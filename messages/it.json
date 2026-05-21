@@ -1,0 +1,105 @@
+{
+  "Nav": {
+    "studio": "Studio",
+    "projects": "Progetti",
+    "about": "About",
+    "contact": "Contatti",
+    "menuOpen": "Apri menu",
+    "menuClose": "Chiudi menu"
+  },
+  "Home": {
+    "sectionLabel": "HOME",
+    "title": "Kansei\nStudio",
+    "tagline": "Technological Poetry │ Human Experience",
+    "description": "Esperienze digitali che prendono vita.",
+    "scrollHint": "SCROLL TO EXPLORE"
+  },
+  "About": {
+    "sectionLabel": "ABOUT",
+    "title": "Where technology\nbecomes sensation.",
+    "description": "Kansei Studio crea sistemi digitali sensoriali che connettono la tecnologia con l'emozione umana. Progettiamo interfacce immersive, esperienze intelligenti e installazioni interattive che rispondono, si adattano e risuonano.",
+    "philosophyCta": "La nostra filosofia"
+  },
+  "Services": {
+    "01": {
+      "title": "Technological Innovation",
+      "items": [
+        "Wireframing and prototyping",
+        "Unreal / Unity system based",
+        "Biometric recognition systems",
+        "Touchdesigner and Playable interfaces"
+      ]
+    },
+    "02": {
+      "title": "Experimental Formats",
+      "items": [
+        "Design of digital experiential spaces",
+        "Design and creation of immersive rooms",
+        "Automated systems for interactive and experiential environments",
+        "Reactive Space"
+      ]
+    },
+    "03": {
+      "title": "AI Advanced System",
+      "items": [
+        "AI Automation Agency",
+        "Sistema Multi-Agente per Aziende Autonome",
+        "Digital Twin intelligente",
+        "AI Control Room"
+      ]
+    },
+    "04": {
+      "title": "Cross-Environment Applications",
+      "items": [
+        "Shopping malls",
+        "Exhibition areas",
+        "Museums",
+        "Stadiums"
+      ]
+    }
+  },
+  "Projects": {
+    "sectionLabel": "PROGETTI",
+    "archive": "ARCHIVIO",
+    "title": "Progetti che ci somigliano.",
+    "description": "Una selezione di sistemi, installazioni e prodotti digitali progettati per emozionare.",
+    "filterAll": "Tutti",
+    "counterFormat": "{visible} / {total}",
+    "noResults": "Nessun progetto in questa categoria.",
+    "projectEyebrow": "Progetto:",
+    "problemHeading": "Il problema",
+    "solutionHeading": "Soluzione tecnologica",
+    "backToArchive": "Torna all'archivio"
+  },
+  "Contact": {
+    "sectionLabel": "CONTATTI",
+    "heroTitle": "Let's build\nsensory software.",
+    "heroDescription": "Siamo aperti a collaborazioni selezionate con brand, istituzioni culturali e agenzie partner. Scrivici per raccontarci il tuo progetto.",
+    "studioLabel": "Studio",
+    "studioValue": "Kansei Studio",
+    "locationLabel": "Location",
+    "locationValue": "Italy / Remote",
+    "availabilityLabel": "Availability",
+    "availabilityValue": "Aperti a collaborazioni selezionate",
+    "emailLabel": "Email",
+    "emailValue": "hello@kansei-studio.art",
+    "focusLabel": "Focus",
+    "focusValue": "Immersive Web, AI Interfaces, Digital Installations",
+    "cardsSectionLabel": "Canali",
+    "email": "Email",
+    "emailHandle": "hello@kansei-studio.art",
+    "linkedin": "LinkedIn",
+    "linkedinHandle": "kansei-studio",
+    "instagram": "Instagram",
+    "instagramHandle": "@kansei.studio",
+    "github": "GitHub / Portfolio",
+    "githubHandle": "github.com/kansei-studio",
+    "newsletter": "Newsletter / Notes",
+    "newsletterHandle": "Design thinking & technical essays"
+  },
+  "Common": {
+    "loading": "Caricamento…",
+    "error": "Si è verificato un errore.",
+    "languageSwitcher": "Lingua"
+  }
+}

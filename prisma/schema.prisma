@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Projects ----------
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique @db.VarChar(120)
+  year         Int
+  client       String   @db.VarChar(180)
+  format       String   @db.VarChar(120)
+  environment  String   @db.VarChar(180)
+  technologies String   @db.Text
+  notes        String?  @db.Text
+  videoUrl     String?  @map("video_url") @db.VarChar(255)
+  posterUrl    String?  @map("poster_url") @db.VarChar(255)
+  coverUrl     String?  @map("cover_url") @db.VarChar(255)
+  published    Boolean  @default(true)
+  sortOrder    Int      @default(0) @map("sort_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  translations ProjectTranslation[]
+  categories   ProjectCategory[]
+  kpis         ProjectKpi[]
+
+  @@map("projects")
+}
+
+model ProjectTranslation {
+  projectId   Int     @map("project_id")
+  locale      String  @db.VarChar(5)
+  title       String  @db.VarChar(200)
+  tagline     String? @db.VarChar(250)
+  description String  @db.Text
+  problem     String? @db.Text
+  solution    String? @db.Text
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, locale])
+  @@map("project_translations")
+}
+
+// ---------- Categories ----------
+
+model Category {
+  id        Int    @id @default(autoincrement())
+  slug      String @unique @db.VarChar(60)
+  sortOrder Int    @default(0) @map("sort_order")
+
+  translations CategoryTranslation[]
+  projects     ProjectCategory[]
+
+  @@map("categories")
+}
+
+model CategoryTranslation {
+  categoryId Int    @map("category_id")
+  locale     String @db.VarChar(5)
+  name       String @db.VarChar(80)
+
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, locale])
+  @@map("category_translations")
+}
+
+model ProjectCategory {
+  projectId  Int @map("project_id")
+  categoryId Int @map("category_id")
+
+  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([projectId, categoryId])
+  @@map("project_categories")
+}
+
+// ---------- KPIs ----------
+
+model ProjectKpi {
+  id        Int    @id @default(autoincrement())
+  projectId Int    @map("project_id")
+  icon      String @db.VarChar(30)
+  value     String @db.VarChar(20)
+  sortOrder Int    @default(0) @map("sort_order")
+
+  project      Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  translations ProjectKpiTranslation[]
+
+  @@map("project_kpis")
+}
+
+model ProjectKpiTranslation {
+  kpiId  Int    @map("kpi_id")
+  locale String @db.VarChar(5)
+  label  String @db.VarChar(150)
+
+  kpi ProjectKpi @relation(fields: [kpiId], references: [id], onDelete: Cascade)
+
+  @@id([kpiId, locale])
+  @@map("project_kpi_translations")
+}
