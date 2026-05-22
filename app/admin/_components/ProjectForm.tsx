@@ -89,20 +89,17 @@ export function ProjectForm({ initialValues, projectId, categories }: ProjectFor
   }
 
   function onSubmit(data: ProjectFormValues) {
-    console.log("[ProjectForm] onSubmit invoked with data:", data)
     setServerError(null)
     startTransition(async () => {
       try {
         const result = isEditing
           ? await updateProjectAction(projectId!, data)
           : await createProjectAction(data)
-        console.log("[ProjectForm] action result:", result)
         if (result?.error) {
           setServerError(result.error)
           window.scrollTo({ top: 0, behavior: "smooth" })
         }
       } catch (err) {
-        console.error("[ProjectForm] caught error:", err)
         setServerError("Errore di rete. Riprova.")
         window.scrollTo({ top: 0, behavior: "smooth" })
       }
@@ -110,7 +107,6 @@ export function ProjectForm({ initialValues, projectId, categories }: ProjectFor
   }
 
   function onInvalid(formErrors: Record<string, unknown>) {
-    console.warn("[ProjectForm] validation failed:", formErrors)
     const fieldErrors = collectFieldErrors(formErrors)
     setServerError(
       `Compila tutti i campi obbligatori:\n${fieldErrors.join("\n")}`
