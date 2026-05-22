@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils"
 import { Container } from "@/components/atoms/Container"
 import { HairlineDivider } from "@/components/atoms/HairlineDivider"
-import { GenerativeVisual } from "@/components/atoms/GenerativeVisual"
 import { RevealText } from "@/components/molecules/RevealText"
+import { HomeLogoVisual } from "@/components/sections/HomeLogoVisual"
 
 interface HomeHeroProps {
   title: string
@@ -76,7 +76,7 @@ export function HomeHero({
               visualSrc is reserved for when /public/visuals/tree-home.png exists (Task 09).
               GenerativeVisual shows a placeholder until that file is in place.
             */}
-            <GenerativeVisual variant="tree-home" priority alt={visualAlt} />
+            <HomeLogoVisual />
           </div>
 
         </div>
