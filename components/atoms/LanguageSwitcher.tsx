@@ -2,6 +2,7 @@
 
 import { useLocale } from "next-intl"
 import { useRouter, usePathname } from "@/i18n/routing"
+import { routing } from "@/i18n/routing"
 import { cn } from "@/lib/utils"
 
 interface LanguageSwitcherProps {
@@ -11,11 +12,15 @@ interface LanguageSwitcherProps {
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const locale = useLocale()
   const router = useRouter()
-  const pathname = usePathname()
+  const rawPathname = usePathname()
+
+  // Strip locale prefix if next-intl returns it with the prefix included
+  // (defensive fix for next-intl 3.x + Next 16 Turbopack edge case)
+  const cleanPathname = stripLocalePrefix(rawPathname, routing.locales)
 
   const switchTo = (target: "it" | "en") => {
     if (target === locale) return
-    router.replace(pathname, { locale: target })
+    router.replace(cleanPathname, { locale: target })
   }
 
   return (
@@ -52,4 +57,17 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
       </button>
     </div>
   )
+}
+
+function stripLocalePrefix(
+  pathname: string,
+  locales: readonly string[]
+): string {
+  for (const loc of locales) {
+    if (pathname === `/${loc}`) return "/"
+    if (pathname.startsWith(`/${loc}/`)) {
+      return pathname.slice(`/${loc}`.length)
+    }
+  }
+  return pathname
 }

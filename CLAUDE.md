@@ -258,3 +258,33 @@ Per generare il secret: `node -e "console.log(require('crypto').randomBytes(32).
 - Il root layout (`app/layout.tsx`) carica next-intl con fallback a locale "it" per route senza contesto i18n (es. `/admin`). Non serve modificarlo.
 - I link interni in `/admin` usano `next/link` standard (non `@/i18n/routing`) perché l'admin non è internazionalizzato.
 - `proxy.ts` usa `unsealData` direttamente (non `getIronSession`) nel contesto Edge runtime per leggere la sessione senza scrivere cookie.
+
+---
+
+## Home Telemetry
+
+Micro-elementi telemetrici animati sovrapposti alla HomeHero per dare
+sensazione di "sistema vivo" minimalista. Stile: dashboard tech
+sussurrata, ispirazione Field.io / Locomotive / Studio Hopo'o.
+
+### Elementi
+- SEED: hash hex random a reload (top-left)
+- GPS Coordinates: lat/lon di Bitritto + UTC+1 (top-right)
+- STATUS dot pulse: heartbeat 3s loop (bottom-left)
+- PROCESS glitch: 12 parole che ruotano con glitch ogni 6s (bottom-left)
+- CYCLES: counter 0-99999 loop (bottom-right)
+- UPTIME: cronometro live dal mount (bottom-right)
+- CLOCK: orario Europe/Rome live (bottom-center)
+
+### File
+- `components/sections/HomeTelemetry.tsx` (client component)
+- Integrato in `app/[locale]/page.tsx` come overlay assoluto su HomeHero
+
+### Pattern
+- Tutti i valori dinamici inizializzati con stringa/numero vuoto,
+  popolati in useEffect — evita warning di hydration
+- `pointer-events-none` sul container = non interferisce con UX
+- `tabular-nums` sui numeri per evitare salti visivi
+- STATUS/PROCESS e CYCLES/UPTIME nascosti su mobile (`hidden md:block`);
+  GPS nascosto su xs (`hidden sm:block`); SEED e CLOCK sempre visibili
+- `wordIndexRef` (useRef) per evitare stale closure nel glitch di PROCESS

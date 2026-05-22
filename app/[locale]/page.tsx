@@ -2,6 +2,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server"
 import { TopNav } from "@/components/molecules/TopNav"
 import { ScrollIndicator } from "@/components/molecules/ScrollIndicator"
 import { HomeHero } from "@/components/sections/HomeHero"
+import { HomeTelemetry } from "@/components/sections/HomeTelemetry"
 import { ServicesGrid } from "@/components/sections/ServicesGrid"
 
 export default async function Home({
@@ -19,13 +20,16 @@ export default async function Home({
       <TopNav />
       <ScrollIndicator total={4} current={1} />
       <main>
-        <HomeHero
-          title={t("title")}
-          tagline={t("tagline")}
-          description={t("description")}
-          visualSrc="/visuals/tree-home.png"
-          visualAlt="Kansei Studio generative tree visualization"
-        />
+        <div className="relative">
+          <HomeHero
+            title={t("title")}
+            tagline={t("tagline")}
+            description={t("description")}
+            visualSrc="/visuals/tree-home.png"
+            visualAlt="Kansei Studio generative tree visualization"
+          />
+          <HomeTelemetry />
+        </div>
         <ServicesGrid />
       </main>
     </>
