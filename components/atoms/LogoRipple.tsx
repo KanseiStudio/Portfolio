@@ -17,28 +17,29 @@ export function LogoRipple() {
 
   return (
     <div
-      className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10"
+      className="absolute inset-0 pointer-events-none overflow-hidden"
       aria-hidden="true"
     >
       <svg
-        viewBox="0 0 800 800"
-        className="w-[180%] h-[180%] max-w-none"
+        className="absolute inset-0 w-full h-full"
+        preserveAspectRatio="none"
         xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 100 100"
       >
-        {[0, 1.5, 3, 4.5].map((delay, i) => (
+        {[0, 1.5, 3, 4.5, 6, 7.5].map((delay, i) => (
           <circle
             key={i}
-            cx="400"
-            cy="400"
-            r="120"
+            cx="75"
+            cy="50"
+            r="5"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1"
+            strokeWidth="0.1"
             opacity="0"
             style={{
-              animation: `logoRipple 6s ease-out infinite`,
+              animation: `logoRipple 9s ease-out infinite`,
               animationDelay: `${delay}s`,
-              transformOrigin: "400px 400px",
+              vectorEffect: "non-scaling-stroke",
             }}
           />
         ))}
@@ -46,17 +47,17 @@ export function LogoRipple() {
         <style>{`
           @keyframes logoRipple {
             0% {
-              r: 120px;
+              r: 5;
               opacity: 0;
-              stroke-width: 1.5;
+              stroke-width: 0.15;
             }
             5% {
-              opacity: 0.4;
+              opacity: 0.3;
             }
             100% {
-              r: 600px;
+              r: 80;
               opacity: 0;
-              stroke-width: 0.5;
+              stroke-width: 0.05;
             }
           }
         `}</style>

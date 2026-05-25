@@ -7,8 +7,12 @@ export async function HomeHero() {
   const t = await getTranslations("Home")
 
   return (
-    <Container as="section" className="pt-12 pb-16 lg:pt-16 lg:pb-24">
-      <div className="grid grid-cols-12 gap-4 lg:gap-6 items-center">
+    <Container as="section" className="pt-12 pb-16 lg:pt-16 lg:pb-24 relative">
+
+      {/* Ripple overlay dietro a tutto il contenuto della section */}
+      <LogoRipple />
+
+      <div className="grid grid-cols-12 gap-4 lg:gap-6 items-center relative z-10">
 
         {/* COLONNA SINISTRA: Title + Eyebrow + Body */}
         <div className="col-span-12 lg:col-span-7">
@@ -46,16 +50,15 @@ export async function HomeHero() {
           </div>
         </div>
 
-        {/* COLONNA DESTRA: Logo PNG grande con ripple */}
+        {/* COLONNA DESTRA: Logo PNG grande */}
         <div className="col-span-12 lg:col-span-5 mt-10 lg:mt-0">
           <div className="relative w-full aspect-square scale-110 lg:scale-125 origin-center">
-            <LogoRipple />
             <Image
               src="/logo.png"
               alt="Kansei Studio — Logo"
               fill
               sizes="(max-width: 1024px) 100vw, 42vw"
-              className="object-contain relative z-10"
+              className="object-contain"
               priority
             />
           </div>
