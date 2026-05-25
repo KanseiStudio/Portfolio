@@ -18,12 +18,11 @@ export default async function HomePage({
       <TopNav />
       <HairlineDivider />
 
-      <div className="relative">
-        <HomeHero />
-        <HomeTelemetry />
-      </div>
-
+      <HomeHero />
       <HomeServices />
+
+      {/* Overlay fisso al viewport — segue lo scroll */}
+      <HomeTelemetry />
     </main>
   )
 }

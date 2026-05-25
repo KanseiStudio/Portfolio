@@ -52,6 +52,7 @@ export async function HomeHero() {
               src="/logo.png"
               alt="Kansei Studio — Logo"
               fill
+              sizes="(max-width: 1024px) 100vw, 42vw"
               className="object-contain"
               priority
             />
