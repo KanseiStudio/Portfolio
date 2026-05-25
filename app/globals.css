@@ -228,3 +228,86 @@
 @utility font-n27 {
   font-family: var(--font-n27), system-ui, sans-serif;
 }
+
+/* ── Tree logo wind animation ── */
+@keyframes wind-sway-grande {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(0.6deg); }
+  50%      { transform: rotate(-0.3deg); }
+  75%      { transform: rotate(0.4deg); }
+}
+
+@keyframes wind-sway-medio {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(1.2deg); }
+  50%      { transform: rotate(-0.5deg); }
+  75%      { transform: rotate(0.8deg); }
+}
+
+@keyframes wind-sway-piccolo {
+  0%, 100% { transform: rotate(0deg); }
+  20%      { transform: rotate(2deg); }
+  45%      { transform: rotate(-1deg); }
+  70%      { transform: rotate(1.5deg); }
+  90%      { transform: rotate(-0.3deg); }
+}
+
+@keyframes leaves-vibrate {
+  0%, 100% { transform: translate(0, 0); }
+  25%      { transform: translate(1px, -0.5px); }
+  50%      { transform: translate(-0.5px, 0.5px); }
+  75%      { transform: translate(0.5px, 0px); }
+}
+
+.branch-sx-grande {
+  transform-origin: 645px 750px;
+  animation: wind-sway-grande 11s ease-in-out infinite;
+}
+.branch-dx-grande {
+  transform-origin: 1380px 600px;
+  animation: wind-sway-grande 11s ease-in-out infinite;
+  animation-delay: -0.5s;
+}
+.branch-sx-medio {
+  transform-origin: 540px 580px;
+  animation: wind-sway-medio 9s ease-in-out infinite;
+  animation-delay: -1s;
+}
+.branch-dx-medio {
+  transform-origin: 880px 410px;
+  animation: wind-sway-medio 9s ease-in-out infinite;
+  animation-delay: -1.5s;
+}
+.branch-sx-piccolo-1 {
+  transform-origin: 400px 770px;
+  animation: wind-sway-piccolo 7s ease-in-out infinite;
+  animation-delay: -2s;
+}
+.branch-sx-piccolo-2 {
+  transform-origin: 470px 950px;
+  animation: wind-sway-piccolo 8s ease-in-out infinite;
+  animation-delay: -3s;
+}
+.branch-dx-piccolo-1 {
+  transform-origin: 1450px 700px;
+  animation: wind-sway-piccolo 7.5s ease-in-out infinite;
+  animation-delay: -2.5s;
+}
+.branch-dx-piccolo-2 {
+  transform-origin: 1500px 850px;
+  animation: wind-sway-piccolo 8.5s ease-in-out infinite;
+  animation-delay: -1.5s;
+}
+.leaves {
+  animation: leaves-vibrate 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .branch-sx-grande, .branch-dx-grande,
+  .branch-sx-medio, .branch-dx-medio,
+  .branch-sx-piccolo-1, .branch-sx-piccolo-2,
+  .branch-dx-piccolo-1, .branch-dx-piccolo-2,
+  .leaves {
+    animation: none;
+  }
+}
