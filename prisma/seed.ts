@@ -94,6 +94,133 @@ async function main() {
 
   console.log("✓ Project ↔ Categories linked")
 
+  // -------- Contact Info (singleton) --------
+  const existingInfo = await prisma.contactInfo.findFirst()
+  const contactInfo = existingInfo
+    ? existingInfo
+    : await prisma.contactInfo.create({
+        data: {
+          studioName: "Kansei Studio",
+          email: "hello@kansei-studio.art",
+        },
+      })
+
+  await prisma.contactInfoTranslation.upsert({
+    where: { contactInfoId_locale: { contactInfoId: contactInfo.id, locale: "it" } },
+    create: {
+      contactInfoId: contactInfo.id,
+      locale: "it",
+      location: "Italy / Remote",
+      availability: "Aperti a collaborazioni selezionate",
+      focus: "Immersive Web, AI Interfaces, Digital Installations",
+    },
+    update: {
+      location: "Italy / Remote",
+      availability: "Aperti a collaborazioni selezionate",
+      focus: "Immersive Web, AI Interfaces, Digital Installations",
+    },
+  })
+
+  await prisma.contactInfoTranslation.upsert({
+    where: { contactInfoId_locale: { contactInfoId: contactInfo.id, locale: "en" } },
+    create: {
+      contactInfoId: contactInfo.id,
+      locale: "en",
+      location: "Italy / Remote",
+      availability: "Open for selected collaborations",
+      focus: "Immersive Web, AI Interfaces, Digital Installations",
+    },
+    update: {
+      location: "Italy / Remote",
+      availability: "Open for selected collaborations",
+      focus: "Immersive Web, AI Interfaces, Digital Installations",
+    },
+  })
+
+  console.log("✓ Contact info seeded")
+
+  // -------- Contact Channels --------
+  const channelsData = [
+    {
+      platform: "email",
+      iconName: "Mail",
+      handle: "hello@kansei-studio.art",
+      url: "mailto:hello@kansei-studio.art",
+      sortOrder: 1,
+      labels: { it: "Email", en: "Email" },
+    },
+    {
+      platform: "linkedin",
+      iconName: "Linkedin",
+      handle: "kansei-studio",
+      url: "https://www.linkedin.com/company/kansei-studio",
+      sortOrder: 2,
+      labels: { it: "LinkedIn", en: "LinkedIn" },
+    },
+    {
+      platform: "instagram",
+      iconName: "Instagram",
+      handle: "@kansei.studio",
+      url: "https://www.instagram.com/kansei.studio",
+      sortOrder: 3,
+      labels: { it: "Instagram", en: "Instagram" },
+    },
+    {
+      platform: "github",
+      iconName: "Github",
+      handle: "github.com/kansei-studio",
+      url: "https://github.com/kansei-studio",
+      sortOrder: 4,
+      labels: { it: "GitHub / Portfolio", en: "GitHub / Portfolio" },
+    },
+    {
+      platform: "newsletter",
+      iconName: "NotebookPen",
+      handle: "Design thinking & technical essays",
+      url: null,
+      sortOrder: 5,
+      labels: { it: "Newsletter / Notes", en: "Newsletter / Notes" },
+    },
+  ]
+
+  for (const ch of channelsData) {
+    const existingChannel = await prisma.contactChannel.findFirst({
+      where: { platform: ch.platform },
+    })
+
+    const channel = existingChannel
+      ? await prisma.contactChannel.update({
+          where: { id: existingChannel.id },
+          data: {
+            iconName: ch.iconName,
+            handle: ch.handle,
+            url: ch.url,
+            sortOrder: ch.sortOrder,
+            enabled: true,
+          },
+        })
+      : await prisma.contactChannel.create({
+          data: {
+            platform: ch.platform,
+            iconName: ch.iconName,
+            handle: ch.handle,
+            url: ch.url,
+            sortOrder: ch.sortOrder,
+            enabled: true,
+          },
+        })
+
+    for (const [locale, label] of Object.entries(ch.labels)) {
+      await prisma.contactChannelTranslation.upsert({
+        where: { contactChannelId_locale: { contactChannelId: channel.id, locale } },
+        create: { contactChannelId: channel.id, locale, label },
+        update: { label },
+      })
+    }
+  }
+
+  console.log("✓ Contact channels seeded")
+
   console.log("✅ Seeding complete")
 }
 

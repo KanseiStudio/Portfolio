@@ -4,17 +4,31 @@ import { MetadataTable } from "@/components/molecules/MetadataTable"
 import { GenerativeVisual } from "@/components/atoms/GenerativeVisual"
 import { RevealText } from "@/components/molecules/RevealText"
 
-export async function ContactHero() {
+interface ContactHeroProps {
+  studioName: string
+  email: string
+  location: string
+  availability: string
+  focus: string
+}
+
+export async function ContactHero({
+  studioName,
+  email,
+  location,
+  availability,
+  focus,
+}: ContactHeroProps) {
   const t = await getTranslations("Contact")
 
   const titleLines = t("heroTitle").split("\n")
 
   const studioInfo = [
-    { label: t("studioLabel"), value: t("studioValue") },
-    { label: t("locationLabel"), value: t("locationValue") },
-    { label: t("availabilityLabel"), value: t("availabilityValue") },
-    { label: t("emailLabel"), value: t("emailValue") },
-    { label: t("focusLabel"), value: t("focusValue") },
+    { label: t("studioLabel"), value: studioName },
+    { label: t("locationLabel"), value: location },
+    { label: t("availabilityLabel"), value: availability },
+    { label: t("emailLabel"), value: email },
+    { label: t("focusLabel"), value: focus },
   ]
 
   return (

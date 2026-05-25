@@ -1,43 +1,25 @@
 import { getTranslations } from "next-intl/server"
-import { Mail, Link2, Camera, Code2, NotebookPen } from "lucide-react"
 import { Container } from "@/components/atoms/Container"
 import { ContactCard } from "@/components/molecules/ContactCard"
+import * as Icons from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 
-export async function ContactChannels() {
+interface ChannelData {
+  id: number
+  iconName: string
+  handle: string
+  url: string | null
+  label: string
+}
+
+export async function ContactChannels({
+  channels,
+}: {
+  channels: ChannelData[]
+}) {
   const t = await getTranslations("Contact")
 
-  const channels = [
-    {
-      icon: Mail,
-      label: t("email"),
-      value: t("emailHandle"),
-      href: `mailto:${t("emailHandle")}`,
-    },
-    {
-      icon: Link2,
-      label: t("linkedin"),
-      value: t("linkedinHandle"),
-      href: `https://www.linkedin.com/company/${t("linkedinHandle")}`,
-    },
-    {
-      icon: Camera,
-      label: t("instagram"),
-      value: t("instagramHandle"),
-      href: `https://www.instagram.com/${t("instagramHandle").replace("@", "")}`,
-    },
-    {
-      icon: Code2,
-      label: t("github"),
-      value: t("githubHandle"),
-      href: `https://${t("githubHandle")}`,
-    },
-    {
-      icon: NotebookPen,
-      label: t("newsletter"),
-      value: t("newsletterHandle"),
-      // No href: newsletter not yet active — renders as non-interactive div
-    },
-  ]
+  if (channels.length === 0) return null
 
   return (
     <Container as="section" className="py-20 lg:py-32">
@@ -46,15 +28,20 @@ export async function ContactChannels() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {channels.map((ch) => (
-          <ContactCard
-            key={ch.label}
-            icon={ch.icon}
-            label={ch.label}
-            value={ch.value}
-            href={"href" in ch ? ch.href : undefined}
-          />
-        ))}
+        {channels.map((ch) => {
+          const Icon =
+            (Icons as unknown as Record<string, LucideIcon>)[ch.iconName] ??
+            Icons.Link
+          return (
+            <ContactCard
+              key={ch.id}
+              icon={Icon}
+              label={ch.label}
+              value={ch.handle}
+              href={ch.url ?? undefined}
+            />
+          )
+        })}
       </div>
     </Container>
   )

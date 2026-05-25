@@ -108,3 +108,60 @@ model ProjectKpiTranslation {
   @@id([kpiId, locale])
   @@map("project_kpi_translations")
 }
+
+// ---------- Contact Info (singleton) ----------
+
+model ContactInfo {
+  id         Int      @id @default(autoincrement())
+  studioName String   @default("Kansei Studio") @map("studio_name") @db.VarChar(120)
+  email      String   @db.VarChar(180)
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  translations ContactInfoTranslation[]
+
+  @@map("contact_info")
+}
+
+model ContactInfoTranslation {
+  id            Int    @id @default(autoincrement())
+  contactInfoId Int    @map("contact_info_id")
+  locale        String @db.VarChar(5)
+  location      String @db.VarChar(180)
+  availability  String @db.VarChar(250)
+  focus         String @db.VarChar(250)
+
+  contactInfo ContactInfo @relation(fields: [contactInfoId], references: [id], onDelete: Cascade)
+
+  @@unique([contactInfoId, locale])
+  @@map("contact_info_translations")
+}
+
+// ---------- Contact Channels ----------
+
+model ContactChannel {
+  id        Int      @id @default(autoincrement())
+  platform  String   @db.VarChar(60)
+  iconName  String   @map("icon_name") @db.VarChar(60)
+  handle    String   @db.VarChar(200)
+  url       String?  @db.VarChar(255)
+  enabled   Boolean  @default(true)
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  translations ContactChannelTranslation[]
+
+  @@map("contact_channels")
+}
+
+model ContactChannelTranslation {
+  id               Int    @id @default(autoincrement())
+  contactChannelId Int    @map("contact_channel_id")
+  locale           String @db.VarChar(5)
+  label            String @db.VarChar(120)
+
+  contactChannel ContactChannel @relation(fields: [contactChannelId], references: [id], onDelete: Cascade)
+
+  @@unique([contactChannelId, locale])
+  @@map("contact_channel_translations")
+}

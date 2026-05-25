@@ -73,7 +73,7 @@ export default async function AdminDashboardPage() {
         <HairlineDivider />
 
         {/* Quick actions */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-4">
           <ActionCard
             title="Gestisci progetti"
             description="Crea, modifica ed elimina i case study"
@@ -83,6 +83,11 @@ export default async function AdminDashboardPage() {
             title="Gestisci categorie"
             description="Aggiungi nuove categorie e modifica le esistenti"
             href="/admin/categories"
+          />
+          <ActionCard
+            title="Gestisci contatti"
+            description="Modifica email, social e informazioni dello studio"
+            href="/admin/contact"
           />
         </div>
 
