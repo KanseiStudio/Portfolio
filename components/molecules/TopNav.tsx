@@ -40,7 +40,7 @@ export function TopNav() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-ks-bg/90 backdrop-blur-[8px]">
-        <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 py-5 flex items-center justify-between">
+        <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 py-3 flex items-center justify-between">
 
           {/* Logo */}
           <Link

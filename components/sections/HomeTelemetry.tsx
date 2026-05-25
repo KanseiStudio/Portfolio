@@ -111,13 +111,13 @@ export function HomeTelemetry() {
     <div className="fixed inset-0 pointer-events-none z-30" aria-hidden="true">
 
       {/* SEED — top-left, sotto la TopNav */}
-      <div className="absolute top-32 lg:top-36 left-4 sm:left-6 lg:left-8 xl:left-12 font-mono text-[10px] uppercase tracking-widest opacity-50">
+      <div className="absolute top-20 lg:top-24 left-4 sm:left-6 lg:left-8 xl:left-12 font-mono text-[10px] uppercase tracking-widest opacity-50">
         <div className="opacity-60">SEED</div>
         <div className="mt-1">{seed}</div>
       </div>
 
       {/* GPS — top-right, nascosto su mobile */}
-      <div className="absolute top-32 lg:top-36 right-4 sm:right-6 lg:right-8 xl:right-12 font-mono text-[10px] uppercase tracking-widest opacity-50 text-right hidden md:block">
+      <div className="absolute top-20 lg:top-24 right-4 sm:right-6 lg:right-8 xl:right-12 font-mono text-[10px] uppercase tracking-widest opacity-50 text-right hidden md:block">
         <div>+ LAT&nbsp;&nbsp;41.0394°N</div>
         <div className="mt-1">+ LON&nbsp;&nbsp;16.8267°E</div>
         <div className="mt-1">+ UTC+1 ROMA</div>
