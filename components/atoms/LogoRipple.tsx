@@ -15,6 +15,8 @@ export function LogoRipple() {
 
   if (reducedMotion) return null
 
+  const RIPPLES = Array.from({ length: 10 }, (_, i) => i * 1.5)
+
   return (
     <div
       className="absolute inset-0 pointer-events-none overflow-hidden"
@@ -22,22 +24,22 @@ export function LogoRipple() {
     >
       <svg
         className="absolute inset-0 w-full h-full"
-        preserveAspectRatio="none"
+        viewBox="0 0 1920 800"
+        preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 100 100"
       >
-        {[0, 1.5, 3, 4.5, 6, 7.5].map((delay, i) => (
+        {RIPPLES.map((delay, i) => (
           <circle
             key={i}
-            cx="75"
-            cy="50"
-            r="5"
+            cx="1440"
+            cy="400"
+            r="100"
             fill="none"
             stroke="currentColor"
-            strokeWidth="0.1"
+            strokeWidth="1.5"
             opacity="0"
             style={{
-              animation: `logoRipple 9s ease-out infinite`,
+              animation: `logoRipple 15s ease-out infinite`,
               animationDelay: `${delay}s`,
               vectorEffect: "non-scaling-stroke",
             }}
@@ -47,17 +49,17 @@ export function LogoRipple() {
         <style>{`
           @keyframes logoRipple {
             0% {
-              r: 5;
+              r: 100px;
               opacity: 0;
-              stroke-width: 0.15;
+              stroke-width: 2;
             }
-            5% {
-              opacity: 0.3;
+            10% {
+              opacity: 0.5;
             }
             100% {
-              r: 80;
+              r: 1400px;
               opacity: 0;
-              stroke-width: 0.05;
+              stroke-width: 0.5;
             }
           }
         `}</style>
