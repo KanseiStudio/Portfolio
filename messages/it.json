@@ -1,18 +1,66 @@
 {
   "Nav": {
-    "studio": "Studio",
-    "projects": "Progetti",
     "about": "About",
+    "projects": "Progetti",
     "contact": "Contatti",
     "menuOpen": "Apri menu",
     "menuClose": "Chiudi menu"
   },
   "Home": {
-    "sectionLabel": "HOME",
-    "title": "Kansei\nStudio",
-    "tagline": "Technological Poetry │ Human Experience",
-    "description": "Esperienze digitali che prendono vita.",
+    "titleLine1": "KANSEI",
+    "titleLine2": "STUDIO",
+    "eyebrow": "TECHNOLOGICAL POETRY",
+    "eyebrowDivider": "|",
+    "eyebrowSecond": "HUMAN EXPERIENCE",
+    "bodyHeadline": "Esperienze digitali che prendono vita",
+    "bodyText": "Kansei Studio crea sistemi digitali sensoriali che connettono la tecnologia con l'emozione umana. Progettiamo interfacce immersive, esperienze intelligenti e installazioni interattive che rispondono, si adattano e risuonano",
     "scrollHint": "SCROLL TO EXPLORE"
+  },
+  "HomeServices": {
+    "service01": {
+      "number": "01",
+      "title": "Technological Innovation",
+      "description": "We design immersive interfaces and AR/VR experiences that push the boundaries of human-computer interaction.",
+      "bullets": [
+        "Wireframing and prototyping",
+        "Unreal / Unity system based",
+        "Biometric recognition systems",
+        "Touchdesigner and Playable interfaces"
+      ]
+    },
+    "service02": {
+      "number": "02",
+      "title": "Experimental Formats",
+      "description": "Sensory systems for stadiums, museums, and events. Data-driven installations that respond to human presence.",
+      "bullets": [
+        "Design of digital experiential spaces",
+        "Design and creation of immersive rooms",
+        "Automated systems for interactive and experiential environments",
+        "Reactive Space"
+      ]
+    },
+    "service03": {
+      "number": "03",
+      "title": "AI Advanced System",
+      "description": "Intelligent environments and adaptive interfaces built on top of modern AI primitives.",
+      "bullets": [
+        "AI Automation Agency",
+        "Sistema Multi-Agente per Aziende Autonome",
+        "Digital Twin intelligente",
+        "AI Control Room"
+      ]
+    },
+    "service04": {
+      "number": "04",
+      "title": "Cross-Environment Applications",
+      "description": "Experiences that span physical and digital — from shopping malls to large-scale stadium installations.",
+      "bullets": [
+        "Shopping malls",
+        "Exhibition areas",
+        "Museums",
+        "Stadiums"
+      ]
+    }
   },
   "About": {
     "sectionLabel": "ABOUT",

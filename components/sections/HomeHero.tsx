@@ -1,86 +1,64 @@
-import { cn } from "@/lib/utils"
+import Image from "next/image"
+import { getTranslations } from "next-intl/server"
 import { Container } from "@/components/atoms/Container"
-import { HairlineDivider } from "@/components/atoms/HairlineDivider"
-import { RevealText } from "@/components/molecules/RevealText"
-import { HomeLogoVisual } from "@/components/sections/HomeLogoVisual"
 
-interface HomeHeroProps {
-  title: string
-  tagline?: string
-  description: string
-  visualSrc: string
-  visualAlt: string
-  className?: string
-}
-
-export function HomeHero({
-  title,
-  tagline,
-  description,
-  visualAlt,
-  className,
-}: HomeHeroProps) {
-  const taglineParts = tagline?.split("|").map((p) => p.trim()) ?? []
+export async function HomeHero() {
+  const t = await getTranslations("Home")
 
   return (
-    <section id="home" className={cn("w-full", className)}>
+    <Container as="section" className="pt-8 pb-12">
+      <div className="grid grid-cols-12 gap-4 lg:gap-6 items-center">
 
-      <HairlineDivider className="my-0" />
+        {/* COLONNA SINISTRA: Title + Eyebrow + Body */}
+        <div className="col-span-12 lg:col-span-7">
 
-      {/* ── Hero grid ─────────────────────────────────────────── */}
-      <Container className="pt-12 pb-20 lg:pt-20 lg:pb-32">
-        <div className="grid grid-cols-12 gap-8">
+          {/* Title gigante KANSEI / STUDIO */}
+          <h1 className="font-n27 font-bold uppercase leading-[0.95] tracking-tight">
+            <span className="block text-[clamp(4rem,12vw,11rem)]">
+              {t("titleLine1")}
+            </span>
+            <span className="block text-[clamp(4rem,12vw,11rem)]">
+              {t("titleLine2")}
+            </span>
+          </h1>
 
-          {/* Left: text ── col-span-12 mobile, col-span-5 lg */}
-          <div className="col-span-12 lg:col-span-5">
-            <RevealText
-              as="h1"
-              className="text-[2.5rem] sm:text-[4rem] lg:text-[7rem] font-display font-normal leading-[0.9] tracking-[-0.03em] whitespace-pre-line"
+          {/* Eyebrow con underline hairline */}
+          <div className="mt-3 lg:mt-4 pb-3 border-b border-ks-hairline-active inline-block">
+            <p
+              className="font-mono uppercase tracking-widest opacity-80"
+              style={{ fontSize: "clamp(0.85rem, 1.8vw, 1.5rem)" }}
             >
-              {title}
-            </RevealText>
-
-            <HairlineDivider variant="half" className="my-8" />
-
-            {taglineParts.length > 0 && (
-              <RevealText
-                as="p"
-                delay={200}
-                className="text-eyebrow font-mono uppercase tracking-widest opacity-60"
-              >
-                {taglineParts.map((part, i) => (
-                  <span key={i}>
-                    {i > 0 && (
-                      <span className="mx-2 opacity-50" aria-hidden="true">
-                        │
-                      </span>
-                    )}
-                    {part}
-                  </span>
-                ))}
-              </RevealText>
-            )}
-
-            <RevealText
-              as="p"
-              delay={400}
-              className="text-base font-body mt-10 leading-relaxed opacity-80 max-w-sm"
-            >
-              {description}
-            </RevealText>
+              {t("eyebrow")}{" "}
+              <span className="opacity-40 mx-2">{t("eyebrowDivider")}</span>{" "}
+              {t("eyebrowSecond")}
+            </p>
           </div>
 
-          {/* Right: generative visual ── col-span-12 mobile, col-span-7 lg */}
-          <div className="col-span-12 mt-10 lg:mt-0 lg:col-span-7">
-            {/*
-              visualSrc is reserved for when /public/visuals/tree-home.png exists (Task 09).
-              GenerativeVisual shows a placeholder until that file is in place.
-            */}
-            <HomeLogoVisual />
+          {/* Body copy */}
+          <div className="mt-4 lg:mt-6 max-w-2xl">
+            <p className="font-n27 font-medium text-xl lg:text-2xl leading-tight mb-3">
+              {t("bodyHeadline")}
+            </p>
+            <p className="font-n27 font-light text-base lg:text-lg leading-relaxed opacity-90">
+              {t("bodyText")}
+            </p>
           </div>
-
         </div>
-      </Container>
-    </section>
+
+        {/* COLONNA DESTRA: Logo PNG grande */}
+        <div className="col-span-12 lg:col-span-5 mt-10 lg:mt-0">
+          <div className="relative w-full aspect-square scale-110 lg:scale-125 origin-center">
+            <Image
+              src="/logo.png"
+              alt="Kansei Studio — Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+        </div>
+
+      </div>
+    </Container>
   )
 }

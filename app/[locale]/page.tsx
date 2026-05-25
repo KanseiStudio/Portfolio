@@ -1,11 +1,11 @@
-import { setRequestLocale, getTranslations } from "next-intl/server"
+import { setRequestLocale } from "next-intl/server"
 import { TopNav } from "@/components/molecules/TopNav"
-import { ScrollIndicator } from "@/components/molecules/ScrollIndicator"
+import { HairlineDivider } from "@/components/atoms/HairlineDivider"
 import { HomeHero } from "@/components/sections/HomeHero"
+import { HomeServices } from "@/components/sections/HomeServices"
 import { HomeTelemetry } from "@/components/sections/HomeTelemetry"
-import { ServicesGrid } from "@/components/sections/ServicesGrid"
 
-export default async function Home({
+export default async function HomePage({
   params,
 }: {
   params: Promise<{ locale: string }>
@@ -13,25 +13,17 @@ export default async function Home({
   const { locale } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations("Home")
-
   return (
-    <>
+    <main>
       <TopNav />
-      <ScrollIndicator total={4} current={1} />
-      <main>
-        <div className="relative">
-          <HomeHero
-            title={t("title")}
-            tagline={t("tagline")}
-            description={t("description")}
-            visualSrc="/visuals/tree-home.png"
-            visualAlt="Kansei Studio generative tree visualization"
-          />
-          <HomeTelemetry />
-        </div>
-        <ServicesGrid />
-      </main>
-    </>
+      <HairlineDivider />
+
+      <div className="relative">
+        <HomeHero />
+        <HomeTelemetry />
+      </div>
+
+      <HomeServices />
+    </main>
   )
 }

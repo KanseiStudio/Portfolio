@@ -50,7 +50,7 @@ export function TopNav() {
             onClick={() => setIsMobileOpen(false)}
           >
             <Logo size={28} className="shrink-0" />
-            <span className="font-display text-base font-medium tracking-tight">
+            <span className="font-n27 font-bold text-base tracking-tight uppercase">
               Kansei Studio
             </span>
           </Link>
