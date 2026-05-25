@@ -1,11 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
+
+interface Ripple {
+  delay: number
+  duration: number
+}
 
 export function LogoRipple() {
   const [reducedMotion, setReducedMotion] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
     setReducedMotion(mq.matches)
     const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches)
@@ -13,9 +20,15 @@ export function LogoRipple() {
     return () => mq.removeEventListener("change", handler)
   }, [])
 
-  if (reducedMotion) return null
+  const ripples = useMemo<Ripple[]>(() => {
+    if (!mounted) return []
+    return Array.from({ length: 12 }, () => ({
+      delay: Math.random() * 16,
+      duration: 14 + Math.random() * 4,
+    }))
+  }, [mounted])
 
-  const RIPPLES = Array.from({ length: 10 }, (_, i) => i * 1.5)
+  if (!mounted || reducedMotion) return null
 
   return (
     <div
@@ -28,7 +41,7 @@ export function LogoRipple() {
         preserveAspectRatio="xMidYMid slice"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {RIPPLES.map((delay, i) => (
+        {ripples.map((ripple, i) => (
           <circle
             key={i}
             cx="1440"
@@ -36,11 +49,11 @@ export function LogoRipple() {
             r="100"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.5"
+            strokeWidth="1.2"
             opacity="0"
             style={{
-              animation: `logoRipple 15s ease-out infinite`,
-              animationDelay: `${delay}s`,
+              animation: `logoRipple ${ripple.duration}s ease-out infinite`,
+              animationDelay: `${ripple.delay}s`,
               vectorEffect: "non-scaling-stroke",
             }}
           />
@@ -51,15 +64,15 @@ export function LogoRipple() {
             0% {
               r: 100px;
               opacity: 0;
-              stroke-width: 2;
+              stroke-width: 1.2;
             }
-            10% {
-              opacity: 0.5;
+            12% {
+              opacity: 0.4;
             }
             100% {
               r: 1400px;
               opacity: 0;
-              stroke-width: 0.5;
+              stroke-width: 0.4;
             }
           }
         `}</style>
