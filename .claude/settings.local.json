@@ -68,7 +68,11 @@
       "PowerShell(Tail *)",
       "PowerShell(npx playwright install chromium 2>&1 | Select-Object -Last 5)",
       "PowerShell(npx playwright screenshot --browser chromium --viewport-size \"1440,900\" --full-page http://localhost:3099/it/dev/font-test verify-font-test.png 2>&1)",
-      "PowerShell(npx playwright screenshot --browser chromium --viewport-size \"1440,900\" http://localhost:3099/it verify-home.png 2>&1)"
+      "PowerShell(npx playwright screenshot --browser chromium --viewport-size \"1440,900\" http://localhost:3099/it verify-home.png 2>&1)",
+      "PowerShell(Start-Process -NoNewWindow -FilePath \"cmd\" -ArgumentList \"/c\",\"cd /d C:\\\\Users\\\\User\\\\Kansei_Projects\\\\kansei-studio && npm run dev -- --port 3099 > C:\\\\Temp\\\\kansei-dev.log 2>&1\")",
+      "PowerShell(Start-Sleep 8; $result = Invoke-WebRequest -Uri \"http://localhost:3099/it\" -UseBasicParsing -TimeoutSec 5 -ErrorAction SilentlyContinue; if \\($result\\) { $result.StatusCode } else { \"NOT READY\" })",
+      "PowerShell(Receive-Job *)",
+      "Bash(echo \"EXIT:$?\")"
     ]
   },
   "enableAllProjectMcpServers": true,
