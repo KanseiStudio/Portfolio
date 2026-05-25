@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { getTranslations } from "next-intl/server"
 import { Container } from "@/components/atoms/Container"
+import { LogoRipple } from "@/components/atoms/LogoRipple"
 
 export async function HomeHero() {
   const t = await getTranslations("Home")
@@ -45,15 +46,16 @@ export async function HomeHero() {
           </div>
         </div>
 
-        {/* COLONNA DESTRA: Logo PNG grande */}
+        {/* COLONNA DESTRA: Logo PNG grande con ripple */}
         <div className="col-span-12 lg:col-span-5 mt-10 lg:mt-0">
           <div className="relative w-full aspect-square scale-110 lg:scale-125 origin-center">
+            <LogoRipple />
             <Image
               src="/logo.png"
               alt="Kansei Studio — Logo"
               fill
               sizes="(max-width: 1024px) 100vw, 42vw"
-              className="object-contain"
+              className="object-contain relative z-10"
               priority
             />
           </div>
