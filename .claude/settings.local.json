@@ -61,7 +61,14 @@
       "Bash(python *)",
       "PowerShell(python scripts/with_server.py --help)",
       "PowerShell(Invoke-WebRequest -Uri \"http://localhost:3000/it\" -UseBasicParsing -TimeoutSec 3 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty StatusCode)",
-      "PowerShell(python scripts/verify_logo_visual.py)"
+      "PowerShell(python scripts/verify_logo_visual.py)",
+      "Bash(python3 -c \"import sys,json; p=json.load\\(sys.stdin\\); print\\(p.get\\('scripts',{}\\)\\)\")",
+      "PowerShell(node -e \"const p = require\\('@playwright/test'\\); console.log\\('found'\\)\" 2>&1)",
+      "PowerShell(npx playwright screenshot --browser chromium --viewport-size \"1440,900\" http://localhost:3099/it/dev/font-test verify-font-test.png 2>&1)",
+      "PowerShell(Tail *)",
+      "PowerShell(npx playwright install chromium 2>&1 | Select-Object -Last 5)",
+      "PowerShell(npx playwright screenshot --browser chromium --viewport-size \"1440,900\" --full-page http://localhost:3099/it/dev/font-test verify-font-test.png 2>&1)",
+      "PowerShell(npx playwright screenshot --browser chromium --viewport-size \"1440,900\" http://localhost:3099/it verify-home.png 2>&1)"
     ]
   },
   "enableAllProjectMcpServers": true,

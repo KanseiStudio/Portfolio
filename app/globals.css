@@ -223,3 +223,8 @@
     --color-ks-hairline-active: rgba(245, 244, 240, 0.16);
   }
 }
+
+/* font-n27 utility — uses the CSS variable injected by next/font/local on <html> */
+@utility font-n27 {
+  font-family: var(--font-n27), system-ui, sans-serif;
+}

@@ -2,7 +2,7 @@ import "./globals.css"
 import type { ReactNode } from "react"
 import type { Metadata } from "next"
 import { getLocale } from "next-intl/server"
-import { fraunces, geistSans, geistMono } from "@/lib/fonts"
+import { fraunces, geistSans, geistMono, n27 } from "@/lib/fonts"
 
 export const metadata: Metadata = {
   title: "Kansei Studio",
@@ -18,7 +18,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html
       lang={locale}
-      className={`${fraunces.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${fraunces.variable} ${geistSans.variable} ${geistMono.variable} ${n27.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="bg-ks-bg text-ks-fg font-body">
