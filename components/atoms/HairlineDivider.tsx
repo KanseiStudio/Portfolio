@@ -30,7 +30,7 @@ export function HairlineDivider({
     return (
       <div
         role="separator"
-        className={cn("flex items-center gap-6 my-8 lg:my-12", className)}
+        className={cn("flex items-center gap-6 my-3 lg:my-4", className)}
       >
         {label.left && (
           <span className="text-small font-mono text-ks-fg opacity-70 shrink-0">
@@ -50,7 +50,7 @@ export function HairlineDivider({
   return (
     <hr
       className={cn(
-        "border-t border-ks-hairline-active my-8 lg:my-12",
+        "border-t border-ks-hairline-active my-3 lg:my-4",
         variant === "half" && "w-1/2",
         className
       )}
