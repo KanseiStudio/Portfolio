@@ -39,7 +39,7 @@ export async function HomeServices() {
   ]
 
   return (
-    <Container as="section" className="py-8 lg:py-10 border-t border-ks-hairline-active">
+    <Container as="section" className="py-12 lg:py-16 border-t border-ks-hairline-active">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
         {services.map((service) => (
           <article key={service.number} className="space-y-4">

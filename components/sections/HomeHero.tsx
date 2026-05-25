@@ -6,7 +6,7 @@ export async function HomeHero() {
   const t = await getTranslations("Home")
 
   return (
-    <Container as="section" className="pt-8 pb-12">
+    <Container as="section" className="pt-12 pb-16 lg:pt-16 lg:pb-24">
       <div className="grid grid-cols-12 gap-4 lg:gap-6 items-center">
 
         {/* COLONNA SINISTRA: Title + Eyebrow + Body */}
