@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { setRequestLocale, getTranslations } from "next-intl/server"
 import { HomeHero } from "@/components/sections/HomeHero"
 import { HomeServices } from "@/components/sections/HomeServices"
+import { LogoRipple } from "@/components/atoms/LogoRipple"
 
 type Params = Promise<{ locale: string }>
 
@@ -43,6 +44,8 @@ export default async function HomePage({ params }: { params: Params }) {
        overflow-hidden prevents any accidental scroll.
        Mobile: natural document flow, no height constraint.             */
     <main className="lg:h-[calc(100dvh-93px)] lg:flex lg:flex-col lg:overflow-hidden">
+      {/* z-0 fixed layer — below all content (same step-6, earlier DOM → paints first) */}
+      <LogoRipple />
       <HomeHero />
       <HomeServices />
     </main>

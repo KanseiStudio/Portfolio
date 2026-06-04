@@ -1,13 +1,11 @@
 import { getTranslations } from "next-intl/server"
 import { HomeFlowerOrbit } from "@/components/atoms/HomeFlowerOrbit"
-import { LogoRipple } from "@/components/atoms/LogoRipple"
 
 export async function HomeHero() {
   const t = await getTranslations("Home")
 
   return (
     <section className="relative w-full flex-1 min-h-0 overflow-hidden">
-      <LogoRipple />
 
       {/* ── Desktop (lg+) ───────────────────────────────────────────────── */}
       <div className="hidden lg:block absolute inset-0 z-10">

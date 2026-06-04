@@ -1,19 +1,6 @@
 /**
  * HomeFlowerOrbit — static orbit rings + centred flower image.
- * Server Component (no "use client") — zero JS shipped for this element.
- *
- * Orbit anatomy (viewBox 0 0 500 500, square):
- *   outer ring  r=242  opacity 0.20  solid
- *   ring 2      r=192  opacity 0.10  dashed
- *   ring 3      r=140  opacity 0.13  solid
- *   ring 4      r=88   opacity 0.08  dashed
- *   crosshair   opacity 0.09  dashed
- *   cardinal ticks + dots
- *   particle dots scattered
- *
- * Flower: /images/home-flower.png  mix-blend-mode:screen
- *   (transparent PNG → no blend needed; screen is harmless on transparent pixels)
- *   gradient mask hides wordmark at bottom of dev-placeholder image.
+ * Server Component — zero JS shipped for this element.
  */
 
 export function HomeFlowerOrbit() {

@@ -1,76 +1,69 @@
 "use client"
 
 /**
- * HomeRipple — "cerchi nell'acqua" expanding from the flower centre.
+ * LogoRipple — onde che si propagano dal centro del fiore su tutta la pagina.
  *
- * Rules:
- * - Pure CSS animation: transform:scale, NO SVG r attribute animation.
- * - NO runtime React state updates (only reducedMotion, set once on mount).
- * - NO dynamic keys, NO Math.random(), NO useMemo dependent on mounted.
- * - 4 circles with fixed animation-delay → loop continuo senza flicker.
- * - pointer-events:none, absolute inset-0, z-index below content.
+ * Anti-flicker rules:
+ * - useMemo per i delay/duration casuali: calcolati ONCE al mount, mai a ogni render.
+ * - Span statici (key=indice fisso), nessun state per-frame, nessun rAF/setInterval.
+ * - Animazione pura CSS: transform:scale + opacity via @keyframes.
+ * - fixed inset-0: bypassa overflow:hidden su qualsiasi antenato.
+ * - Originate dal centro del fiore (~72%/42% del viewport).
  */
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 export function LogoRipple() {
-  const [reducedMotion, setReducedMotion] = useState(false)
+  const [reduced, setReduced] = useState(false)
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-    setReducedMotion(mq.matches)
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches)
-    mq.addEventListener("change", handler)
-    return () => mq.removeEventListener("change", handler)
+    setReduced(mq.matches)
+    const h = (e: MediaQueryListEvent) => setReduced(e.matches)
+    mq.addEventListener("change", h)
+    return () => mq.removeEventListener("change", h)
   }, [])
 
-  if (reducedMotion) return null
+  // Tempi casuali STABILI — calcolati una volta al mount, mai ricreati (no flicker)
+  const rings = useMemo(
+    () =>
+      Array.from({ length: 6 }, () => ({
+        delay:    Math.random() * 7,
+        duration: 7 + Math.random() * 4, // 7–11 s
+      })),
+    []
+  )
+
+  if (reduced) return null
 
   return (
     <div
-      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-0 overflow-visible"
       aria-hidden="true"
     >
-      {/*
-        viewBox 0 0 1440 800 — proportioned to a standard desktop section.
-        cx = 1024 ≈ 71 % of 1440 → visual centre of the right 7/12 column.
-        cy = 400 → vertical centre of the 800-unit-tall section.
-        r  = 80 SVG units = starting radius (tiny dot effect at scale 1).
-        Each circle uses transform:scale via CSS @keyframes:
-          scale(1) → invisible speck;  scale(17) → r≈1360, covers full viewport.
-        transformBox:fill-box + transformOrigin:center → scales from each
-        circle's own centre, not the SVG origin — correct ripple behaviour.
-      */}
-      <svg
-        viewBox="0 0 1440 800"
-        className="absolute inset-0 w-full h-full"
-        preserveAspectRatio="xMidYMid slice"
-        fill="none"
-      >
-        {([0, 1.5, 3, 4.5] as const).map((delay, i) => (
-          <circle
+      {/* Origine ancorata al centro del fiore — lato destro della Home */}
+      <div className="absolute" style={{ left: "72%", top: "42%" }}>
+        {rings.map((r, i) => (
+          <span
             key={i}
-            cx="1024" cy="400" r="80"
-            stroke="white" strokeOpacity="0.18" strokeWidth="1"
-            opacity="0"
+            className="absolute rounded-full border border-white/15"
             style={{
-              animation:       "homeRipple 6s ease-out infinite",
-              animationDelay:  `${delay}s`,
-              transformBox:    "fill-box",
-              transformOrigin: "center",
+              width:          "420px",
+              height:         "420px",
+              animation:      `pageRipple ${r.duration}s linear infinite`,
+              animationDelay: `${r.delay}s`,
             }}
           />
         ))}
+      </div>
 
-        {/* Scoped keyframe — no global name collision */}
-        <style>{`
-          @keyframes homeRipple {
-            0%   { transform: scale(1);  opacity: 0;    }
-            8%   {                        opacity: 0.22; }
-            100% { transform: scale(17); opacity: 0;    }
-          }
-        `}</style>
-      </svg>
+      <style>{`
+        @keyframes pageRipple {
+          0%   { transform: translate(-50%,-50%) scale(.15); opacity: 0;   }
+          8%   {                                              opacity: .35; }
+          100% { transform: translate(-50%,-50%) scale(6);   opacity: 0;   }
+        }
+      `}</style>
     </div>
   )
 }
