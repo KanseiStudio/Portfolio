@@ -3,6 +3,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl"
 import { notFound } from "next/navigation"
 import { routing } from "@/i18n/routing"
 import { InstrumentFrame } from "@/components/chrome/InstrumentFrame"
+import { getSiteSettings } from "@/lib/site-settings"
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -22,11 +23,14 @@ export default async function LocaleLayout({
   }
 
   setRequestLocale(locale)
-  const messages = await getMessages()
+  const [messages, settings] = await Promise.all([getMessages(), getSiteSettings()])
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <InstrumentFrame>
+      <InstrumentFrame
+        musicUrl={settings?.musicUrl ?? null}
+        musicEnabled={settings?.musicEnabled ?? false}
+      >
         {children}
       </InstrumentFrame>
     </NextIntlClientProvider>

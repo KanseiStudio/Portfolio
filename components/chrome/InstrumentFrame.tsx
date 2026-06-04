@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { Link, usePathname, useRouter } from "@/i18n/routing"
 import { routing } from "@/i18n/routing"
 import { Logo } from "@/components/atoms/Logo"
+import { BackgroundMusic } from "@/components/chrome/BackgroundMusic"
 import { cn } from "@/lib/utils"
 
 type Locale = "it" | "en"
@@ -29,6 +30,8 @@ interface InstrumentFrameProps {
   lat?: string
   lon?: string
   tz?: string
+  musicUrl?: string | null
+  musicEnabled?: boolean
 }
 
 export function InstrumentFrame({
@@ -36,6 +39,8 @@ export function InstrumentFrame({
   lat = "41°54'N",
   lon = "12°24'E",
   tz  = "UTC+01 ROME",
+  musicUrl,
+  musicEnabled = false,
 }: InstrumentFrameProps) {
   const t        = useTranslations("Nav")
   const locale   = useLocale() as Locale
@@ -413,6 +418,11 @@ export function InstrumentFrame({
           </span>
         </div>
       </div>
+
+      {/* ══ BACKGROUND MUSIC ════════════════════════════════════════════════ */}
+      {musicEnabled && musicUrl && (
+        <BackgroundMusic musicUrl={musicUrl} />
+      )}
 
       {/* ══ CONTENT ═════════════════════════════════════════════════════════ */}
       <div className="pt-[53px] md:pb-[40px]">

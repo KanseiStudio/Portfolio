@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { FolderOpen, Tags, TrendingUp, LogOut, Globe, Zap } from "lucide-react"
+import { FolderOpen, Tags, TrendingUp, LogOut, Globe, Zap, Settings2 } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { logoutAction } from "@/app/admin/_actions/auth"
 import { Container } from "@/components/atoms/Container"
@@ -95,6 +95,11 @@ export default async function AdminDashboardPage() {
             title="Gestisci tecnologie"
             description="Aggiungi e aggiorna i software e sistemi con immagini e descrizioni"
             href="/admin/technologies"
+          />
+          <ActionCard
+            title="Impostazioni sito"
+            description="Configura la musica ambientale e altre opzioni globali del sito"
+            href="/admin/settings"
           />
         </div>
 

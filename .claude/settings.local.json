@@ -94,7 +94,10 @@
       "Bash(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
       "Bash(Select-Object Id, CPU, ProcessName)",
       "Bash(Format-Table)",
-      "Bash(git show *)"
+      "Bash(git show *)",
+      "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\User\\\\Kansei_Projects\\\\kansei-studio\\\\app\\\\admin\\\\settings\")",
+      "Bash(Out-Null)",
+      "Bash(Write-Host \"ok\")"
     ]
   },
   "enableAllProjectMcpServers": true,

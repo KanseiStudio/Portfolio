@@ -170,6 +170,17 @@ model ContactInfoTranslation {
   @@map("contact_info_translations")
 }
 
+// ---------- Site Settings (singleton) ----------
+
+model SiteSettings {
+  id           String   @id @default("singleton")
+  musicUrl     String?  @map("music_url") @db.VarChar(500)
+  musicEnabled Boolean  @default(false) @map("music_enabled")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
 // ---------- Contact Channels ----------
 
 model ContactChannel {
