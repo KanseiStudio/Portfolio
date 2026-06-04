@@ -270,11 +270,11 @@ export function InstrumentFrame({
         aria-hidden="true"
       >
         {/* STATUS / ONLINE */}
-        <div className="absolute top-5 left-4 xl:left-6 flex flex-col gap-[5px]">
-          <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/28 leading-none">
+        <div className="absolute top-4 left-4 xl:left-6 flex flex-col gap-[5px]">
+          <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/35 leading-none">
             STATUS
           </span>
-          <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/65 leading-none flex items-center gap-1.5">
+          <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/70 leading-none flex items-center gap-1.5">
             {mounted && (
               <motion.span
                 className="block w-[5px] h-[5px] rounded-full bg-[#4ADE80] shrink-0"
@@ -286,28 +286,53 @@ export function InstrumentFrame({
           </span>
         </div>
 
-        {/* Vertical dashed line */}
+        {/* Dot at rail top */}
         <div
-          className="absolute left-[19px] xl:left-[21px] border-l border-dashed border-[#F5F4F0]/10"
-          style={{ top: 68, bottom: 68 }}
+          className="absolute left-[18px] xl:left-[20px] w-[3px] h-[3px] rounded-full bg-[#F5F4F0]/30"
+          style={{ top: 66 }}
         />
 
-        {/* Cursor mark at ~30 % */}
+        {/* Vertical dashed line */}
         <div
-          className="absolute left-[13px] xl:left-[15px]"
-          style={{ top: "calc(68px + 28%)" }}
+          className="absolute left-[19px] xl:left-[21px] border-l border-dashed border-[#F5F4F0]/18"
+          style={{ top: 70, bottom: 70 }}
+        />
+
+        {/* Ring at ~50% — small circle outline */}
+        <div
+          className="absolute w-[9px] h-[9px] rounded-full border border-[#F5F4F0]/22"
+          style={{
+            left: "calc(19px - 4px)",
+            top: "calc(70px + 48%)",
+            transform: "translateY(-50%)",
+          }}
+        />
+
+        {/* Diagonal notch at ~65% */}
+        <div
+          className="absolute"
+          style={{ left: "14px", top: "calc(70px + 65%)" }}
         >
-          <div className="w-[12px] h-px bg-[#F5F4F0]/28" />
+          <div
+            className="w-[9px] h-px bg-[#F5F4F0]/20"
+            style={{ transform: "rotate(-35deg)", transformOrigin: "left center" }}
+          />
         </div>
 
+        {/* Dot at rail bottom */}
+        <div
+          className="absolute left-[18px] xl:left-[20px] w-[3px] h-[3px] rounded-full bg-[#F5F4F0]/20"
+          style={{ bottom: 70 }}
+        />
+
         {/* SEED */}
-        <div className="absolute bottom-5 left-4 xl:left-6 flex flex-col gap-[3px]">
-          <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/22 leading-none">
+        <div className="absolute bottom-4 left-4 xl:left-6 flex flex-col gap-[3px]">
+          <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/28 leading-none">
             SEED
           </span>
           {mounted && (
-            <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/30 leading-none">
-              #0x{seed}
+            <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/38 leading-none">
+              K·0X{seed}
             </span>
           )}
         </div>
@@ -318,10 +343,14 @@ export function InstrumentFrame({
         className="fixed top-[63px] right-4 lg:right-8 xl:right-12 z-30 pointer-events-none hidden md:block text-right"
         aria-hidden="true"
       >
-        {[`+ LAT  ${lat}`, `+ LON  ${lon}`, `+ ${tz}`].map((line) => (
+        {[
+          `LAT  41.8934°N`,
+          `LON  12.4827°E`,
+          `UTC+1  ROME`,
+        ].map((line) => (
           <div
             key={line}
-            className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/28 leading-snug"
+            className="font-mono text-[8px] uppercase tracking-[0.12em] text-[#F5F4F0]/32 leading-snug"
           >
             {line}
           </div>
@@ -334,44 +363,55 @@ export function InstrumentFrame({
           className="fixed bottom-[52px] right-4 lg:right-8 xl:right-12 z-30 pointer-events-none hidden lg:block text-right tabular-nums"
           aria-hidden="true"
         >
-          <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/28 leading-snug">
+          <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/32 leading-snug">
             CYCLES {cyclesStr}/99999
           </div>
-          <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/28 leading-snug">
+          <div className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#F5F4F0]/32 leading-snug">
             UPTIME {uptime}
           </div>
         </div>
       )}
 
-      {/* ══ BOTTOM TICKER — hidden below md (covers content on narrow viewports) */}
+      {/* ══ BOTTOM TICKER ═══════════════════════════════════════════════════ */}
       <div
         className="max-md:hidden fixed inset-x-0 bottom-0 h-[40px] z-30 pointer-events-none"
         aria-hidden="true"
       >
         {/* Top hairline */}
-        <div className="absolute inset-x-0 top-0 h-px bg-[#F5F4F0]/10" />
+        <div className="absolute inset-x-0 top-0 h-px bg-[#F5F4F0]/14" />
 
-        {/* Corner brackets */}
-        <div className="absolute top-1.5 left-4 lg:left-8 w-[10px] h-[10px] border-t border-l border-[#F5F4F0]/28" />
-        <div className="absolute top-1.5 right-4 lg:right-8 w-[10px] h-[10px] border-t border-r border-[#F5F4F0]/28" />
-        <div className="absolute bottom-1.5 left-4 lg:left-8 w-[10px] h-[10px] border-b border-l border-[#F5F4F0]/28" />
-        <div className="absolute bottom-1.5 right-4 lg:right-8 w-[10px] h-[10px] border-b border-r border-[#F5F4F0]/28" />
+        {/* Corner "+" crosshairs — four corners */}
+        {(["top-[6px] left-4 lg:left-8", "top-[6px] right-4 lg:right-8",
+           "bottom-[6px] left-4 lg:left-8", "bottom-[6px] right-4 lg:right-8"] as const
+        ).map((pos) => (
+          <span
+            key={pos}
+            className={`absolute font-mono text-[10px] leading-none text-[#F5F4F0]/30 select-none ${pos}`}
+            style={{ transform: "translate(-35%, -35%)" }}
+          >
+            +
+          </span>
+        ))}
 
-        {/* Segmented lines flanking the clock */}
-        <div className="absolute left-11 lg:left-16 right-[54%] top-1/2 -translate-y-1/2 border-t border-dashed border-[#F5F4F0]/10" />
-        <div className="absolute left-[54%] right-11 lg:right-16 top-1/2 -translate-y-1/2 border-t border-dashed border-[#F5F4F0]/10" />
+        {/* Segmented dashed lines flanking the clock */}
+        <div className="absolute left-10 lg:left-14 right-[54%] top-1/2 -translate-y-1/2 border-t border-dashed border-[#F5F4F0]/12" />
+        <div className="absolute left-[54%] right-10 lg:right-14 top-1/2 -translate-y-1/2 border-t border-dashed border-[#F5F4F0]/12" />
 
-        {/* Clock */}
+        {/* Clock — centred */}
         {time && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-[#F5F4F0]/50 tabular-nums select-none">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[#F5F4F0]/55 tabular-nums select-none">
               [ {time} CET ]
             </span>
           </div>
         )}
 
-        {/* Right signal dot */}
-        <div className="absolute right-6 lg:right-12 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#F5F4F0]/22" />
+        {/* · · · right of clock */}
+        <div className="absolute right-5 lg:right-10 top-1/2 -translate-y-1/2">
+          <span className="font-mono text-[9px] tracking-[0.35em] text-[#F5F4F0]/28 select-none">
+            · · ·
+          </span>
+        </div>
       </div>
 
       {/* ══ CONTENT ═════════════════════════════════════════════════════════ */}

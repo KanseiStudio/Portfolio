@@ -235,11 +235,11 @@
   font-family: var(--font-n27), system-ui, sans-serif;
 }
 
-/* ── Concentric ripple rings (Home visual) ── */
-@keyframes ks-ripple {
-  0%   { transform: scale(0.05); opacity: 0.6; }
-  60%  { opacity: 0.18; }
-  100% { transform: scale(1.75); opacity: 0; }
+/* ── Concentric ripple rings — full-page overlay (Home) ── */
+@keyframes ks-ripple-full {
+  0%   { transform: scale(0.01); opacity: 0.55; }
+  35%  { opacity: 0.15; }
+  100% { transform: scale(1);    opacity: 0; }
 }
 
 /* ── Tree logo wind animation ── */
