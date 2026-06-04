@@ -1,7 +1,6 @@
 {
   "Nav": {
     "about": "About",
-    "projects": "Projects",
     "technologies": "Technologies",
     "contact": "Contact",
     "menuOpen": "Open menu",
@@ -23,43 +22,43 @@
       "title": "Immersive Interfaces",
       "description": "We design immersive interfaces and AR/VR experiences that push the boundaries of human-computer interaction.",
       "bullets": [
-        "Wireframing and prototyping",
-        "Unreal / Unity system based",
-        "Biometric recognition systems",
-        "Touchdesigner and Playable interfaces"
+        "UX/UI Design",
+        "AR / VR Experiences",
+        "Haptic & Multisensory Design",
+        "Real-time Interaction"
       ]
     },
     "service02": {
       "number": "02",
       "title": "Intelligent Experiences",
-      "description": "Sensory systems for stadiums, museums, and events. Data-driven installations that respond to human presence.",
+      "description": "Adaptive AI-driven systems that learn from human behaviour and generate personalised narratives.",
       "bullets": [
-        "Design of digital experiential spaces",
-        "Design and creation of immersive rooms",
-        "Automated systems for interactive environments",
-        "Reactive Space"
+        "AI & Emotional Intelligence",
+        "Adaptive Systems",
+        "Data-driven Narratives",
+        "Personalization Engine"
       ]
     },
     "service03": {
       "number": "03",
       "title": "Interactive Installations",
-      "description": "Intelligent environments and adaptive interfaces built on top of modern AI primitives.",
+      "description": "Generative environments and spatial experiences that respond to audience presence in real time.",
       "bullets": [
-        "AI Automation Agency",
-        "Multi-Agent Systems for Autonomous Companies",
-        "Intelligent Digital Twin",
-        "AI Control Room"
+        "Generative Installations",
+        "Spatial Computing",
+        "Sound & Light Interaction",
+        "Audience Awareness"
       ]
     },
     "service04": {
       "number": "04",
       "title": "Cross-Environment Systems",
-      "description": "Experiences that span physical and digital — from shopping malls to large-scale stadium installations.",
+      "description": "IoT and cloud architectures that unify the physical and digital into one coherent, scalable system.",
       "bullets": [
-        "Shopping malls",
-        "Exhibition areas",
-        "Museums",
-        "Stadiums"
+        "IoT & Edge Systems",
+        "Cloud Architecture",
+        "Digital Twin",
+        "System Integration"
       ]
     }
   },

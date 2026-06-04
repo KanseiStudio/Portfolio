@@ -1,6 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server"
 import { prisma } from "@/lib/prisma"
-import { Container } from "@/components/atoms/Container"
 import { HairlineDivider } from "@/components/atoms/HairlineDivider"
 import { TechnologyCard } from "@/components/molecules/TechnologyCard"
 import type { TechnologyCardData } from "@/components/molecules/TechnologyCard"
@@ -47,15 +46,16 @@ export default async function TechnologiesPage({
   return (
     <main>
 
-      {/* ── Page header ────────────────────────────────────────── */}
-      <Container as="section" className="pt-16 lg:pt-24 pb-12 lg:pb-16">
-        <div className="grid grid-cols-12 gap-6 items-end">
+      {/* ── Page header — full-width, px matches HUD rail ─────── */}
+      <section className="w-full px-6 lg:px-16 pt-16 lg:pt-24 pb-12 lg:pb-16">
+        <div className="flex items-end justify-between gap-6">
 
-          <div className="col-span-12 lg:col-span-8 flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#F5F4F0]/35">
               {t("sectionLabel")}
             </p>
-            <h1 className="font-display font-normal leading-[0.92] tracking-[-0.025em] text-[#F5F4F0] text-[clamp(3rem,7vw,6rem)]">
+            <h1 className="font-fraunces font-normal text-[#F5F4F0]"
+                style={{ fontSize: "clamp(2.25rem, 3.8vw, 3.75rem)", lineHeight: "0.95", letterSpacing: "-0.015em" }}>
               {t("title")}
             </h1>
             <p className="font-n27 font-light text-base lg:text-lg leading-relaxed text-[#F5F4F0]/55 max-w-xl mt-2">
@@ -63,26 +63,23 @@ export default async function TechnologiesPage({
             </p>
           </div>
 
-          {/* Count badge */}
-          <div className="col-span-12 lg:col-span-4 lg:text-right">
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#F5F4F0]/25">
-              {String(technologies.length).padStart(2, "0")} / 04
-            </span>
-          </div>
+          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#F5F4F0]/25 shrink-0 pb-1">
+            {String(technologies.length).padStart(2, "0")} / 04
+          </span>
 
         </div>
-      </Container>
+      </section>
 
-      <HairlineDivider className="my-0 border-[#F5F4F0]/10" />
+      <HairlineDivider className="my-0 border-[#F5F4F0]/20" />
 
-      {/* ── 2×2 grid ───────────────────────────────────────────── */}
-      <Container className="py-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-[#F5F4F0]/8">
+      {/* ── 2×2 grid — contained (px-16), real gap, cards bordered ─ */}
+      <div className="px-6 lg:px-16 py-8 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-6">
           {shaped.map((tech) => (
             <TechnologyCard key={tech.slug} tech={tech} labels={labels} />
           ))}
         </div>
-      </Container>
+      </div>
 
     </main>
   )

@@ -62,9 +62,10 @@
   --color-ks-hairline: rgba(10, 10, 10, 0.12);
   /* Contextual hairline: overridden to light value inside .dark-section */
   --color-ks-hairline-active: rgba(10, 10, 10, 0.12);
+  --color-ks-hairline-strong: rgba(245, 244, 240, 0.40);
 
   /* Font families → font-display, font-body */
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-n27), system-ui, sans-serif;
   --font-body: var(--font-geist-sans), "Helvetica Neue", Arial, sans-serif;
 
   /* Typography scale with default line-height and letter-spacing modifiers.
@@ -226,13 +227,18 @@
   }
 
   .dark-section {
-    --color-ks-hairline-active: rgba(245, 244, 240, 0.16);
+    --color-ks-hairline-active: rgba(245, 244, 240, 0.24);
   }
 }
 
 /* font-n27 utility — uses the CSS variable injected by next/font/local on <html> */
 @utility font-n27 {
   font-family: var(--font-n27), system-ui, sans-serif;
+}
+
+/* font-fraunces utility — Fraunces serif loaded in app/layout.tsx */
+@utility font-fraunces {
+  font-family: var(--font-fraunces), Georgia, serif;
 }
 
 

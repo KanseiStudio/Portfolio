@@ -16,7 +16,7 @@ export function Logo({ size = 28, className, alt = "Kansei Studio", onDark = fal
       style={{ width: size, height: size }}
     >
       <Image
-        src="/Logo_Kansei.png"
+        src="/images/home-flower.png"
         alt={alt}
         width={size}
         height={size}

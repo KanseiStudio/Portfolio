@@ -1,5 +1,3 @@
-import { cn } from "@/lib/utils"
-
 export interface TechnologyCardData {
   number: string
   slug: string
@@ -26,152 +24,163 @@ interface TechnologyCardProps {
 }
 
 export function TechnologyCard({ tech, labels }: TechnologyCardProps) {
-  const usageImages = [tech.usageImage1, tech.usageImage2, tech.usageImage3].filter(Boolean) as string[]
-  const hasUsageImages = usageImages.length > 0
+  const usageImages = [tech.usageImage1, tech.usageImage2, tech.usageImage3]
+  const hasUsage    = usageImages.some(Boolean)
+  const hasLower    = hasUsage || Boolean(tech.videoUrl)
 
   return (
-    <article className="bg-[#0A0A0A] flex flex-col border border-[#F5F4F0]/10">
+    <article className="bg-[#0A0A0A] border border-[#F5F4F0]/20 flex flex-col">
 
-      {/* ── Header row ─────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-[#F5F4F0]/10">
-        <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#F5F4F0]/30">
+      {/* ── Header: "0N" left · ↗ right ──────────────────────────── */}
+      <div className="flex items-center justify-between px-5 py-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.16em]
+                         text-[#F5F4F0]/35 leading-none">
           {tech.number}
         </span>
-        <div className="flex items-center gap-3">
-          <span className="font-n27 font-semibold text-base tracking-tight text-[#F5F4F0]">
-            {tech.name}
-          </span>
-          {tech.videoUrl && (
-            <a
-              href={tech.videoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${tech.name} — video`}
-              className="flex items-center justify-center w-6 h-6 border border-[#F5F4F0]/25 text-[#F5F4F0]/50 hover:border-[#F5F4F0]/55 hover:text-[#F5F4F0]/90 transition-colors duration-300"
-            >
-              <span className="text-[11px] leading-none" aria-hidden="true">↗</span>
-            </a>
-          )}
-        </div>
+        {tech.videoUrl ? (
+          <a
+            href={tech.videoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${tech.name} — video`}
+            className="text-[#F5F4F0]/45 hover:text-[#F5F4F0] transition-colors
+                       duration-200 leading-none text-lg"
+          >
+            ↗
+          </a>
+        ) : (
+          <span className="w-4" aria-hidden="true" />
+        )}
       </div>
 
-      {/* ── Main body: image left + text right ─────────────────── */}
-      <div className="flex flex-col sm:flex-row flex-1">
+      {/* ── Upper body: mainImage (55%) | name + text (45%) ───────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-[11fr_9fr]
+                      border-t border-[#F5F4F0]/20">
 
-        {/* Left: mainImage or placeholder */}
-        <div className="sm:w-[42%] shrink-0 border-b sm:border-b-0 sm:border-r border-[#F5F4F0]/10">
+        {/* Left: mainImage with uniform padding — image never touches card edge */}
+        <div className="border-b lg:border-b-0 lg:border-r border-[#F5F4F0]/20 p-3">
           {tech.mainImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={tech.mainImage}
               alt={tech.name}
-              className="w-full h-full object-cover aspect-video sm:aspect-auto sm:min-h-[200px]"
+              className="w-full object-cover border border-[#F5F4F0]/20"
+              style={{ aspectRatio: "16 / 10", display: "block" }}
             />
           ) : (
             <div
-              className={cn(
-                "w-full aspect-video sm:aspect-auto sm:h-full sm:min-h-[160px]",
-                "bg-[#080808] flex flex-col items-center justify-center gap-2",
-                "relative overflow-hidden"
-              )}
+              className="w-full bg-[#0D0D0D] border border-[#F5F4F0]/12 flex items-center justify-center"
+              style={{ aspectRatio: "16 / 10" }}
             >
-              {/* Subtle dot-grid pattern */}
-              <svg
-                className="absolute inset-0 w-full h-full opacity-[0.04]"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <pattern id={`dot-${tech.slug}`} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <circle cx="1" cy="1" r="1" fill="white" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill={`url(#dot-${tech.slug})`} />
-              </svg>
-              <span className="relative font-mono text-[9px] uppercase tracking-[0.18em] text-[#F5F4F0]/18">
+              <span className="font-mono text-[9px] uppercase tracking-[0.18em]
+                               text-[#F5F4F0]/15">
                 {tech.slug}
               </span>
             </div>
           )}
         </div>
 
-        {/* Right: description + applications */}
-        <div className="sm:flex-1 flex flex-col px-5 py-5 gap-4">
+        {/* Right: name (Fraunces) + DESCRIZIONE + APPLICAZIONI */}
+        <div className="flex flex-col gap-5 px-6 py-5">
 
-          {/* Description */}
-          <div className="flex flex-col gap-2">
-            <span className="font-mono text-[8px] uppercase tracking-[0.16em] text-[#F5F4F0]/30">
+          <h2
+            className="font-fraunces font-normal text-[#F5F4F0] leading-[0.95]
+                       tracking-[-0.01em]"
+            style={{ fontSize: "clamp(1.75rem, 2.5vw, 2.75rem)" }}
+          >
+            {tech.name}
+          </h2>
+
+          <div className="flex flex-col gap-[6px]">
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em]
+                             text-[#F5F4F0]/35">
               {labels.descriptionLabel}
             </span>
-            <p className="font-n27 font-light text-sm leading-relaxed text-[#F5F4F0]/70">
-              {tech.description || <span className="opacity-30 italic">—</span>}
+            <p className="font-n27 font-light text-sm leading-relaxed
+                           text-[#F5F4F0]/70">
+              {tech.description}
             </p>
           </div>
 
-          {/* Hairline */}
-          <div className="border-t border-[#F5F4F0]/10" />
-
-          {/* Applications */}
-          <div className="flex flex-col gap-2">
-            <span className="font-mono text-[8px] uppercase tracking-[0.16em] text-[#F5F4F0]/30">
+          <div className="flex flex-col gap-[6px]">
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em]
+                             text-[#F5F4F0]/35">
               {labels.applicationsLabel}
             </span>
-            <p className="font-mono text-[10px] uppercase tracking-wider text-[#F5F4F0]/50 leading-relaxed">
-              {tech.applications || <span className="opacity-30 italic">—</span>}
+            <p className="font-n27 font-light text-sm leading-relaxed
+                           text-[#F5F4F0]/70">
+              {tech.applications}
             </p>
           </div>
 
         </div>
       </div>
 
-      {/* ── Usage images ───────────────────────────────────────── */}
-      {hasUsageImages && (
-        <>
-          <div className="border-t border-[#F5F4F0]/10" />
-          <div className="px-5 py-4 flex flex-col gap-3">
-            <span className="font-mono text-[8px] uppercase tracking-[0.16em] text-[#F5F4F0]/30">
-              {labels.usedInLabel}
-            </span>
-            <div className="grid grid-cols-3 gap-2">
-              {[tech.usageImage1, tech.usageImage2, tech.usageImage3].map((img, i) =>
-                img ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={i}
-                    src={img}
-                    alt=""
-                    className="w-full aspect-video object-cover"
-                  />
-                ) : (
-                  <div
-                    key={i}
-                    className="w-full aspect-video bg-[#111] border border-[#F5F4F0]/8"
-                  />
-                )
-              )}
-            </div>
-          </div>
-        </>
-      )}
+      {/* ── Lower body: usage thumbnails (55%) | video URL (45%) ──── */}
+      {hasLower && (
+        <div className="grid grid-cols-1 lg:grid-cols-[11fr_9fr]
+                        border-t border-[#F5F4F0]/20">
 
-      {/* ── Video URL bar ───────────────────────────────────────── */}
-      {tech.videoUrl && (
-        <>
-          <div className="border-t border-[#F5F4F0]/10" />
-          <div className="px-5 py-3 flex items-center gap-3">
-            <span className="font-mono text-[8px] uppercase tracking-[0.16em] text-[#F5F4F0]/30 shrink-0">
-              {labels.videoLabel}
-            </span>
-            <a
-              href={tech.videoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-mono text-[9px] text-[#F5F4F0]/40 hover:text-[#F5F4F0]/70 transition-colors duration-300 truncate"
-            >
-              {tech.videoUrl}
-            </a>
-            <span className="ml-auto font-mono text-[10px] text-[#F5F4F0]/30">↗</span>
+          {/* Left: usage images */}
+          <div className="px-5 py-4 flex flex-col gap-3
+                          border-b lg:border-b-0 lg:border-r border-[#F5F4F0]/20">
+            {hasUsage && (
+              <>
+                <span className="font-mono text-[9px] uppercase tracking-[0.18em]
+                                 text-[#F5F4F0]/35">
+                  {labels.usedInLabel}
+                </span>
+                <div className="grid grid-cols-3 gap-2">
+                  {usageImages.map((img, i) =>
+                    img ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={i}
+                        src={img}
+                        alt=""
+                        className="w-full aspect-video object-cover
+                                   border border-[#F5F4F0]/20"
+                      />
+                    ) : null
+                  )}
+                </div>
+              </>
+            )}
           </div>
-        </>
+
+          {/* Right: video URL box */}
+          <div className="px-5 py-4 flex flex-col gap-3">
+            {tech.videoUrl && (
+              <>
+                <span className="font-mono text-[9px] uppercase tracking-[0.18em]
+                                 text-[#F5F4F0]/35">
+                  {labels.videoLabel}
+                </span>
+                <a
+                  href={tech.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between gap-3 px-4 py-3
+                             border border-[#F5F4F0]/20
+                             hover:border-[#F5F4F0]/40 transition-colors
+                             duration-200 group"
+                >
+                  <span className="font-mono text-[9px] text-[#F5F4F0]/50
+                                   group-hover:text-[#F5F4F0]/70 truncate
+                                   transition-colors duration-200">
+                    {tech.videoUrl}
+                  </span>
+                  <span className="shrink-0 text-[#F5F4F0]/40
+                                   group-hover:text-[#F5F4F0]/70
+                                   transition-colors duration-200 text-[11px]">
+                    ↗
+                  </span>
+                </a>
+              </>
+            )}
+          </div>
+
+        </div>
       )}
 
     </article>

@@ -1,16 +1,17 @@
 import Link from "next/link"
-import { FolderOpen, Tags, TrendingUp, LogOut, Globe } from "lucide-react"
+import { FolderOpen, Tags, TrendingUp, LogOut, Globe, Zap } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { logoutAction } from "@/app/admin/_actions/auth"
 import { Container } from "@/components/atoms/Container"
 import { HairlineDivider } from "@/components/atoms/HairlineDivider"
 
 export default async function AdminDashboardPage() {
-  const [totalProjects, publishedProjects, totalCategories, latestProjects] =
+  const [totalProjects, publishedProjects, totalCategories, totalTechnologies, latestProjects] =
     await Promise.all([
       prisma.project.count(),
       prisma.project.count({ where: { published: true } }),
       prisma.category.count(),
+      prisma.technology.count(),
       prisma.project.findMany({
         orderBy: { updatedAt: "desc" },
         take: 5,
@@ -56,7 +57,7 @@ export default async function AdminDashboardPage() {
           Benvenuto.
         </h1>
         <p className="mt-6 text-base font-body opacity-80 max-w-md">
-          Da qui puoi gestire progetti e categorie del sito.
+          Da qui puoi gestire progetti, categorie e tecnologie del sito.
         </p>
 
         {/* Stats grid */}
@@ -68,6 +69,7 @@ export default async function AdminDashboardPage() {
             value={`${publishedProjects} / ${totalProjects}`}
           />
           <StatCard icon={Tags} label="Categorie" value={String(totalCategories)} />
+          <StatCard icon={Zap} label="Tecnologie" value={String(totalTechnologies)} />
         </div>
 
         <HairlineDivider />
@@ -88,6 +90,11 @@ export default async function AdminDashboardPage() {
             title="Gestisci contatti"
             description="Modifica email, social e informazioni dello studio"
             href="/admin/contact"
+          />
+          <ActionCard
+            title="Gestisci tecnologie"
+            description="Aggiungi e aggiorna i software e sistemi con immagini e descrizioni"
+            href="/admin/technologies"
           />
         </div>
 

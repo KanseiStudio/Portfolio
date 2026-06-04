@@ -1,10 +1,10 @@
 import Link from "next/link"
-import { Globe, LogOut, FolderOpen, Tags, AtSign } from "lucide-react"
+import { Globe, LogOut, FolderOpen, Tags, AtSign, Zap } from "lucide-react"
 import { Container } from "@/components/atoms/Container"
 import { logoutAction } from "@/app/admin/_actions/auth"
 
 interface AdminHeaderProps {
-  active?: "projects" | "categories" | "contact" | "dashboard"
+  active?: "projects" | "categories" | "contact" | "technologies" | "dashboard"
 }
 
 export function AdminHeader({ active }: AdminHeaderProps) {
@@ -39,6 +39,13 @@ export function AdminHeader({ active }: AdminHeaderProps) {
           >
             <AtSign size={14} strokeWidth={1.5} />
             <span>Contatti</span>
+          </Link>
+          <Link
+            href="/admin/technologies"
+            className={`inline-flex items-center gap-1.5 text-small font-medium hover:underline underline-offset-4 ${active === "technologies" ? "opacity-100" : "opacity-60"}`}
+          >
+            <Zap size={14} strokeWidth={1.5} />
+            <span>Tecnologie</span>
           </Link>
         </nav>
 

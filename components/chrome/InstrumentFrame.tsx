@@ -20,7 +20,6 @@ function stripLocalePrefix(pathname: string, locales: readonly string[]): string
 
 const NAV_HREFS = [
   "/about",
-  "/projects",
   "/technologies",
   "/contact",
 ] as const
@@ -45,9 +44,8 @@ export function InstrumentFrame({
 
   const nav = [
     { href: NAV_HREFS[0], label: t("about")        },
-    { href: NAV_HREFS[1], label: t("projects")      },
-    { href: NAV_HREFS[2], label: t("technologies")  },
-    { href: NAV_HREFS[3], label: t("contact")       },
+    { href: NAV_HREFS[1], label: t("technologies")  },
+    { href: NAV_HREFS[2], label: t("contact")       },
   ] as const
 
   const [mounted,    setMounted]    = useState(false)
@@ -120,7 +118,7 @@ export function InstrumentFrame({
 
       {/* ══ HEADER ══════════════════════════════════════════════════════════ */}
       <header className="fixed inset-x-0 top-0 z-50 bg-[#0A0A0A]/95 backdrop-blur-[6px]">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 h-[52px] flex items-center justify-between gap-6">
+        <div className="w-full px-6 lg:px-16 h-[52px] flex items-center justify-between gap-6">
 
           {/* Wordmark */}
           <Link
@@ -223,7 +221,7 @@ export function InstrumentFrame({
         </div>
 
         {/* Header hairline */}
-        <div className="h-px bg-[#F5F4F0]/10" />
+        <div className="h-px bg-[#F5F4F0]/24" />
       </header>
 
       {/* ══ MOBILE DRAWER ═══════════════════════════════════════════════════ */}
@@ -296,7 +294,7 @@ export function InstrumentFrame({
 
         {/* Vertical dashed line */}
         <div
-          className="absolute left-[19px] xl:left-[21px] border-l border-dashed border-[#F5F4F0]/18"
+          className="absolute left-[19px] xl:left-[21px] border-l border-dashed border-[#F5F4F0]/28"
           style={{ top: 70, bottom: 70 }}
         />
 
@@ -380,7 +378,7 @@ export function InstrumentFrame({
         aria-hidden="true"
       >
         {/* Top hairline */}
-        <div className="absolute inset-x-0 top-0 h-px bg-[#F5F4F0]/14" />
+        <div className="absolute inset-x-0 top-0 h-px bg-[#F5F4F0]/24" />
 
         {/* Corner "+" crosshairs — four corners */}
         {(["top-[6px] left-4 lg:left-8", "top-[6px] right-4 lg:right-8",

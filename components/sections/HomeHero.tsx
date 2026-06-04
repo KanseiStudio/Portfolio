@@ -1,5 +1,4 @@
 import { getTranslations } from "next-intl/server"
-import { Container } from "@/components/atoms/Container"
 import { HomeFlowerOrbit } from "@/components/atoms/HomeFlowerOrbit"
 import { LogoRipple } from "@/components/atoms/LogoRipple"
 
@@ -7,67 +6,120 @@ export async function HomeHero() {
   const t = await getTranslations("Home")
 
   return (
-    <section className="relative w-full flex-1 min-h-0 flex items-center">
+    <section className="relative w-full flex-1 min-h-0 overflow-hidden">
       <LogoRipple />
 
-      <Container className="relative z-10 w-full py-6 lg:py-0 h-full flex items-center">
-        <div className="w-full grid grid-cols-12 gap-4 lg:gap-6 items-center">
+      {/* ── Desktop (lg+) ───────────────────────────────────────────────── */}
+      <div className="hidden lg:block absolute inset-0 z-10">
 
-          {/* ── LEFT: ~40 % (5/12) ───────────────────────────────────── */}
-          <div className="col-span-12 lg:col-span-5 flex flex-col min-w-0">
-
-            {/* w-fit so the eyebrow bar is exactly as wide as the title text */}
-            <div className="lg:w-fit flex flex-col">
-
-              {/* Display headline — Fraunces regular, matches reference */}
-              <h1
-                className="font-display uppercase leading-[0.92] tracking-[-0.015em] text-[#F5F4F0]"
-                style={{ fontSize: "clamp(3.8rem, min(10.5vw, 16vh), 10.5rem)", fontWeight: 400 }}
-              >
-                <span className="block">{t("titleLine1")}</span>
-                <span className="block">{t("titleLine2")}</span>
-              </h1>
-
-              {/* Eyebrow — mono, small, spans title width */}
-              <div className="mt-2 pb-2 border-b border-[#F5F4F0]/12 w-full flex items-center justify-between gap-2">
-                <span className="font-mono uppercase text-[#F5F4F0]/50 leading-none whitespace-nowrap"
-                  style={{ fontSize: "9px", letterSpacing: "0.20em" }}>
-                  {t("eyebrow")}
-                </span>
-                <span className="font-mono text-[#F5F4F0]/25 leading-none shrink-0"
-                  style={{ fontSize: "9px" }}>
-                  {t("eyebrowDivider")}
-                </span>
-                <span className="font-mono uppercase text-[#F5F4F0]/50 leading-none whitespace-nowrap"
-                  style={{ fontSize: "9px", letterSpacing: "0.20em" }}>
-                  {t("eyebrowSecond")}
-                </span>
-              </div>
-            </div>
-
-            {/* Body */}
-            <p
-              className="mt-5 lg:mt-6 font-n27 font-light leading-relaxed text-[#F5F4F0]/65 max-w-[420px]"
-              style={{ fontSize: "clamp(0.8rem, 1.3vh, 0.94rem)" }}
+        {/* Text block: left 13vw, vertically ~52% above centre */}
+        <div
+          className="absolute top-1/2 -translate-y-[52%] flex flex-col"
+          style={{ left: "13vw", width: "27vw" }}
+        >
+          <div className="flex flex-col">
+            <h1
+              className="font-n27 uppercase text-[#F5F4F0] leading-[0.92]"
+              style={{
+                fontWeight:    300,
+                letterSpacing: "0.03em",
+                fontSize:      "clamp(3rem, 10vw, 11rem)",
+              }}
             >
-              {t("bodyText")}
-            </p>
+              <span className="block">{t("titleLine1")}</span>
+              <span className="block">{t("titleLine2")}</span>
+            </h1>
 
-          </div>
-
-          {/* ── RIGHT: ~60 % (7/12) ───────────────────────────────────── */}
-          {/* w-full fills the column → aspect-square makes height=width.
-              The orbit exceeds hero height; overflow is clipped by
-              main's lg:overflow-hidden → orbit bleeds top/bottom
-              exactly as in the reference.                             */}
-          <div className="col-span-12 lg:col-span-7 flex items-center justify-center mt-8 lg:mt-0">
-            <div className="w-full">
-              <HomeFlowerOrbit />
+            {/* Eyebrow — three blocks, justify-between, edge-to-edge */}
+            <div
+              className="mt-[6px] pb-[6px] border-b border-[#F5F4F0]/24 w-full
+                          flex items-start justify-between"
+            >
+              <span
+                className="font-mono uppercase text-[#F5F4F0]/50 leading-snug"
+                style={{ fontSize: "clamp(14px, 1.4vw, 22px)", letterSpacing: "0.18em" }}
+              >
+                {t("eyebrow")}
+              </span>
+              <span
+                className="font-mono text-[#F5F4F0]/22 leading-snug shrink-0 px-2"
+                style={{ fontSize: "clamp(14px, 1.4vw, 22px)" }}
+              >
+                {t("eyebrowDivider")}
+              </span>
+              <span
+                className="font-mono uppercase text-[#F5F4F0]/50 leading-snug text-right"
+                style={{ fontSize: "clamp(14px, 1.4vw, 22px)", letterSpacing: "0.18em" }}
+              >
+                {t("eyebrowSecond")}
+              </span>
             </div>
           </div>
 
+          {/* Manifesto body */}
+          <p
+            className="mt-5 font-n27 font-light text-[#F5F4F0]/62"
+            style={{
+              fontSize:   "clamp(15px, 1.15vw, 19px)",
+              lineHeight: 1.6,
+            }}
+          >
+            {t("bodyText")}
+          </p>
         </div>
-      </Container>
+
+        {/* Flower orbit: right half, capped at min(38vh, 32vw) to stay in viewport */}
+        <div
+          className="absolute top-0 bottom-0 flex items-center justify-center"
+          style={{ left: "43vw", right: 0 }}
+        >
+          <div style={{ width: "min(70vh, 56vw)", height: "min(70vh, 56vw)" }}>
+            <HomeFlowerOrbit />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Mobile (below lg) ───────────────────────────────────────────── */}
+      <div className="lg:hidden relative z-10 w-full h-full flex flex-col
+                      justify-center gap-8 px-6 py-8">
+        <div className="flex flex-col">
+          <h1
+            className="font-n27 uppercase text-[#F5F4F0] leading-[0.92]"
+            style={{ fontWeight: 300, letterSpacing: "0.03em", fontSize: "clamp(3rem, 15vw, 5rem)" }}
+          >
+            <span className="block">{t("titleLine1")}</span>
+            <span className="block">{t("titleLine2")}</span>
+          </h1>
+          <div className="mt-[6px] pb-[6px] border-b border-[#F5F4F0]/24 w-full
+                          flex items-start justify-between">
+            <span
+              className="font-mono uppercase text-[#F5F4F0]/50 leading-snug"
+              style={{ fontSize: "11px", letterSpacing: "0.18em" }}
+            >
+              {t("eyebrow")}
+            </span>
+            <span
+              className="font-mono text-[#F5F4F0]/22 leading-snug shrink-0 px-1"
+              style={{ fontSize: "11px" }}
+            >
+              {t("eyebrowDivider")}
+            </span>
+            <span
+              className="font-mono uppercase text-[#F5F4F0]/50 leading-snug text-right"
+              style={{ fontSize: "11px", letterSpacing: "0.18em" }}
+            >
+              {t("eyebrowSecond")}
+            </span>
+          </div>
+          <p
+            className="mt-5 font-n27 font-light text-[#F5F4F0]/62"
+            style={{ fontSize: "0.9rem", lineHeight: 1.6 }}
+          >
+            {t("bodyText")}
+          </p>
+        </div>
+        <HomeFlowerOrbit />
+      </div>
     </section>
   )
 }
