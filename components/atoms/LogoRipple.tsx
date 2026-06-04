@@ -1,5 +1,16 @@
 "use client"
 
+/**
+ * HomeRipple — "cerchi nell'acqua" expanding from the flower centre.
+ *
+ * Rules:
+ * - Pure CSS animation: transform:scale, NO SVG r attribute animation.
+ * - NO runtime React state updates (only reducedMotion, set once on mount).
+ * - NO dynamic keys, NO Math.random(), NO useMemo dependent on mounted.
+ * - 4 circles with fixed animation-delay → loop continuo senza flicker.
+ * - pointer-events:none, absolute inset-0, z-index below content.
+ */
+
 import { useEffect, useState } from "react"
 
 export function LogoRipple() {
@@ -21,11 +32,14 @@ export function LogoRipple() {
       aria-hidden="true"
     >
       {/*
-        transform:scale approach — more reliable than animating SVG r.
-        transform-box:fill-box + transform-origin:center → scales from
-        each circle's own centre (cx=1080, cy=400).
-        scale(1) = r×1 = 80 SVG units; scale(17) ≈ 1360 SVG units,
-        enough to cover the full viewport from the right-column origin.
+        viewBox 0 0 1440 800 — proportioned to a standard desktop section.
+        cx = 1024 ≈ 71 % of 1440 → visual centre of the right 7/12 column.
+        cy = 400 → vertical centre of the 800-unit-tall section.
+        r  = 80 SVG units = starting radius (tiny dot effect at scale 1).
+        Each circle uses transform:scale via CSS @keyframes:
+          scale(1) → invisible speck;  scale(17) → r≈1360, covers full viewport.
+        transformBox:fill-box + transformOrigin:center → scales from each
+        circle's own centre, not the SVG origin — correct ripple behaviour.
       */}
       <svg
         viewBox="0 0 1440 800"
@@ -36,22 +50,23 @@ export function LogoRipple() {
         {([0, 1.5, 3, 4.5] as const).map((delay, i) => (
           <circle
             key={i}
-            cx="1080" cy="400" r="80"
-            stroke="white" strokeOpacity="0.22" strokeWidth="1"
+            cx="1024" cy="400" r="80"
+            stroke="white" strokeOpacity="0.18" strokeWidth="1"
             opacity="0"
             style={{
-              animation:      "logoRipple 6s ease-out infinite",
-              animationDelay: `${delay}s`,
-              transformBox:   "fill-box",
+              animation:       "homeRipple 6s ease-out infinite",
+              animationDelay:  `${delay}s`,
+              transformBox:    "fill-box",
               transformOrigin: "center",
             }}
           />
         ))}
 
+        {/* Scoped keyframe — no global name collision */}
         <style>{`
-          @keyframes logoRipple {
+          @keyframes homeRipple {
             0%   { transform: scale(1);  opacity: 0;    }
-            8%   {                        opacity: 0.26; }
+            8%   {                        opacity: 0.22; }
             100% { transform: scale(17); opacity: 0;    }
           }
         `}</style>

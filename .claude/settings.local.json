@@ -84,7 +84,17 @@
       "Bash(chromium-cli *)",
       "Bash(npm root *)",
       "Bash(identify public/ok_projects.png public/ok_tech.png public/ok_about.png public/ok_contact.png)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(git rm *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('scripts',{}\\)\\)\")",
+      "Bash(dir \"C:\\\\Users\\\\User\\\\Kansei_Projects\\\\kansei-studio\\\\public\" /s /b)",
+      "PowerShell(New-Item *)",
+      "Bash(git checkout *)",
+      "Bash(Write-Host \"cache cleared\")",
+      "Bash(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Id, CPU, ProcessName)",
+      "Bash(Format-Table)",
+      "Bash(git show *)"
     ]
   },
   "enableAllProjectMcpServers": true,
