@@ -1,7 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server"
 import { prisma } from "@/lib/prisma"
-import { TopNav } from "@/components/molecules/TopNav"
-import { HairlineDivider } from "@/components/atoms/HairlineDivider"
 import { ContactHero } from "@/components/sections/ContactHero"
 import { ContactChannels } from "@/components/sections/ContactChannels"
 
@@ -27,32 +25,25 @@ export default async function ContactPage({
   const tr = info?.translations[0]
 
   return (
-    <>
-      <TopNav />
-      <main>
-        <HairlineDivider className="my-0" />
+    <main>
+      <ContactHero
+        studioName={info?.studioName ?? "Kansei Studio"}
+        email={info?.email ?? ""}
+        location={tr?.location ?? ""}
+        availability={tr?.availability ?? ""}
+        focus={tr?.focus ?? ""}
+      />
 
-        <ContactHero
-          studioName={info?.studioName ?? "Kansei Studio"}
-          email={info?.email ?? ""}
-          location={tr?.location ?? ""}
-          availability={tr?.availability ?? ""}
-          focus={tr?.focus ?? ""}
-        />
-
-        <HairlineDivider className="my-0" />
-
-        <ContactChannels
-          channels={channels.map((c) => ({
-            id: c.id,
-            iconName: c.iconName,
-            handle: c.handle,
-            url: c.url,
-            label: c.translations[0]?.label ?? c.platform,
-          }))}
-        />
-      </main>
-    </>
+      <ContactChannels
+        channels={channels.map((c) => ({
+          id: c.id,
+          iconName: c.iconName,
+          handle: c.handle,
+          url: c.url,
+          label: c.translations[0]?.label ?? c.platform,
+        }))}
+      />
+    </main>
   )
 }
 

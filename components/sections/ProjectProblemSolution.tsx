@@ -14,13 +14,14 @@ export async function ProjectProblemSolution({
 
   return (
     <Container as="section" className="py-16 lg:py-24">
-      <div className="grid grid-cols-12 gap-8 lg:gap-12">
+      <div className="grid grid-cols-12 gap-x-8 gap-y-12 lg:gap-x-16">
+
         {problem && (
           <div className="col-span-12 lg:col-span-6">
-            <h2 className="font-display text-ks-h2 leading-tight tracking-tight text-ks-fg">
+            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#F5F4F0]/35 mb-6">
               {t("problemHeading")}
-            </h2>
-            <p className="mt-6 text-base font-body leading-relaxed text-ks-fg opacity-90 whitespace-pre-line">
+            </p>
+            <p className="font-n27 font-light text-base lg:text-lg leading-relaxed text-[#F5F4F0]/65 whitespace-pre-line">
               {problem}
             </p>
           </div>
@@ -28,14 +29,15 @@ export async function ProjectProblemSolution({
 
         {solution && (
           <div className="col-span-12 lg:col-span-6">
-            <h2 className="font-display text-ks-h2 leading-tight tracking-tight text-ks-fg">
+            <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#F5F4F0]/35 mb-6">
               {t("solutionHeading")}
-            </h2>
-            <p className="mt-6 text-base font-body leading-relaxed text-ks-fg opacity-90 whitespace-pre-line">
+            </p>
+            <p className="font-n27 font-light text-base lg:text-lg leading-relaxed text-[#F5F4F0]/65 whitespace-pre-line">
               {solution}
             </p>
           </div>
         )}
+
       </div>
     </Container>
   )

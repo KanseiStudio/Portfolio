@@ -22,27 +22,34 @@ export async function ContactChannels({
   if (channels.length === 0) return null
 
   return (
-    <Container as="section" className="py-20 lg:py-32">
-      <p className="text-eyebrow font-mono uppercase tracking-widest opacity-60 mb-12">
-        {t("cardsSectionLabel")}
-      </p>
+    <section className="border-t border-[#F5F4F0]/10">
+      <Container className="pt-10 pb-16 lg:pb-24">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {channels.map((ch) => {
-          const Icon =
-            (Icons as unknown as Record<string, LucideIcon>)[ch.iconName] ??
-            Icons.Link
-          return (
-            <ContactCard
-              key={ch.id}
-              icon={Icon}
-              label={ch.label}
-              value={ch.handle}
-              href={ch.url ?? undefined}
-            />
-          )
-        })}
-      </div>
-    </Container>
+        {/* Eyebrow */}
+        <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#F5F4F0]/30 mb-8">
+          {t("cardsSectionLabel")}
+        </p>
+
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-[#F5F4F0]/8">
+          {channels.map((ch) => {
+            const Icon =
+              (Icons as unknown as Record<string, LucideIcon>)[ch.iconName] ??
+              Icons.Link
+            return (
+              <ContactCard
+                key={ch.id}
+                icon={Icon}
+                label={ch.label}
+                value={ch.handle}
+                href={ch.url ?? undefined}
+                className="bg-[#0A0A0A]"
+              />
+            )
+          })}
+        </div>
+
+      </Container>
+    </section>
   )
 }

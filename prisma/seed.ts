@@ -221,6 +221,111 @@ async function main() {
 
   console.log("✓ Contact channels seeded")
 
+  // -------- Technologies --------
+  const technologiesData = [
+    {
+      slug: "touchdesigner",
+      name: "TouchDesigner",
+      videoUrl: "https://vimeo.com/kansei/touchdesigner",
+      sortOrder: 1,
+      translations: {
+        it: {
+          description: "Piattaforma visuale per sistemi generativi, dati in tempo reale e ambienti audiovisivi reattivi.",
+          applications: "Installazioni immersive, visual generativi, ledwall, data visualization.",
+        },
+        en: {
+          description: "Visual platform for generative systems, real-time data and reactive audiovisual environments.",
+          applications: "Immersive installations, generative visuals, LED walls, data visualization.",
+        },
+      },
+    },
+    {
+      slug: "unreal",
+      name: "Unreal Engine",
+      videoUrl: "https://vimeo.com/kansei/unreal",
+      sortOrder: 2,
+      translations: {
+        it: {
+          description: "Motore real-time per ambienti 3D, digital human, simulazioni spaziali e interfacce immersive.",
+          applications: "Experience 3D, musei interattivi, avatar AI, visualizzazione real-time.",
+        },
+        en: {
+          description: "Real-time engine for 3D environments, digital humans, spatial simulations and immersive interfaces.",
+          applications: "3D experiences, interactive museums, AI avatars, real-time visualization.",
+        },
+      },
+    },
+    {
+      slug: "unity",
+      name: "Unity",
+      videoUrl: "https://vimeo.com/kansei/unity",
+      sortOrder: 3,
+      translations: {
+        it: {
+          description: "Framework per applicazioni interattive, touch systems e soluzioni cross-platform.",
+          applications: "Totem touch, app interattive, control panel, esperienze mobile e desktop.",
+        },
+        en: {
+          description: "Framework for interactive applications, touch systems and cross-platform solutions.",
+          applications: "Touch totems, interactive apps, control panels, mobile and desktop experiences.",
+        },
+      },
+    },
+    {
+      slug: "openai-systems",
+      name: "OpenAI Systems",
+      videoUrl: "https://vimeo.com/kansei/openai",
+      sortOrder: 4,
+      translations: {
+        it: {
+          description: "LLM, speech e agent orchestration per sistemi conversazionali e interfacce intelligenti.",
+          applications: "Digital assistant, voice interaction, AI multi-agent, personalizzazione.",
+        },
+        en: {
+          description: "LLM, speech and agent orchestration for conversational systems and intelligent interfaces.",
+          applications: "Digital assistant, voice interaction, AI multi-agent, personalization.",
+        },
+      },
+    },
+  ]
+
+  for (const tech of technologiesData) {
+    const upserted = await prisma.technology.upsert({
+      where: { slug: tech.slug },
+      update: {
+        name: tech.name,
+        videoUrl: tech.videoUrl,
+        sortOrder: tech.sortOrder,
+        published: true,
+      },
+      create: {
+        slug: tech.slug,
+        name: tech.name,
+        videoUrl: tech.videoUrl,
+        sortOrder: tech.sortOrder,
+        published: true,
+      },
+    })
+
+    for (const [locale, tr] of Object.entries(tech.translations)) {
+      await prisma.technologyTranslation.upsert({
+        where: { technologyId_locale: { technologyId: upserted.id, locale } },
+        create: {
+          technologyId: upserted.id,
+          locale,
+          description: tr.description,
+          applications: tr.applications,
+        },
+        update: {
+          description: tr.description,
+          applications: tr.applications,
+        },
+      })
+    }
+  }
+
+  console.log("✓ Technologies seeded")
+
   console.log("✅ Seeding complete")
 }
 

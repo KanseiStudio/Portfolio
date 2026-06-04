@@ -1,7 +1,7 @@
 {
   "Nav": {
     "about": "About",
-    "projects": "Progetti",
+    "technologies": "Technologies",
     "contact": "Contatti",
     "menuOpen": "Apri menu",
     "menuClose": "Chiudi menu"
@@ -12,14 +12,15 @@
     "eyebrow": "TECHNOLOGICAL POETRY",
     "eyebrowDivider": "|",
     "eyebrowSecond": "HUMAN EXPERIENCE",
-    "bodyHeadline": "Esperienze digitali che prendono vita",
-    "bodyText": "Kansei Studio crea sistemi digitali sensoriali che connettono la tecnologia con l'emozione umana. Progettiamo interfacce immersive, esperienze intelligenti e installazioni interattive che rispondono, si adattano e risuonano"
+    "bodyText": "Kansei Studio crea sistemi digitali sensoriali che connettono la tecnologia con l'emozione umana. Progettiamo interfacce immersive, esperienze intelligenti e installazioni interattive che rispondono, si adattano e risuonano.",
+    "metaDescription": "Kansei Studio crea sistemi digitali sensoriali che connettono la tecnologia con l'emozione umana. Design immersivo, AI ed esperienze interattive.",
+    "viewProjects": "Scopri i Progetti"
   },
   "HomeServices": {
     "service01": {
       "number": "01",
-      "title": "Technological Innovation",
-      "description": "We design immersive interfaces and AR/VR experiences that push the boundaries of human-computer interaction.",
+      "title": "Immersive Interfaces",
+      "description": "Progettiamo interfacce immersive e esperienze AR/VR che spingono i confini dell'interazione uomo-macchina.",
       "bullets": [
         "Wireframing and prototyping",
         "Unreal / Unity system based",
@@ -29,19 +30,19 @@
     },
     "service02": {
       "number": "02",
-      "title": "Experimental Formats",
-      "description": "Sensory systems for stadiums, museums, and events. Data-driven installations that respond to human presence.",
+      "title": "Intelligent Experiences",
+      "description": "Sistemi sensoriali per stadi, musei ed eventi. Installazioni data-driven che rispondono alla presenza umana.",
       "bullets": [
-        "Design of digital experiential spaces",
-        "Design and creation of immersive rooms",
-        "Automated systems for interactive and experiential environments",
+        "Design di spazi esperienziali digitali",
+        "Design e creazione di stanze immersive",
+        "Sistemi automatizzati per ambienti interattivi",
         "Reactive Space"
       ]
     },
     "service03": {
       "number": "03",
-      "title": "AI Advanced System",
-      "description": "Intelligent environments and adaptive interfaces built on top of modern AI primitives.",
+      "title": "Interactive Installations",
+      "description": "Ambienti intelligenti e interfacce adattive costruite sui primitivi moderni dell'intelligenza artificiale.",
       "bullets": [
         "AI Automation Agency",
         "Sistema Multi-Agente per Aziende Autonome",
@@ -51,8 +52,8 @@
     },
     "service04": {
       "number": "04",
-      "title": "Cross-Environment Applications",
-      "description": "Experiences that span physical and digital — from shopping malls to large-scale stadium installations.",
+      "title": "Cross-Environment Systems",
+      "description": "Esperienze che attraversano il fisico e il digitale — dai centri commerciali alle installazioni per stadi.",
       "bullets": [
         "Shopping malls",
         "Exhibition areas",
@@ -67,9 +68,19 @@
     "description": "Kansei Studio crea sistemi digitali sensoriali che connettono la tecnologia con l'emozione umana. Progettiamo interfacce immersive, esperienze intelligenti e installazioni interattive che rispondono, si adattano e risuonano.",
     "philosophyCta": "La nostra filosofia"
   },
+  "Philosophy": {
+    "eyebrow": "FILOSOFIA",
+    "block1Title": "Kansei (感性)",
+    "block1Body": "Kansei è la parola giapponese per la sensibilità: la risposta emotiva e intuitiva che precede il pensiero. È da lì che parte ogni nostro progetto.",
+    "block2Title": "Tecnologia come senso",
+    "block2Body": "Progettiamo la tecnologia come un senso in più — sistemi che percepiscono, interpretano e rispondono. Un'interfaccia non si usa soltanto: si sente.",
+    "block3Title": "Ingegneria + percezione",
+    "block3Body": "Ogni sistema nasce dall'incontro tra ingegneria e percezione: dati in tempo reale, AI ed esperienze spaziali al servizio di un'unica cosa, l'emozione di chi le attraversa."
+  },
   "Services": {
     "01": {
       "title": "Technological Innovation",
+      "description": "Trasformiamo le idee in esperienze funzionali attraverso ricerca, prototipazione e design iterativo.",
       "items": [
         "Wireframing and prototyping",
         "Unreal / Unity system based",
@@ -79,6 +90,7 @@
     },
     "02": {
       "title": "Experimental Formats",
+      "description": "Costruiamo linguaggi visivi e narrazioni data-driven che comunicano e ispirano.",
       "items": [
         "Design of digital experiential spaces",
         "Design and creation of immersive rooms",
@@ -88,6 +100,7 @@
     },
     "03": {
       "title": "AI Advanced System",
+      "description": "Sviluppiamo sistemi immersivi e intelligenti che si adattano al contesto e al comportamento degli utenti.",
       "items": [
         "AI Automation Agency",
         "Sistema Multi-Agente per Aziende Autonome",
@@ -97,6 +110,7 @@
     },
     "04": {
       "title": "Cross-Environment Applications",
+      "description": "Portiamo esperienze di impatto attraverso ambienti fisici e digitali.",
       "items": [
         "Shopping malls",
         "Exhibition areas",
@@ -107,7 +121,7 @@
   },
   "Projects": {
     "sectionLabel": "PROGETTI",
-    "archive": "ARCHIVIO",
+    "archive": "PROJECTS ARCHIVE",
     "title": "Progetti che ci somigliano.",
     "description": "Una selezione di sistemi, installazioni e prodotti digitali progettati per emozionare.",
     "filterAll": "Tutti",
@@ -143,6 +157,15 @@
     "githubHandle": "github.com/kansei-studio",
     "newsletter": "Newsletter / Notes",
     "newsletterHandle": "Design thinking & technical essays"
+  },
+  "Technologies": {
+    "sectionLabel": "TECHNOLOGIES",
+    "title": "Technologies",
+    "description": "I software e i sistemi con cui costruiamo esperienze immersive, interfacce intelligenti e installazioni interattive.",
+    "descriptionLabel": "DESCRIZIONE",
+    "applicationsLabel": "APPLICAZIONI",
+    "usedInLabel": "PROGETTI IN CUI È UTILIZZATO",
+    "videoLabel": "VIDEO"
   },
   "Common": {
     "loading": "Caricamento…",

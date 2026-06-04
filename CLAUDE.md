@@ -254,6 +254,14 @@ ADMIN_SESSION_SECRET="stringa-random-64-hex-chars"
 ```
 Per generare il secret: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
 
+**Hard delete con conferma slug:**
+- La lista `/admin/projects` ha un bottone Trash2 per riga (visibile all'hover).
+- Al click si apre un Dialog Radix UI (non `confirm()`) che mostra titolo progetto e avviso irreversibilità.
+- L'utente deve digitare lo slug esatto nell'input per abilitare il bottone "Elimina definitivamente".
+- `hardDeleteProjectAction` usa `prisma.project.delete` — il cascade nello schema Prisma pulisce automaticamente `project_translations`, `project_categories` e `project_kpis`.
+- Componente: `app/admin/_components/DeleteProjectDialog.tsx`
+- `revalidatePath` colpisce: `/admin/projects`, `/admin`, `/[locale]/projects` (page).
+
 **Note tecniche:**
 - Il root layout (`app/layout.tsx`) carica next-intl con fallback a locale "it" per route senza contesto i18n (es. `/admin`). Non serve modificarlo.
 - I link interni in `/admin` usano `next/link` standard (non `@/i18n/routing`) perché l'admin non è internazionalizzato.

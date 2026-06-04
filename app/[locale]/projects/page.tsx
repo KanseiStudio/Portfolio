@@ -1,7 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server"
-import { TopNav } from "@/components/molecules/TopNav"
 import { Container } from "@/components/atoms/Container"
-import { HairlineDivider } from "@/components/atoms/HairlineDivider"
 import { ProjectsArchive } from "@/components/sections/ProjectsArchive"
 import { prisma } from "@/lib/prisma"
 import { youTubeThumbnail } from "@/lib/youtube"
@@ -74,38 +72,27 @@ export default async function ProjectsPage({
   }))
 
   return (
-    <>
-      <TopNav />
-      <main>
-        <HairlineDivider className="my-0" />
+    <main>
+      {/* ── Page header ─────────────────────────────────────────── */}
+      <Container as="section" className="pt-16 lg:pt-24 pb-12 lg:pb-16">
+        <div className="flex flex-col gap-5 max-w-2xl">
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#F5F4F0]/35">
+            {t("archive")}
+          </p>
+          <h1 className="font-display font-normal leading-[0.92] tracking-[-0.025em] text-[#F5F4F0] text-[clamp(2.8rem,6vw,5.5rem)]">
+            {t("title")}
+          </h1>
+          <p className="font-n27 font-light text-base lg:text-lg leading-relaxed text-[#F5F4F0]/55 max-w-xl">
+            {t("description")}
+          </p>
+        </div>
+      </Container>
 
-        {/* Archive header */}
-        <Container as="section" className="pt-16 lg:pt-24 pb-12 lg:pb-16">
-          <div className="grid grid-cols-12 gap-8">
-            <div className="col-span-12 lg:col-span-3">
-              <p className="text-eyebrow font-body uppercase tracking-widest text-ks-fg opacity-60">
-                {t("archive")}
-              </p>
-            </div>
-            <div className="col-span-12 lg:col-span-9">
-              <h1 className="font-display text-ks-h1 leading-[0.95] tracking-tight text-ks-fg">
-                {t("title")}
-              </h1>
-              <p className="mt-8 text-base font-body leading-relaxed text-ks-fg opacity-90 max-w-xl">
-                {t("description")}
-              </p>
-            </div>
-          </div>
-        </Container>
-
-        <HairlineDivider className="my-0" />
-
-        <ProjectsArchive
-          projects={shapedProjects}
-          categories={shapedCategories}
-        />
-      </main>
-    </>
+      <ProjectsArchive
+        projects={shapedProjects}
+        categories={shapedCategories}
+      />
+    </main>
   )
 }
 

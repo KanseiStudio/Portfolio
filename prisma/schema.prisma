@@ -109,6 +109,40 @@ model ProjectKpiTranslation {
   @@map("project_kpi_translations")
 }
 
+// ---------- Technologies ----------
+
+model Technology {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique @db.VarChar(120)
+  name        String   @db.VarChar(120)
+  videoUrl    String?  @map("video_url") @db.VarChar(255)
+  mainImage   String?  @map("main_image") @db.VarChar(255)
+  usageImage1 String?  @map("usage_image_1") @db.VarChar(255)
+  usageImage2 String?  @map("usage_image_2") @db.VarChar(255)
+  usageImage3 String?  @map("usage_image_3") @db.VarChar(255)
+  published   Boolean  @default(true)
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  translations TechnologyTranslation[]
+
+  @@map("technologies")
+}
+
+model TechnologyTranslation {
+  id           Int    @id @default(autoincrement())
+  technologyId Int    @map("technology_id")
+  locale       String @db.VarChar(5)
+  description  String @db.Text
+  applications String @db.Text
+
+  technology Technology @relation(fields: [technologyId], references: [id], onDelete: Cascade)
+
+  @@unique([technologyId, locale])
+  @@map("technology_translations")
+}
+
 // ---------- Contact Info (singleton) ----------
 
 model ContactInfo {

@@ -2,12 +2,12 @@
 
 import { useState, useTransition } from "react"
 import Link from "next/link"
-import { Pencil, Trash2, RotateCcw, EyeOff, Eye } from "lucide-react"
+import { Pencil, RotateCcw, EyeOff, Eye } from "lucide-react"
 import {
   softDeleteProjectAction,
-  hardDeleteProjectAction,
   restoreProjectAction,
 } from "@/app/admin/_actions/projects"
+import { DeleteProjectDialog } from "@/app/admin/_components/DeleteProjectDialog"
 
 interface ProjectRow {
   id: number
@@ -52,11 +52,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
 
   function handleRestore(id: number) {
     startTransition(async () => { await restoreProjectAction(id) })
-  }
-
-  function handleHardDelete(id: number) {
-    if (!confirm("Eliminare definitivamente questo progetto? L'azione è irreversibile.")) return
-    startTransition(async () => { await hardDeleteProjectAction(id) })
   }
 
   return (
@@ -173,13 +168,9 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                         </button>
                       )}
 
-                      <button
-                        onClick={() => handleHardDelete(p.id)}
-                        className="p-1.5 hover:bg-red-50 text-red-700 rounded transition-colors opacity-0 group-hover:opacity-60 hover:!opacity-100"
-                        title="Elimina definitivamente"
-                      >
-                        <Trash2 size={14} strokeWidth={1.5} />
-                      </button>
+                      <DeleteProjectDialog
+                        project={{ id: p.id, slug: p.slug, title: p.title }}
+                      />
                     </div>
                   </td>
                 </tr>

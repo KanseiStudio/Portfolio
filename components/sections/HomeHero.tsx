@@ -1,63 +1,62 @@
 import { getTranslations } from "next-intl/server"
+import { Link } from "@/i18n/routing"
 import { Container } from "@/components/atoms/Container"
-import { LogoRipple } from "@/components/atoms/LogoRipple"
-import { TreeLogoAnimated } from "@/components/atoms/TreeLogoAnimated"
+import { HomeFlowerOrbit } from "@/components/atoms/HomeFlowerOrbit"
 
 export async function HomeHero() {
   const t = await getTranslations("Home")
 
   return (
-    <Container as="section" className="pt-12 pb-16 lg:pt-16 lg:pb-24 relative">
+    <section className="relative w-full min-h-[calc(100vh-93px)] flex items-center">
+      <Container className="py-16 lg:py-0 w-full">
+        <div className="grid grid-cols-12 gap-6 lg:gap-8 items-center">
 
-      {/* Ripple overlay dietro a tutto il contenuto della section */}
-      <LogoRipple />
+          {/* ── LEFT: Title + eyebrow + manifesto + CTA ────────────── */}
+          <div className="col-span-12 lg:col-span-6 xl:col-span-7 flex flex-col">
 
-      <div className="grid grid-cols-12 gap-4 lg:gap-6 items-center relative z-10">
+            {/* Display title */}
+            <h1 className="font-n27 font-bold uppercase leading-[0.9] tracking-tight text-[#F5F4F0]">
+              <span className="block text-[clamp(4rem,10vw,9.5rem)]">
+                {t("titleLine1")}
+              </span>
+              <span className="block text-[clamp(4rem,10vw,9.5rem)]">
+                {t("titleLine2")}
+              </span>
+            </h1>
 
-        {/* COLONNA SINISTRA: Title + Eyebrow + Body */}
-        <div className="col-span-12 lg:col-span-7">
+            {/* Mono eyebrow + hairline */}
+            <div className="mt-3 lg:mt-4 pb-3 border-b border-[#F5F4F0]/12">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-[#F5F4F0]/55">
+                {t("eyebrow")}
+                <span className="mx-3 opacity-40">{t("eyebrowDivider")}</span>
+                {t("eyebrowSecond")}
+              </p>
+            </div>
 
-          {/* Title gigante KANSEI / STUDIO */}
-          <h1 className="font-n27 font-bold uppercase leading-[0.95] tracking-tight">
-            <span className="block text-[clamp(4rem,12vw,11rem)]">
-              {t("titleLine1")}
-            </span>
-            <span className="block text-[clamp(4rem,12vw,11rem)]">
-              {t("titleLine2")}
-            </span>
-          </h1>
-
-          {/* Eyebrow con underline hairline */}
-          <div className="mt-3 lg:mt-4 pb-3 border-b border-ks-hairline-active inline-block">
-            <p
-              className="font-mono uppercase tracking-widest opacity-80"
-              style={{ fontSize: "clamp(0.85rem, 1.8vw, 1.5rem)" }}
-            >
-              {t("eyebrow")}{" "}
-              <span className="opacity-40 mx-2">{t("eyebrowDivider")}</span>{" "}
-              {t("eyebrowSecond")}
-            </p>
-          </div>
-
-          {/* Body copy */}
-          <div className="mt-4 lg:mt-6 max-w-2xl">
-            <p className="font-n27 font-medium text-xl lg:text-2xl leading-tight mb-3">
-              {t("bodyHeadline")}
-            </p>
-            <p className="font-n27 font-light text-base lg:text-lg leading-relaxed opacity-90">
+            {/* Manifesto body */}
+            <p className="mt-6 lg:mt-8 font-n27 font-light text-base lg:text-lg leading-relaxed text-[#F5F4F0]/70 max-w-[480px]">
               {t("bodyText")}
             </p>
-          </div>
-        </div>
 
-        {/* COLONNA DESTRA: Logo SVG animato */}
-        <div className="col-span-12 lg:col-span-5 mt-10 lg:mt-0">
-          <div className="relative w-full aspect-square scale-110 lg:scale-125 origin-center overflow-visible">
-            <TreeLogoAnimated />
+            {/* CTA */}
+            <div className="mt-8 lg:mt-10">
+              <Link
+                href="/projects"
+                className="inline-flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest border border-[#F5F4F0]/28 text-[#F5F4F0]/65 hover:border-[#F5F4F0]/55 hover:text-[#F5F4F0]/90 px-5 py-3 transition-colors duration-300"
+              >
+                {t("viewProjects")}
+                <span aria-hidden="true" className="text-[12px]">→</span>
+              </Link>
+            </div>
           </div>
-        </div>
 
-      </div>
-    </Container>
+          {/* ── RIGHT: Orbital flower visual ──────────────────────── */}
+          <div className="col-span-12 lg:col-span-6 xl:col-span-5 flex items-center justify-center mt-8 lg:mt-0">
+            <HomeFlowerOrbit />
+          </div>
+
+        </div>
+      </Container>
+    </section>
   )
 }

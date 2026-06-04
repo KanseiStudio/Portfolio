@@ -3,9 +3,15 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
+import { getAdminSession } from "@/lib/session"
 import { projectFormSchema, type ProjectFormValues } from "@/lib/validations/project"
 
 type ActionResult = { error: string } | null
+
+async function requireAdmin() {
+  const session = await getAdminSession()
+  if (!session.isAdmin) redirect("/admin/login")
+}
 
 export async function createProjectAction(data: ProjectFormValues): Promise<ActionResult> {
   const parsed = projectFormSchema.safeParse(data)
@@ -158,10 +164,18 @@ export async function restoreProjectAction(id: number): Promise<ActionResult> {
   return null
 }
 
-export async function hardDeleteProjectAction(id: number): Promise<ActionResult> {
+export async function hardDeleteProjectAction(
+  id: number,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  await requireAdmin()
+
+  const project = await prisma.project.findUnique({ where: { id } })
+  if (!project) return { ok: false, error: "Progetto non trovato" }
+
   await prisma.project.delete({ where: { id } })
+
   revalidatePath("/admin/projects")
-  revalidatePath("/it/projects")
-  revalidatePath("/en/projects")
-  return null
+  revalidatePath("/admin")
+  revalidatePath("/[locale]/projects", "page")
+  return { ok: true }
 }

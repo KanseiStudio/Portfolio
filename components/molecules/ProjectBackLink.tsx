@@ -7,19 +7,17 @@ export async function ProjectBackLink() {
   const t = await getTranslations("Projects")
 
   return (
-    <Container as="section" className="py-16 lg:py-24">
+    <Container as="section" className="py-16 lg:py-20">
       <Link
         href={"/projects" as never}
-        className="inline-flex items-center gap-3 text-small font-medium text-ks-fg group focus-visible:outline focus-visible:outline-1 focus-visible:outline-ks-fg focus-visible:outline-offset-4"
+        className="inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-[#F5F4F0]/40 hover:text-[#F5F4F0]/80 group transition-colors duration-300 focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#F5F4F0]/40 focus-visible:outline-offset-4"
       >
         <ArrowLeft
-          size={16}
+          size={14}
           strokeWidth={1.5}
           className="transition-transform duration-600 ease-kansei group-hover:-translate-x-1"
         />
-        <span className="group-hover:underline underline-offset-4">
-          {t("backToArchive")}
-        </span>
+        <span>{t("backToArchive")}</span>
       </Link>
     </Container>
   )

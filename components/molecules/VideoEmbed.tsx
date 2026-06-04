@@ -85,7 +85,7 @@ export function VideoEmbed({
       </div>
 
       {caption && (
-        <figcaption className="mt-3 text-eyebrow font-mono uppercase tracking-widest text-ks-fg opacity-60">
+        <figcaption className="mt-3 text-eyebrow font-mono uppercase tracking-widest text-[#F5F4F0]/45">
           {caption}
         </figcaption>
       )}

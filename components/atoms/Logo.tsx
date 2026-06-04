@@ -5,21 +5,23 @@ interface LogoProps {
   size?: number
   className?: string
   alt?: string
+  /** true = dark background (white logo, no CSS tricks needed) */
+  onDark?: boolean
 }
 
-export function Logo({ size = 28, className, alt = "Kansei Studio" }: LogoProps) {
+export function Logo({ size = 28, className, alt = "Kansei Studio", onDark = false }: LogoProps) {
   return (
     <div
       className={cn("shrink-0 aspect-square", className)}
       style={{ width: size, height: size }}
     >
       <Image
-        src="/logo.png"
+        src="/Logo_Kansei.png"
         alt={alt}
         width={size}
         height={size}
         priority
-        className="block"
+        className={cn("block", !onDark && "invert mix-blend-multiply")}
       />
     </div>
   )

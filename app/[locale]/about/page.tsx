@@ -1,7 +1,6 @@
 import { setRequestLocale } from "next-intl/server"
-import { TopNav } from "@/components/molecules/TopNav"
-import { HairlineDivider } from "@/components/atoms/HairlineDivider"
 import { AboutHero } from "@/components/sections/AboutHero"
+import { PhilosophySection } from "@/components/sections/PhilosophySection"
 import { CompetenceGrid } from "@/components/sections/CompetenceGrid"
 
 export default async function About({
@@ -13,13 +12,10 @@ export default async function About({
   setRequestLocale(locale)
 
   return (
-    <>
-      <TopNav />
-      <main>
-        <HairlineDivider className="my-0" />
-        <AboutHero />
-        <CompetenceGrid />
-      </main>
-    </>
+    <main>
+      <AboutHero />
+      <PhilosophySection />
+      <CompetenceGrid />
+    </main>
   )
 }

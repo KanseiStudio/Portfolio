@@ -1,28 +1,45 @@
-import { setRequestLocale } from "next-intl/server"
-import { TopNav } from "@/components/molecules/TopNav"
-import { HairlineDivider } from "@/components/atoms/HairlineDivider"
+import type { Metadata } from "next"
+import { setRequestLocale, getTranslations } from "next-intl/server"
 import { HomeHero } from "@/components/sections/HomeHero"
 import { HomeServices } from "@/components/sections/HomeServices"
-import { HomeTelemetry } from "@/components/sections/HomeTelemetry"
 
-export default async function HomePage({
-  params,
-}: {
-  params: Promise<{ locale: string }>
-}) {
+type Params = Promise<{ locale: string }>
+
+const SITE_TITLE = "Kansei Studio — Where technology becomes sensation"
+const SITE_NAME  = "Kansei Studio"
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: "Home" })
+  const description = t("metaDescription")
+  const ogLocale = locale === "it" ? "it_IT" : "en_US"
+
+  return {
+    title: SITE_TITLE,
+    description,
+    openGraph: {
+      title: SITE_TITLE,
+      description,
+      siteName: SITE_NAME,
+      type: "website",
+      locale: ogLocale,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: SITE_TITLE,
+      description,
+    },
+  }
+}
+
+export default async function HomePage({ params }: { params: Params }) {
   const { locale } = await params
   setRequestLocale(locale)
 
   return (
     <main>
-      <TopNav />
-      <HairlineDivider />
-
       <HomeHero />
       <HomeServices />
-
-      {/* Overlay fisso al viewport — segue lo scroll */}
-      <HomeTelemetry />
     </main>
   )
 }

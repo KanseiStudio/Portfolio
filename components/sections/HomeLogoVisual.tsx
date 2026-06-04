@@ -127,7 +127,7 @@ export function HomeLogoVisual() {
         }}
       >
         <Image
-          src="/logo.png"
+          src="/Logo_Kansei.png"
           alt="Kansei Studio"
           fill
           className="object-contain"

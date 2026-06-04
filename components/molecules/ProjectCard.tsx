@@ -1,8 +1,6 @@
 "use client"
 
 import { Link } from "@/i18n/routing"
-import { ArrowUpRight } from "lucide-react"
-import { GenerativeVisual } from "@/components/atoms/GenerativeVisual"
 import type { ArchiveProject } from "@/components/sections/ProjectsArchive"
 
 export function ProjectCard({
@@ -17,46 +15,47 @@ export function ProjectCard({
   return (
     <Link
       href={`/projects/${project.slug}` as never}
-      className="group block focus-visible:outline focus-visible:outline-1 focus-visible:outline-ks-fg focus-visible:outline-offset-4"
-      aria-label={`Open project: ${project.title}`}
+      className="group block focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#F5F4F0]/50 focus-visible:outline-offset-4"
+      aria-label={project.title}
     >
-      {/* Top row: index + arrow */}
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-eyebrow font-mono text-ks-fg opacity-70">{indexLabel}</span>
-        <ArrowUpRight
-          size={18}
-          strokeWidth={1.5}
-          className="text-ks-fg opacity-70 transition-transform duration-600 ease-kansei group-hover:translate-x-1 group-hover:-translate-y-1"
-        />
+      {/* Index */}
+      <div className="mb-2.5">
+        <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#F5F4F0]/28">
+          {indexLabel}
+        </span>
       </div>
 
-      {/* Poster / generative visual */}
-      <div className="relative aspect-video bg-ks-dark-bg overflow-hidden">
+      {/* Image */}
+      <div className="relative aspect-video overflow-hidden bg-[#0D0D0D]">
         {project.posterUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={project.posterUrl}
             alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-1200 ease-kansei group-hover:scale-[1.02]"
+            className="w-full h-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
           />
         ) : (
-          <GenerativeVisual
-            variant="wave-project"
-            alt={project.title}
-            className="w-full h-full"
-            dark
-          />
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{
+              backgroundImage: "radial-gradient(circle at 50% 50%, rgba(245,244,240,0.03) 0%, transparent 70%)",
+            }}
+          >
+            <span className="font-mono text-[8px] uppercase tracking-widest text-[#F5F4F0]/14">
+              {project.slug}
+            </span>
+          </div>
         )}
       </div>
 
       {/* Title */}
-      <h3 className="mt-6 font-display text-2xl lg:text-3xl leading-tight tracking-tight text-ks-fg">
+      <h3 className="mt-4 font-display font-normal text-xl lg:text-[1.4rem] leading-[1.1] tracking-[-0.02em] text-[#F5F4F0] transition-opacity duration-300 group-hover:opacity-70">
         {project.title}
       </h3>
 
-      {/* Tags row */}
-      <p className="mt-3 text-eyebrow font-mono uppercase tracking-widest text-ks-fg opacity-60">
-        {project.categoryNames.join(" · ")} · {project.year}
+      {/* Year */}
+      <p className="mt-2.5 font-mono text-[9px] uppercase tracking-[0.14em] text-[#F5F4F0]/35">
+        · {project.year}
       </p>
     </Link>
   )

@@ -21,7 +21,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       className={`${fraunces.variable} ${geistSans.variable} ${geistMono.variable} ${n27.variable} antialiased`}
       suppressHydrationWarning
     >
-      <body className="bg-ks-bg text-ks-fg font-body">
+      <body className="bg-[#0A0A0A] text-[#F5F4F0] font-body">
         {children}
       </body>
     </html>

@@ -72,7 +72,19 @@
       "PowerShell(Start-Process -NoNewWindow -FilePath \"cmd\" -ArgumentList \"/c\",\"cd /d C:\\\\Users\\\\User\\\\Kansei_Projects\\\\kansei-studio && npm run dev -- --port 3099 > C:\\\\Temp\\\\kansei-dev.log 2>&1\")",
       "PowerShell(Start-Sleep 8; $result = Invoke-WebRequest -Uri \"http://localhost:3099/it\" -UseBasicParsing -TimeoutSec 5 -ErrorAction SilentlyContinue; if \\($result\\) { $result.StatusCode } else { \"NOT READY\" })",
       "PowerShell(Receive-Job *)",
-      "Bash(echo \"EXIT:$?\")"
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(rm -f test-delete-temp.mjs prisma/seed-test-delete.ts)",
+      "Bash(npm uninstall *)",
+      "Bash(echo \"PID: $!\")",
+      "PowerShell(\\(Get-Command npx\\).Source; npx --yes playwright --version 2>&1)",
+      "Bash(pkill -f \"node.*next\")",
+      "Bash(pkill -f \"next-server\")",
+      "Bash(echo \"started PID $!\")",
+      "Bash(python3 -c \"import sys, re; html = sys.stdin.read\\(\\); m = re.search\\(r'\\\\\"message\\\\\":\\\\\"\\([^\\\\\"]+\\)\\\\\"', html\\); print\\(m.group\\(1\\) if m else 'no match'\\)\")",
+      "Bash(chromium-cli *)",
+      "Bash(npm root *)",
+      "Bash(identify public/ok_projects.png public/ok_tech.png public/ok_about.png public/ok_contact.png)",
+      "Bash(python3 -c ' *)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -194,6 +194,12 @@
     font-optical-sizing: auto;
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     background-color: var(--color-ks-bg);
     color: var(--color-ks-fg);

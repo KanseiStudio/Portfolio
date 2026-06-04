@@ -10,14 +10,16 @@ interface KpiBadgeProps {
 
 export function KpiBadge({ icon: Icon, value, label, className }: KpiBadgeProps) {
   return (
-    <div className={cn("border border-ks-hairline-active p-4 md:p-6", className)}>
-      <div className="grid grid-cols-12 gap-3 items-start">
-        <div className="col-span-2 pt-0.5">
-          <Icon size={20} strokeWidth={1.5} aria-hidden="true" />
-        </div>
-        <div className="col-span-10">
-          <p className="text-ks-h3 font-mono font-normal leading-none mb-1">{value}</p>
-          <p className="text-small font-body opacity-70 leading-tight">{label}</p>
+    <div className={cn("border border-[#F5F4F0]/12 p-4 md:p-6", className)}>
+      <div className="flex flex-col gap-4">
+        <Icon size={16} strokeWidth={1.5} className="text-[#F5F4F0]/35" aria-hidden="true" />
+        <div>
+          <p className="font-mono text-[1.75rem] font-normal leading-none tracking-tight text-[#F5F4F0] mb-1.5">
+            {value}
+          </p>
+          <p className="font-mono text-[10px] uppercase tracking-widest text-[#F5F4F0]/40 leading-tight">
+            {label}
+          </p>
         </div>
       </div>
     </div>
