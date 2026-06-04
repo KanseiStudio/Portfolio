@@ -21,11 +21,11 @@ export function LogoRipple() {
       aria-hidden="true"
     >
       {/*
-        viewBox 0 0 1440 800 proporzionato al desktop standard.
-        cx=1080 = 75% di 1440 → centro ancorato sul fiore (colonna destra).
-        cy=400 → centro verticale dell'hero.
-        4 cerchi con delay fisso: animazione puramente CSS, nessuno stato
-        React aggiornato a runtime → nessun flicker/lampeggio.
+        transform:scale approach — more reliable than animating SVG r.
+        transform-box:fill-box + transform-origin:center → scales from
+        each circle's own centre (cx=1080, cy=400).
+        scale(1) = r×1 = 80 SVG units; scale(17) ≈ 1360 SVG units,
+        enough to cover the full viewport from the right-column origin.
       */}
       <svg
         viewBox="0 0 1440 800"
@@ -36,23 +36,23 @@ export function LogoRipple() {
         {([0, 1.5, 3, 4.5] as const).map((delay, i) => (
           <circle
             key={i}
-            cx="1080" cy="400" r="100"
-            stroke="white" strokeOpacity="0.20" strokeWidth="1"
+            cx="1080" cy="400" r="80"
+            stroke="white" strokeOpacity="0.22" strokeWidth="1"
             opacity="0"
             style={{
               animation:      "logoRipple 6s ease-out infinite",
               animationDelay: `${delay}s`,
+              transformBox:   "fill-box",
+              transformOrigin: "center",
             }}
           />
         ))}
 
-        {/* @keyframes definiti dentro l'SVG — scope locale, nessuna
-            collisione con altri componenti. r senza unità = SVG user units */}
         <style>{`
           @keyframes logoRipple {
-            0%   { r: 100;  opacity: 0;    }
-            10%  {           opacity: 0.28; }
-            100% { r: 1400;  opacity: 0;    }
+            0%   { transform: scale(1);  opacity: 0;    }
+            8%   {                        opacity: 0.26; }
+            100% { transform: scale(17); opacity: 0;    }
           }
         `}</style>
       </svg>

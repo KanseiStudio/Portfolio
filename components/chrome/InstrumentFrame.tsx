@@ -20,6 +20,7 @@ function stripLocalePrefix(pathname: string, locales: readonly string[]): string
 
 const NAV_HREFS = [
   "/about",
+  "/projects",
   "/technologies",
   "/contact",
 ] as const
@@ -44,8 +45,9 @@ export function InstrumentFrame({
 
   const nav = [
     { href: NAV_HREFS[0], label: t("about")        },
-    { href: NAV_HREFS[1], label: t("technologies")  },
-    { href: NAV_HREFS[2], label: t("contact")       },
+    { href: NAV_HREFS[1], label: t("projects")      },
+    { href: NAV_HREFS[2], label: t("technologies")  },
+    { href: NAV_HREFS[3], label: t("contact")       },
   ] as const
 
   const [mounted,    setMounted]    = useState(false)
