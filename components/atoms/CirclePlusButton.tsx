@@ -41,11 +41,11 @@ const sizeConfig: Record<SizeType, { container: string; iconSize: number }> = {
 }
 
 const baseClasses =
-  "inline-flex items-center justify-center rounded-full border border-ks-fg bg-transparent text-ks-fg " +
+  "inline-flex items-center justify-center rounded-full border border-ks-dark-fg bg-transparent text-ks-dark-fg " +
   "transition-colors duration-600 ease-kansei " +
-  "hover:bg-ks-fg hover:text-ks-bg " +
+  "hover:bg-ks-dark-fg hover:text-ks-dark-bg " +
   "active:scale-95 " +
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-ks-fg focus-visible:outline-offset-4 " +
+  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-ks-dark-fg focus-visible:outline-offset-4 " +
   "disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none"
 
 export const CirclePlusButton = forwardRef<HTMLButtonElement, CirclePlusButtonProps>(

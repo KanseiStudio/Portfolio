@@ -37,7 +37,12 @@ export default async function HomePage({ params }: { params: Params }) {
   setRequestLocale(locale)
 
   return (
-    <main>
+    /* Desktop (lg+): lock the entire Home inside the viewport.
+       calc(100dvh - 93px) = 100dvh minus header(53px) + ticker(40px).
+       flex-col: hero takes flex-1 (remaining height), services shrink-0.
+       overflow-hidden prevents any accidental scroll.
+       Mobile: natural document flow, no height constraint.             */
+    <main className="lg:h-[calc(100dvh-93px)] lg:flex lg:flex-col lg:overflow-hidden">
       <HomeHero />
       <HomeServices />
     </main>

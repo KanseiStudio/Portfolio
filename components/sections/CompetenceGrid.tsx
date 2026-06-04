@@ -5,25 +5,18 @@ import { HairlineDivider } from "@/components/atoms/HairlineDivider"
 import { NumberedFeatureCard } from "@/components/molecules/NumberedFeatureCard"
 import { RevealText } from "@/components/molecules/RevealText"
 
-const descriptions = [
-  "We transform ideas into functional experiences through research, prototyping, and iterative design.",
-  "We craft visual languages and data-driven narratives that communicate and inspire.",
-  "We build immersive and intelligent systems that adapt to context and user behavior.",
-  "We deliver impactful experiences across physical and digital environments.",
-]
-
 export async function CompetenceGrid() {
   const t = await getTranslations("Services")
 
-  const items = (["01", "02", "03", "04"] as const).map((key, i) => ({
+  const items = (["01", "02", "03", "04"] as const).map((key) => ({
     number: key,
     title: t(`${key}.title`),
-    description: descriptions[i],
+    description: t(`${key}.description`),
     items: t.raw(`${key}.items`) as string[],
   }))
 
   return (
-    <section id="competence" className="w-full">
+    <section id="competence" className="w-full dark-section">
       <Container className="pt-0 pb-16 lg:pb-[120px]">
         <HairlineDivider className="mt-0 mb-0" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">

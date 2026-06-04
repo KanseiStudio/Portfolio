@@ -21,7 +21,11 @@ export function Logo({ size = 28, className, alt = "Kansei Studio", onDark = fal
         width={size}
         height={size}
         priority
-        className={cn("block", !onDark && "invert mix-blend-multiply")}
+        className={cn(
+          "block",
+          !onDark && "invert mix-blend-multiply",
+          onDark  && "mix-blend-screen",
+        )}
       />
     </div>
   )

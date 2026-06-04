@@ -127,7 +127,7 @@ export function InstrumentFrame({
             aria-label="Kansei Studio — Home"
             onClick={() => setMobileOpen(false)}
           >
-            <Logo size={24} onDark className="shrink-0" />
+            <Logo size={30} onDark className="shrink-0" />
             <span className="font-n27 font-bold text-[13px] tracking-tight uppercase text-[#F5F4F0]">
               Kansei Studio
             </span>

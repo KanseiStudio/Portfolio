@@ -33,7 +33,7 @@ export function NumberedFeatureCard({
         />
       )}
 
-      <span className="text-mono-ks font-mono text-ks-fg relative z-10">{number}</span>
+      <span className="text-mono-ks font-mono relative z-10">{number}</span>
 
       <div className="relative z-10 mt-16 lg:mt-20">
         <h3 className="text-ks-h3 font-display mb-3">{title}</h3>

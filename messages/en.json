@@ -80,6 +80,7 @@
   "Services": {
     "01": {
       "title": "Technological Innovation",
+      "description": "We transform ideas into functional experiences through research, prototyping, and iterative design.",
       "items": [
         "Wireframing and prototyping",
         "Unreal / Unity system based",
@@ -89,6 +90,7 @@
     },
     "02": {
       "title": "Experimental Formats",
+      "description": "We craft visual languages and data-driven narratives that communicate and inspire.",
       "items": [
         "Design of digital experiential spaces",
         "Design and creation of immersive rooms",
@@ -98,6 +100,7 @@
     },
     "03": {
       "title": "AI Advanced System",
+      "description": "We build immersive and intelligent systems that adapt to context and user behavior.",
       "items": [
         "AI Automation Agency",
         "Multi-Agent System for Autonomous Companies",
@@ -107,6 +110,7 @@
     },
     "04": {
       "title": "Cross-Environment Applications",
+      "description": "We deliver impactful experiences across physical and digital environments.",
       "items": [
         "Shopping malls",
         "Exhibition areas",
