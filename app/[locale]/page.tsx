@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import { setRequestLocale, getTranslations } from "next-intl/server"
 import { HomeHero } from "@/components/sections/HomeHero"
 import { HomeServices } from "@/components/sections/HomeServices"
-import { HomeRippleOverlay } from "@/components/atoms/HomeRippleOverlay"
 
 type Params = Promise<{ locale: string }>
 
@@ -43,18 +42,9 @@ export default async function HomePage({ params }: { params: Params }) {
        flex-col: hero takes flex-1 (remaining height), services shrink-0.
        overflow-hidden prevents any accidental scroll.
        Mobile: natural document flow, no height constraint.             */
-    <>
-      {/* Ripple rings behind everything — fixed, z-5 */}
-      <HomeRippleOverlay />
-      {/* Content above ripple — relative z-10 creates stacking context
-          so InstrumentFrame fixed elements (z-30/50) remain on top  */}
-      <main
-        className="relative lg:h-[calc(100dvh-93px)] lg:flex lg:flex-col lg:overflow-hidden"
-        style={{ zIndex: 10 }}
-      >
-        <HomeHero />
-        <HomeServices />
-      </main>
-    </>
+    <main className="lg:h-[calc(100dvh-93px)] lg:flex lg:flex-col lg:overflow-hidden">
+      <HomeHero />
+      <HomeServices />
+    </main>
   )
 }

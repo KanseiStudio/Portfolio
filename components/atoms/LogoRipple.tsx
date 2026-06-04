@@ -1,18 +1,11 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
-
-interface Ripple {
-  delay: number
-  duration: number
-}
+import { useEffect, useState } from "react"
 
 export function LogoRipple() {
   const [reducedMotion, setReducedMotion] = useState(false)
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
     setReducedMotion(mq.matches)
     const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches)
@@ -20,60 +13,46 @@ export function LogoRipple() {
     return () => mq.removeEventListener("change", handler)
   }, [])
 
-  const ripples = useMemo<Ripple[]>(() => {
-    if (!mounted) return []
-    return Array.from({ length: 12 }, () => ({
-      delay: Math.random() * 16,
-      duration: 14 + Math.random() * 4,
-    }))
-  }, [mounted])
-
-  if (!mounted || reducedMotion) return null
+  if (reducedMotion) return null
 
   return (
     <div
-      className="absolute inset-0 pointer-events-none overflow-hidden"
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
       aria-hidden="true"
     >
+      {/*
+        viewBox 0 0 1440 800 proporzionato al desktop standard.
+        cx=1080 = 75% di 1440 → centro ancorato sul fiore (colonna destra).
+        cy=400 → centro verticale dell'hero.
+        4 cerchi con delay fisso: animazione puramente CSS, nessuno stato
+        React aggiornato a runtime → nessun flicker/lampeggio.
+      */}
       <svg
+        viewBox="0 0 1440 800"
         className="absolute inset-0 w-full h-full"
-        viewBox="0 0 1920 800"
         preserveAspectRatio="xMidYMid slice"
-        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
       >
-        {ripples.map((ripple, i) => (
+        {([0, 1.5, 3, 4.5] as const).map((delay, i) => (
           <circle
             key={i}
-            cx="1440"
-            cy="400"
-            r="100"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.2"
+            cx="1080" cy="400" r="100"
+            stroke="white" strokeOpacity="0.20" strokeWidth="1"
             opacity="0"
             style={{
-              animation: `logoRipple ${ripple.duration}s ease-out infinite`,
-              animationDelay: `${ripple.delay}s`,
-              vectorEffect: "non-scaling-stroke",
+              animation:      "logoRipple 6s ease-out infinite",
+              animationDelay: `${delay}s`,
             }}
           />
         ))}
 
+        {/* @keyframes definiti dentro l'SVG — scope locale, nessuna
+            collisione con altri componenti. r senza unità = SVG user units */}
         <style>{`
           @keyframes logoRipple {
-            0% {
-              r: 100px;
-              opacity: 0;
-              stroke-width: 1.2;
-            }
-            12% {
-              opacity: 0.4;
-            }
-            100% {
-              r: 1400px;
-              opacity: 0;
-              stroke-width: 0.4;
-            }
+            0%   { r: 100;  opacity: 0;    }
+            10%  {           opacity: 0.28; }
+            100% { r: 1400;  opacity: 0;    }
           }
         `}</style>
       </svg>
