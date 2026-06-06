@@ -242,6 +242,12 @@
 }
 
 
+/* ── Lightbox fade-in (auto-suppressed by prefers-reduced-motion rule above) ── */
+@keyframes ks-lb-fade {
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}
+
 /* ── Tree logo wind animation ── */
 @keyframes wind-sway-grande {
   0%, 100% { transform: rotate(0deg); }

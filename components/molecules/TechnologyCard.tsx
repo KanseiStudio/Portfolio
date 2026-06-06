@@ -1,3 +1,5 @@
+import { UsageGallery } from "@/components/technologies/UsageGallery"
+
 export interface TechnologyCardData {
   number: string
   slug: string
@@ -130,20 +132,11 @@ export function TechnologyCard({ tech, labels }: TechnologyCardProps) {
                                  text-[#F5F4F0]/35">
                   {labels.usedInLabel}
                 </span>
-                <div className="grid grid-cols-3 gap-2">
-                  {usageImages.map((img, i) =>
-                    img ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        key={i}
-                        src={img}
-                        alt=""
-                        className="w-full aspect-video object-cover
-                                   border border-[#F5F4F0]/20"
-                      />
-                    ) : null
-                  )}
-                </div>
+                <UsageGallery
+                  images={usageImages
+                    .filter((src): src is string => src !== null)
+                    .map(src => ({ src }))}
+                />
               </>
             )}
           </div>

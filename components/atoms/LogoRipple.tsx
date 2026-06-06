@@ -15,8 +15,10 @@ import { useEffect, useMemo, useState } from "react"
 
 export function LogoRipple() {
   const [reduced, setReduced] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
     setReduced(mq.matches)
     const h = (e: MediaQueryListEvent) => setReduced(e.matches)
@@ -24,7 +26,8 @@ export function LogoRipple() {
     return () => mq.removeEventListener("change", h)
   }, [])
 
-  // Tempi casuali STABILI — calcolati una volta al mount, mai ricreati (no flicker)
+  // Valori casuali stabili — useMemo garantisce che non cambino tra re-render,
+  // ma vengono usati SOLO dopo il mount (mounted=true) per evitare mismatch SSR/client.
   const rings = useMemo(
     () =>
       Array.from({ length: 6 }, () => ({
@@ -43,7 +46,7 @@ export function LogoRipple() {
     >
       {/* Origine ancorata al centro del fiore — lato destro della Home */}
       <div className="absolute" style={{ left: "72%", top: "42%" }}>
-        {rings.map((r, i) => (
+        {mounted && rings.map((r, i) => (
           <span
             key={i}
             className="absolute rounded-full border border-white/15"
