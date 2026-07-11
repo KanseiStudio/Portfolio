@@ -191,7 +191,7 @@ TypeScript strict: 0 errori, 0 `any`. Screenshot verificati a 375 / 768 / 1440px
 | # | Componente | File | Note |
 |---|-----------|------|------|
 | 1 | `GenerativeVisual` | `components/atoms/GenerativeVisual.tsx` | `"use client"`; variant map → `/public/visuals/<variant>.png`; fallback placeholder fino a Task 09; motion opacity 0→1 scale 0.98→1 on mount (1200ms ease-kansei) |
-| 2 | `Logo` | `components/atoms/Logo.tsx` | `next/image` con `/logo.png`; `priority`; container `shrink-0 aspect-square` |
+| 2 | `Logo` | `components/atoms/Logo.tsx` | `next/image` con `/logo-white.png` (mark a colori su trasparenza); `onDark` = nessun filtro; `priority`; container `shrink-0 aspect-square` |
 
 ### `sections/` (nuovi)
 

@@ -97,7 +97,10 @@
       "Bash(git show *)",
       "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\User\\\\Kansei_Projects\\\\kansei-studio\\\\app\\\\admin\\\\settings\")",
       "Bash(Out-Null)",
-      "Bash(Write-Host \"ok\")"
+      "Bash(Write-Host \"ok\")",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\User\\\\Kansei_Projects\\\\kansei-studio\\\\public\" | Where-Object { $_.Name -match \"logo|flower\" } | Select-Object Name, Length)",
+      "Bash(powershell -Command 'Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match '\\\\''next dev'\\\\'' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }')",
+      "PowerShell(Get-CimInstance *)"
     ]
   },
   "enableAllProjectMcpServers": true,

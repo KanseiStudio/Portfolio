@@ -49,7 +49,7 @@ export function TopNav() {
             aria-label="Kansei Studio — Home"
             onClick={() => setIsMobileOpen(false)}
           >
-            <Logo size={28} className="shrink-0" />
+            <Logo size={28} onDark className="shrink-0" />
             <span className="font-n27 font-bold text-base tracking-tight uppercase">
               Kansei Studio
             </span>

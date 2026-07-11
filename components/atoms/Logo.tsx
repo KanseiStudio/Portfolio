@@ -16,15 +16,15 @@ export function Logo({ size = 28, className, alt = "Kansei Studio", onDark = fal
       style={{ width: size, height: size }}
     >
       <Image
-        src="/images/home-flower.png"
+        src="/logo-white.png"
         alt={alt}
         width={size}
         height={size}
         priority
         className={cn(
           "block",
-          !onDark && "invert mix-blend-multiply",
-          onDark  && "mix-blend-screen",
+          // logo-white.png is a full-colour transparent mark → no invert/blend on dark.
+          !onDark && "invert",
         )}
       />
     </div>

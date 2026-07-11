@@ -85,26 +85,19 @@ export function HomeFlowerOrbit() {
         <circle cx="32"  cy="330" r="0.8" fill="white" fillOpacity="0.12" />
       </svg>
 
-      {/* ── Flower image ──────────────────────────────────────────────── */}
+      {/* ── Logo mark ─────────────────────────────────────────────────── */}
       {/*
-        /images/home-flower.png should be the transparent PNG provided by
-        the user. mix-blend-mode:screen is kept so the dev placeholder
-        (Logo_Kansei.png — black bg) renders correctly; it is harmless
-        on actual transparent PNGs (screen of transparent = transparent).
-        Gradient mask hides the wordmark at the bottom of the placeholder.
+        /logo-white.png is the full-colour transparent flower mark.
+        No blend/mask needed — it is already the finished artwork and its
+        petals reach the frame edges, so the old radial crop-mask is dropped.
       */}
       <div className="absolute inset-0 flex items-center justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/home-flower.png"
+          src="/logo-white.png"
           alt=""
           loading="eager"
           className="w-[90%] h-auto block"
-          style={{
-            mixBlendMode:    "screen",
-            WebkitMaskImage: "radial-gradient(circle at center, black 52%, transparent 72%)",
-            maskImage:       "radial-gradient(circle at center, black 52%, transparent 72%)",
-          }}
         />
       </div>
     </div>
