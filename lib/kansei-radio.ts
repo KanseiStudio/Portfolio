@@ -26,6 +26,14 @@ const TARGET_VOL = 0.6
 type Track    = { file: string; title: string; artist?: string; info?: string; duration: number }
 type Playlist = { name: string; epoch: string; tracks: Track[] }
 
+/** Rifiuta se la promessa non si risolve entro ms (evita attese infinite). */
+function withTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const id = setTimeout(() => reject(new Error("timeout")), ms)
+    p.then((v) => { clearTimeout(id); resolve(v) }, (e) => { clearTimeout(id); reject(e) })
+  })
+}
+
 /** Dall'ora attuale ricava indice del brano e secondo di partenza. */
 function whereAreWe(p: Playlist) {
   const total   = p.tracks.reduce((s, t) => s + t.duration, 0)
@@ -59,7 +67,7 @@ export function useKanseiRadio(): KanseiRadio {
   const getAudio = useCallback(() => {
     if (!audioRef.current) {
       const a = new Audio()
-      a.preload = "none"
+      a.preload = "auto"
       a.addEventListener("ended", () => onEndedRef.current())
       audioRef.current = a
     }
@@ -75,24 +83,27 @@ export function useKanseiRadio(): KanseiRadio {
     return p
   }, [])
 
-  /** Carica il brano in onda nel punto giusto e lo fa partire. */
+  /**
+   * Carica il brano in onda nel punto giusto e lo fa partire.
+   * play() viene chiamato subito (dentro il gesto dell'utente, richiesto da
+   * Safari/iOS); il punto di partenza è passato come media fragment (#t=)
+   * e corretto appena arrivano i metadati.
+   */
   const tuneIn = useCallback(async () => {
     const audio = getAudio()
-    const p = playlistRef.current ?? (await loadPlaylist())
+    const p = playlistRef.current ?? (await withTimeout(loadPlaylist(), 10_000))
     const { index, offset } = whereAreWe(p)
-    const tr  = p.tracks[index]
-    const src = `${RADIO_BASE}/${tr.file}`
+    const tr = p.tracks[index]
     setTitle(tr.title)
-    if (audio.src !== src) audio.src = src
-    if (audio.readyState < 1) {
-      await new Promise<void>((resolve, reject) => {
-        audio.addEventListener("loadedmetadata", () => resolve(), { once: true })
-        audio.addEventListener("error", () => reject(new Error("audio")), { once: true })
-      })
+    const startedAt = Date.now()
+    const seek = () => {
+      const target = offset + (Date.now() - startedAt) / 1000
+      if (Math.abs(audio.currentTime - target) > 1.5) audio.currentTime = target
     }
-    audio.currentTime = offset
+    audio.addEventListener("loadedmetadata", seek, { once: true })
+    audio.src = `${RADIO_BASE}/${tr.file}#t=${offset.toFixed(1)}`
     audio.volume = TARGET_VOL
-    await audio.play()
+    await withTimeout(audio.play(), 20_000)
   }, [loadPlaylist, getAudio])
 
   const stop = useCallback(() => {
@@ -135,7 +146,9 @@ export function useKanseiRadio(): KanseiRadio {
       await tuneIn() // ogni play si riallinea alla diretta
       setPlaying(true)
       setError(false)
-    } catch {
+    } catch (e) {
+      console.warn("[Kansei Radio] avvio non riuscito:", e)
+      audioRef.current?.pause()
       setError(true)
       setPlaying(false)
     } finally {
