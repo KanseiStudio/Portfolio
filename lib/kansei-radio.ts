@@ -1,0 +1,147 @@
+"use client"
+
+/**
+ * Kansei Radio — motore di riproduzione sincronizzata.
+ *
+ * Legge playlist.json da radio.kansei-studio.art e, dall'ora attuale, calcola
+ * quale brano è in onda e da che secondo: tutti gli ascoltatori sentono la
+ * stessa cosa nello stesso momento. Nessun server di streaming.
+ *
+ * L'elemento audio è creato al primo play. Usare l'hook UNA sola volta (in InstrumentFrame, che vive nel layout
+ * [locale] e non viene rimontato al cambio pagina) e passare lo stato ai
+ * pulsanti, così l'audio non si interrompe navigando.
+ *
+ * Coordinamento con BackgroundMusic (SND): quando la radio parte emette
+ * RADIO_PLAY_EVENT; quando parte SND emette SND_PLAY_EVENT e la radio si ferma.
+ */
+
+import { useCallback, useEffect, useRef, useState } from "react"
+
+export const RADIO_BASE        = "https://radio.kansei-studio.art"
+export const RADIO_PLAY_EVENT  = "ks:radio-play"
+export const SND_PLAY_EVENT    = "ks:snd-play"
+
+const TARGET_VOL = 0.6
+
+type Track    = { file: string; title: string; artist?: string; info?: string; duration: number }
+type Playlist = { name: string; epoch: string; tracks: Track[] }
+
+/** Dall'ora attuale ricava indice del brano e secondo di partenza. */
+function whereAreWe(p: Playlist) {
+  const total   = p.tracks.reduce((s, t) => s + t.duration, 0)
+  const epochMs = Date.parse(p.epoch)
+  let t = ((((Date.now() - epochMs) / 1000) % total) + total) % total
+  for (let i = 0; i < p.tracks.length; i++) {
+    if (t < p.tracks[i].duration) return { index: i, offset: t }
+    t -= p.tracks[i].duration
+  }
+  return { index: 0, offset: 0 }
+}
+
+export type KanseiRadio = {
+  playing: boolean
+  loading: boolean
+  error:   boolean
+  title:   string | null
+  toggle:  () => void
+}
+
+export function useKanseiRadio(): KanseiRadio {
+  const audioRef    = useRef<HTMLAudioElement | null>(null)
+  const playlistRef = useRef<Playlist | null>(null)
+  const [playing, setPlaying] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState(false)
+  const [title,   setTitle]   = useState<string | null>(null)
+  const onEndedRef = useRef<() => void>(() => {})
+
+  /** Un solo elemento audio, creato al primo play (niente <audio> nel DOM). */
+  const getAudio = useCallback(() => {
+    if (!audioRef.current) {
+      const a = new Audio()
+      a.preload = "none"
+      a.addEventListener("ended", () => onEndedRef.current())
+      audioRef.current = a
+    }
+    return audioRef.current
+  }, [])
+
+  const loadPlaylist = useCallback(async () => {
+    const r = await fetch(`${RADIO_BASE}/playlist.json`, { cache: "no-cache" })
+    if (!r.ok) throw new Error("playlist")
+    const p = (await r.json()) as Playlist
+    if (!p.tracks?.length) throw new Error("playlist vuota")
+    playlistRef.current = p
+    return p
+  }, [])
+
+  /** Carica il brano in onda nel punto giusto e lo fa partire. */
+  const tuneIn = useCallback(async () => {
+    const audio = getAudio()
+    const p = playlistRef.current ?? (await loadPlaylist())
+    const { index, offset } = whereAreWe(p)
+    const tr  = p.tracks[index]
+    const src = `${RADIO_BASE}/${tr.file}`
+    setTitle(tr.title)
+    if (audio.src !== src) audio.src = src
+    if (audio.readyState < 1) {
+      await new Promise<void>((resolve, reject) => {
+        audio.addEventListener("loadedmetadata", () => resolve(), { once: true })
+        audio.addEventListener("error", () => reject(new Error("audio")), { once: true })
+      })
+    }
+    audio.currentTime = offset
+    audio.volume = TARGET_VOL
+    await audio.play()
+  }, [loadPlaylist, getAudio])
+
+  const stop = useCallback(() => {
+    audioRef.current?.pause()
+    setPlaying(false)
+  }, [])
+
+  // Titolo in onda già visibile prima del play (tooltip / aria)
+  useEffect(() => {
+    loadPlaylist()
+      .then((p) => setTitle(p.tracks[whereAreWe(p).index].title))
+      .catch(() => setError(true))
+  }, [loadPlaylist])
+
+  // Fine brano → si riallinea alla diretta (ricarica la playlist: può essere cambiata)
+  useEffect(() => {
+    onEndedRef.current = async () => {
+      playlistRef.current = null
+      try { await tuneIn() } catch { setPlaying(false); setError(true) }
+    }
+  }, [tuneIn])
+
+  // Smontaggio (non avviene navigando, solo uscendo dal layout pubblico)
+  useEffect(() => () => {
+    audioRef.current?.pause()
+    audioRef.current = null
+  }, [])
+
+  // Se parte la musica di sottofondo (SND), la radio si ferma
+  useEffect(() => {
+    window.addEventListener(SND_PLAY_EVENT, stop)
+    return () => window.removeEventListener(SND_PLAY_EVENT, stop)
+  }, [stop])
+
+  const toggle = useCallback(async () => {
+    if (playing) return stop()
+    setLoading(true)
+    try {
+      window.dispatchEvent(new Event(RADIO_PLAY_EVENT))
+      await tuneIn() // ogni play si riallinea alla diretta
+      setPlaying(true)
+      setError(false)
+    } catch {
+      setError(true)
+      setPlaying(false)
+    } finally {
+      setLoading(false)
+    }
+  }, [playing, stop, tuneIn])
+
+  return { playing, loading, error, title, toggle }
+}

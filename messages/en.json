@@ -4,7 +4,10 @@
     "technologies": "Technologies",
     "contact": "Contact",
     "menuOpen": "Open menu",
-    "menuClose": "Close menu"
+    "menuClose": "Close menu",
+    "radio": "Radio",
+    "radioPlay": "Listen to Kansei Radio",
+    "radioPause": "Stop Kansei Radio"
   },
   "Home": {
     "titleLine1": "KANSEI",
