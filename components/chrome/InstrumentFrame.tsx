@@ -7,6 +7,8 @@ import { Link, usePathname, useRouter } from "@/i18n/routing"
 import { routing } from "@/i18n/routing"
 import { Logo } from "@/components/atoms/Logo"
 import { BackgroundMusic } from "@/components/chrome/BackgroundMusic"
+import { RadioNavButton } from "@/components/chrome/RadioNavButton"
+import { useKanseiRadio } from "@/lib/kansei-radio"
 import { cn } from "@/lib/utils"
 
 type Locale = "it" | "en"
@@ -52,6 +54,8 @@ export function InstrumentFrame({
     { href: NAV_HREFS[1], label: t("technologies")  },
     { href: NAV_HREFS[2], label: t("contact")       },
   ] as const
+
+  const radio = useKanseiRadio()
 
   const [mounted,    setMounted]    = useState(false)
   const [time,       setTime]       = useState("")
@@ -159,6 +163,9 @@ export function InstrumentFrame({
               )
             })}
 
+            {/* RADIO — accende/spegne Kansei Radio in diretta */}
+            <RadioNavButton radio={radio} />
+
             {/* IT / EN pill toggle */}
             <div role="group" aria-label="Language selector" className="flex items-center gap-1">
               {(["it", "en"] as const).map((loc) => (
@@ -264,6 +271,13 @@ export function InstrumentFrame({
                   </Link>
                 </motion.div>
               ))}
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.36, delay: 0.06 + nav.length * 0.07, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <RadioNavButton radio={radio} variant="mobile" />
+              </motion.div>
             </nav>
           </motion.div>
         )}
