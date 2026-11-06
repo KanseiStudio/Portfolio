@@ -2,7 +2,6 @@
 
 import { useRef, useState, useEffect, useCallback } from "react"
 import { cn } from "@/lib/utils"
-import { RADIO_PLAY_EVENT, SND_PLAY_EVENT } from "@/lib/kansei-radio"
 
 const STORAGE_KEY = "ks-sound-pref"
 const TARGET_VOL  = 0.3
@@ -59,18 +58,9 @@ export function BackgroundMusic({ musicUrl }: { musicUrl: string }) {
     const next = !playing
     setPlaying(next)
     localStorage.setItem(STORAGE_KEY, next ? "on" : "off")
-    if (next) {
-      window.dispatchEvent(new Event(SND_PLAY_EVENT)) // ferma Kansei Radio
-      fadeIn()
-    } else fadeOut()
+    if (next) fadeIn()
+    else fadeOut()
   }, [playing, fadeIn, fadeOut])
-
-  // Se parte Kansei Radio, la musica di sottofondo si spegne
-  useEffect(() => {
-    const onRadio = () => { setPlaying(false); fadeOut() }
-    window.addEventListener(RADIO_PLAY_EVENT, onRadio)
-    return () => window.removeEventListener(RADIO_PLAY_EVENT, onRadio)
-  }, [fadeOut])
 
   if (!mounted) return null
 
