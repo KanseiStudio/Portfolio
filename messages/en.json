@@ -5,9 +5,7 @@
     "contact": "Contact",
     "menuOpen": "Open menu",
     "menuClose": "Close menu",
-    "radio": "Radio",
-    "radioPlay": "Listen to Kansei Radio",
-    "radioPause": "Stop Kansei Radio"
+    "radio": "Radio"
   },
   "Home": {
     "titleLine1": "KANSEI",
@@ -174,5 +172,10 @@
     "loading": "Loading…",
     "error": "An error occurred.",
     "languageSwitcher": "Language"
+  },
+  "Radio": {
+    "metaTitle": "Radio — Kansei Studio",
+    "metaDescription": "Kansei Radio: live generative music, the same for everyone at the same moment.",
+    "iframeTitle": "Kansei Radio player"
   }
 }
