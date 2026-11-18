@@ -50,6 +50,8 @@ export interface LocalizedWorkSummary {
   position: number
   published: boolean
   type: string
+  /** Tipologia breve per la tabella indice (fallback: type) */
+  typeShort: string
   status: string
   tagline: string
   intro: string
@@ -116,6 +118,7 @@ function localizeSummary(
   position: number,
 ): LocalizedWorkSummary {
   const intro = pick(locale, { it: w.introIt, en: w.introEn }) ?? ""
+  const type = pick(locale, { it: w.typeIt, en: w.typeEn }) ?? ""
   return {
     id: w.id,
     slug: w.slug,
@@ -123,7 +126,8 @@ function localizeSummary(
     order: w.order,
     position,
     published: w.published,
-    type: pick(locale, { it: w.typeIt, en: w.typeEn }) ?? "",
+    type,
+    typeShort: pick(locale, { it: w.typeShortIt, en: w.typeShortEn }) ?? type,
     status: pick(locale, { it: w.statusIt, en: w.statusEn }) ?? "",
     tagline: pick(locale, { it: w.taglineIt, en: w.taglineEn }) ?? "",
     intro,

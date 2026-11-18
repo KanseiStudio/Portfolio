@@ -18,6 +18,7 @@ export function workToFormValues(w: WorkWithChildren): WorkFormValues {
     slug: w.slug,
     published: w.published,
     typeIt: w.typeIt, typeEn: w.typeEn,
+    typeShortIt: s(w.typeShortIt), typeShortEn: s(w.typeShortEn),
     statusIt: w.statusIt, statusEn: w.statusEn,
     taglineIt: w.taglineIt, taglineEn: w.taglineEn,
     introIt: w.introIt, introEn: w.introEn,

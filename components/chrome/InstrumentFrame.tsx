@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useSyncExternalStore } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { useLocale, useTranslations } from "next-intl"
 import { Link, usePathname, useRouter } from "@/i18n/routing"
@@ -26,6 +26,16 @@ const NAV_HREFS = [
   "/contact",
   "/radio",
 ] as const
+
+// "Mounted" e SEED senza setState in effect né Math.random in render:
+// lo snapshot server ("false" / "13F3") viene usato in SSR e in hydration,
+// poi il client passa al proprio valore — stesso comportamento di prima.
+const noopSubscribe = () => () => {}
+let clientSeed: string | null = null
+function getClientSeed() {
+  clientSeed ??= Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0")
+  return clientSeed
+}
 
 /** Voce attiva anche sulle sottopagine (es. /works/kbox) */
 function isNavActive(pathname: string, href: string) {
@@ -62,18 +72,13 @@ export function InstrumentFrame({
     { href: NAV_HREFS[4], label: t("radio")         },
   ] as const
 
-  const [mounted,    setMounted]    = useState(false)
+  const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false)
   const [time,       setTime]       = useState("")
   const [cycles,     setCycles]     = useState(8316)
   const [seconds,    setSeconds]    = useState(0)
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  const seed = useMemo(() => {
-    if (typeof window === "undefined") return "13F3"
-    return Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0")
-  }, [])
-
-  useEffect(() => { setMounted(true) }, [])
+  const seed = useSyncExternalStore(noopSubscribe, getClientSeed, () => "13F3")
 
   // Body scroll lock when mobile drawer is open
   useEffect(() => {

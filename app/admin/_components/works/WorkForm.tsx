@@ -42,7 +42,7 @@ type TabKey = (typeof TABS)[number]["key"]
 /** A quale scheda appartiene ogni campo di primo livello (per badge errori e salto automatico) */
 const FIELD_TAB: Record<keyof WorkFormValues, TabKey> = {
   name: "general", slug: "general", published: "general",
-  typeIt: "general", typeEn: "general", statusIt: "general", statusEn: "general",
+  typeIt: "general", typeEn: "general", typeShortIt: "general", typeShortEn: "general", statusIt: "general", statusEn: "general",
   taglineIt: "general", taglineEn: "general", introIt: "general", introEn: "general",
   summaryIt: "general", summaryEn: "general", tags: "general",
   heroImage: "hero", heroAltIt: "hero", heroAltEn: "hero", heroCaption: "hero", heroTone: "hero",
@@ -350,6 +350,12 @@ function GeneralPanel({ isEditing }: { isEditing: boolean }) {
         />
       </div>
       <BiField label="Tipologia" base="type" required placeholder={{ it: "Assistente digitale · AI conversazionale" }} />
+      <BiField
+        label="Tipologia breve"
+        base="typeShort"
+        hint="opzionale — per la tabella indice; se vuota si usa la tipologia"
+        placeholder={{ it: "Assistente digitale · AI", en: "Digital assistant · AI" }}
+      />
       <BiField label="Stato" base="status" required placeholder={{ it: "Disponibile", en: "Available" }} />
       <BiField label="Tagline" base="tagline" required multiline rows="sm" />
       <BiField label="Intro" base="intro" required multiline />

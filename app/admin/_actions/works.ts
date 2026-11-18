@@ -99,6 +99,8 @@ function workData(d: WorkFormValues) {
     published: d.published,
     typeIt: d.typeIt,
     typeEn: d.typeEn,
+    typeShortIt: orNull(d.typeShortIt),
+    typeShortEn: orNull(d.typeShortEn),
     statusIt: d.statusIt,
     statusEn: d.statusEn,
     taglineIt: d.taglineIt,

@@ -214,7 +214,7 @@ Ogni pagina è composta da **sezioni a blocchi ordinabili**: un lavoro nuovo pu�
 ### Modello (`prisma/schema.prisma`)
 | Modello | Contenuto |
 |---|---|
-| `Work` (`works`) | slug, name (non tradotto), order, published, tipologia, stato, tagline, intro, testo scheda indice (`summary`, fallback intro), frase finale, etichetta CTA, hero (immagine, alt, didascalia, `heroTone`) |
+| `Work` (`works`) | slug, name (non tradotto), order, published, tipologia, tipologia breve (`typeShort`, solo tabella indice, fallback tipologia), stato, tagline, intro, testo scheda indice (`summary`, fallback intro), frase finale, etichetta CTA, hero (immagine, alt, didascalia, `heroTone`) |
 | `WorkTag` | tag ordinati (IT/EN) |
 | `WorkStat` | `value` + etichetta; `onPage` = fascia stats sotto l'hero; `onCard` = scheda dell'indice (**max 3**, con `cardLabel` breve opzionale) |
 | `WorkSection` | `kind` + eyebrow/titolo/testo, intestazioni colonne (`columns`, solo TABLE), immagine + alt |
@@ -242,7 +242,7 @@ Fonte unica: `SECTION_KIND_CONFIG` in `lib/validations/work.ts` (la usano editor
 `*` = obbligatorio. Cambiando tipo, i valori dei campi non pertinenti restano nel form ma il salvataggio li azzera.
 
 ### Admin
-- `/admin/works`: lista con riordino (frecce), switch Pubblicato/Bozza, Modifica, Vedi sul sito, eliminazione con conferma dello slug.
+- `/admin/works`: lista con riordino (frecce), switch Pubblicato/Bozza, Modifica, Vedi sul sito, eliminazione con conferma dello slug. Mentre lo switch salva compare «salvataggio…» e lasciare la pagina chiede conferma (`beforeunload`).
 - `/admin/works/new`, `/admin/works/[id]`: editor a schede **Generale · Hero · Stats · Sezioni · Chiusura**. Le schede sono solo visive: tutti i campi restano montati e si salva tutto in un colpo. IT ed EN sempre affiancati. Su errore l'editor salta alla prima scheda con errori (badge rossi) e apre le sezioni interessate.
 - "Salva bozza" = `published: false`, "Salva e pubblica" = `published: true`, "Anteprima" = `/it/works/<slug>?preview=1` (la verifica della sessione admin è nella pagina pubblica, task 2).
 - Server Actions in `app/admin/_actions/works.ts` (`createWork`, `updateWork`, `deleteWork`, `reorderWorks`, `togglePublished`, `uploadWorkImage`, `discardWorkImage`): `requireAdmin()` + Zod; figli sostituiti completamente in transazione; `revalidatePath` su `/{it,en}/works` e `/{it,en}/works/<slug>` (anche il vecchio slug).
@@ -259,10 +259,12 @@ Fonte unica: `SECTION_KIND_CONFIG` in `lib/validations/work.ts` (la usano editor
 ```bash
 npx prisma migrate dev --name <nome>   # migrazione (dev)
 npx prisma migrate deploy              # migrazione su produzione
-npm run seed:works                     # seed idempotente di KDoors, KBox, K-Avatar (upsert per slug)
+npm run seed:works                     # crea SOLO i lavori mancanti (KDoors, KBox, K-Avatar); quelli esistenti restano intatti
+npm run seed:works -- --force          # riscrive TUTTO (campi, tag, stats, sezioni) dei 3 lavori; prima stampa gli slug coinvolti
 npm run test:e2e                       # Playwright (usa .env.local; avvia/riusa `npm run dev`)
 ```
-Il seed riscrive completamente tag, stats e sezioni dei 3 lavori: modifiche fatte dall'admin a quei lavori vengono sovrascritte.
+- Senza `--force` il seed è sicuro da rilanciare: non tocca mai un lavoro già presente, nemmeno se modificato dall'admin.
+- `--force` sovrascrive le modifiche fatte dall'admin sui 3 lavori: usarlo solo per riallineare un DB ai contenuti del seed (es. dopo aver aggiunto un campo come `typeShort`).
 
 ## Works — pagine pubbliche (aggiunto Task works-2)
 
@@ -304,7 +306,10 @@ Il rosso del logo `#E31E24` compare **solo** nella barra verticale di `QuoteSect
 3. Con sessione: la bozza viene renderizzata con badge HUD "Bozza · anteprima" e `robots: noindex, nofollow`. Nell'anteprima la posizione e il "Prossimo" includono la bozza; per i visitatori le bozze sono escluse da indice, contatore e "Prossimo".
 
 ### Nav
-Voce **Works** tra Technologies e Contatti (`Nav.works`), attiva su `/works` e `/works/*` in desktop e drawer mobile (`aria-current="page"`).
+Ordine, desktop e mobile, IT ed EN: **About · Technologies · Works · Contatti · Radio** (`Nav.works`, `Nav.radio`). Una voce è attiva sulla sua rotta e sulle sottopagine (`/works/*`) tramite `isNavActive()` in `InstrumentFrame`, sia nel nav desktop sia nel drawer mobile (`aria-current="page"`).
+
+### Tabella indice
+Colonna Tipologia = `typeShort` (es. "Installazione fisica · AI"); se vuota, `type`. Le schede e la pagina lavoro usano sempre `type` completo.
 
 ### Immagini
 `next/image` ovunque, con `alt` dal DB e `sizes` per colonna. Le hero sono ritratti verticali: in hero e schede il fuoco è in alto (`object-position: center top`) per non tagliare i volti.

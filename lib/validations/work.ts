@@ -182,6 +182,8 @@ export const workFormSchema = z.object({
   published: z.boolean(),
   typeIt: req("Tipologia IT", 180),
   typeEn: req("Tipologia EN", 180),
+  typeShortIt: text(120),
+  typeShortEn: text(120),
   statusIt: req("Stato IT", 80),
   statusEn: req("Stato EN", 80),
   taglineIt: req("Tagline IT", 300),
@@ -236,7 +238,7 @@ export const emptyWorkStat: WorkStatFormValues = {
 
 export const emptyWorkForm: WorkFormValues = {
   name: "", slug: "", published: false,
-  typeIt: "", typeEn: "", statusIt: "", statusEn: "",
+  typeIt: "", typeEn: "", typeShortIt: "", typeShortEn: "", statusIt: "", statusEn: "",
   taglineIt: "", taglineEn: "", introIt: "", introEn: "",
   summaryIt: "", summaryEn: "", closingIt: "", closingEn: "",
   ctaLabelIt: "", ctaLabelEn: "",

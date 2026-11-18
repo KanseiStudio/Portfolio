@@ -239,6 +239,8 @@ model Work {
   published   Boolean  @default(false)
   typeIt      String   @map("type_it") @db.VarChar(180)
   typeEn      String   @map("type_en") @db.VarChar(180)
+  typeShortIt String?  @map("type_short_it") @db.VarChar(120) // tipologia breve per la tabella indice (fallback: type)
+  typeShortEn String?  @map("type_short_en") @db.VarChar(120)
   statusIt    String   @map("status_it") @db.VarChar(80)
   statusEn    String   @map("status_en") @db.VarChar(80)
   taglineIt   String   @map("tagline_it") @db.VarChar(300)

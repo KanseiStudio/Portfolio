@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { ArrowDown, ArrowUp, ExternalLink, Pencil } from "lucide-react"
@@ -23,7 +23,19 @@ export function WorksTable({ works }: { works: WorkRow[] }) {
   const [prevWorks, setPrevWorks] = useState(works)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+  const [savingId, setSavingId] = useState<string | null>(null)
   const router = useRouter()
+
+  // Mentre un salvataggio è in corso, lasciare la pagina chiede conferma
+  useEffect(() => {
+    if (!isPending) return
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ""
+    }
+    window.addEventListener("beforeunload", onBeforeUnload)
+    return () => window.removeEventListener("beforeunload", onBeforeUnload)
+  }, [isPending])
 
   // Riallinea lo stato locale quando il server invia dati nuovi
   if (works !== prevWorks) {
@@ -53,13 +65,18 @@ export function WorksTable({ works }: { works: WorkRow[] }) {
     const previous = rows
     setRows(rows.map((r) => (r.id === row.id ? { ...r, published: !r.published } : r)))
     setError(null)
+    setSavingId(row.id)
     startTransition(async () => {
-      const res = await togglePublished(row.id, !row.published)
-      if (!res.ok) {
-        setRows(previous)
-        setError(res.error)
+      try {
+        const res = await togglePublished(row.id, !row.published)
+        if (!res.ok) {
+          setRows(previous)
+          setError(res.error)
+        }
+        router.refresh()
+      } finally {
+        setSavingId(null)
       }
-      router.refresh()
     })
   }
 
@@ -152,6 +169,11 @@ export function WorksTable({ works }: { works: WorkRow[] }) {
                     <span className="font-mono text-xs uppercase tracking-widest" data-testid="work-status">
                       {w.published ? "Pubblicato" : "Bozza"}
                     </span>
+                    {savingId === w.id && (
+                      <span className="font-mono text-xs opacity-60" role="status" data-testid="work-saving">
+                        salvataggio…
+                      </span>
+                    )}
                   </button>
                 </td>
                 <td className="p-4 opacity-60 font-mono text-eyebrow hidden md:table-cell whitespace-nowrap">

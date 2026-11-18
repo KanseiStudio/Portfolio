@@ -1,8 +1,11 @@
 /**
  * Seed dei Works (KDoors, KBox, K-Avatar).
- * Idempotente: upsert per slug + sostituzione completa di tag, stats e sezioni.
+ * Non distruttivo: crea solo i lavori mancanti, quelli esistenti restano intatti.
+ * Con --force riscrive tutto (upsert per slug + sostituzione completa di tag,
+ * stats e sezioni) dopo aver stampato gli slug coinvolti.
  *
- *   npm run seed:works
+ *   npm run seed:works              # crea solo i mancanti
+ *   npm run seed:works -- --force   # riscrive anche gli esistenti
  *
  * Testi IT presi testualmente dalle anteprime in design/references/works/.
  * Immagini: path locali in public/works/<slug>/.
@@ -45,6 +48,7 @@ interface SeedWork {
   name: string
   order: number
   type: T
+  typeShort?: T
   status: T
   tagline: T
   intro: T
@@ -67,6 +71,7 @@ const kdoors: SeedWork = {
   name: "KDoors",
   order: 1,
   type: ["Installazione fisica · Motore AI", "Physical installation · AI engine"],
+  typeShort: ["Installazione fisica · AI", "Physical installation · AI"],
   status: ["Disponibile", "Available"],
   tagline: ["Apri la porta. Dietro ci sei già tu.", "Open the door. You're already behind it."],
   intro: [
@@ -218,6 +223,7 @@ const kbox: SeedWork = {
   name: "KBox",
   order: 2,
   type: ["Display LED · Unreal Engine", "LED display · Unreal Engine"],
+  typeShort: ["Display LED · Unreal Engine", "LED display · Unreal Engine"],
   status: ["Disponibile", "Available"],
   tagline: ["Una teca di luce che contiene un mondo intero.", "A showcase of light that holds an entire world."],
   intro: [
@@ -355,6 +361,7 @@ const kavatar: SeedWork = {
   name: "K-Avatar",
   order: 3,
   type: ["Assistente digitale · AI conversazionale", "Digital assistant · Conversational AI"],
+  typeShort: ["Assistente digitale · AI", "Digital assistant · AI"],
   status: ["In esercizio", "In operation"],
   tagline: [
     "Un volto che ti vede, una voce che ti ascolta, una presenza che sa quando parlare e quando tacere.",
@@ -488,6 +495,7 @@ async function seedWork(w: SeedWork) {
     order: w.order,
     published: true,
     typeIt: w.type[0], typeEn: w.type[1],
+    typeShortIt: it(w.typeShort), typeShortEn: en(w.typeShort),
     statusIt: w.status[0], statusEn: w.status[1],
     taglineIt: w.tagline[0], taglineEn: w.tagline[1],
     introIt: w.intro[0], introEn: w.intro[1],
@@ -558,8 +566,35 @@ async function seedWork(w: SeedWork) {
 }
 
 async function main() {
-  console.log("🌱 Seeding works…")
-  for (const w of [kdoors, kbox, kavatar]) await seedWork(w)
+  const force = process.argv.includes("--force")
+  const all = [kdoors, kbox, kavatar]
+  const existing = new Set(
+    (await prisma.work.findMany({ where: { slug: { in: all.map((w) => w.slug) } }, select: { slug: true } })).map(
+      (w) => w.slug,
+    ),
+  )
+
+  console.log(`🌱 Seeding works${force ? " (--force)" : ""}…`)
+
+  if (force && existing.size > 0) {
+    console.warn(
+      [
+        "",
+        "⚠️  --force: verranno RISCRITTI completamente (campi, tag, stats, sezioni) i lavori già presenti:",
+        ...all.filter((w) => existing.has(w.slug)).map((w) => `   - ${w.slug}`),
+        "   Le modifiche fatte dall'admin su questi lavori andranno perse.",
+        "",
+      ].join("\n"),
+    )
+  }
+
+  for (const w of all) {
+    if (existing.has(w.slug) && !force) {
+      console.log(`  · ${w.name}: esiste già, lasciato intatto (usa --force per riscriverlo)`)
+      continue
+    }
+    await seedWork(w)
+  }
   console.log("✅ Works seed completato")
 }
 

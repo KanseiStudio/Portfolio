@@ -48,7 +48,7 @@ export async function WorksIndexTable({ works }: { works: LocalizedWorkSummary[]
             >
               <span className={ws.lbl}>{pad(w.position)}</span>
               <span className={cn(ws.serif, "text-[22px] md:text-[24px]")}>{w.name}</span>
-              <span className={cn(ws.lbl, "hidden md:block text-[#F5F4F0]/75")}>{w.type}</span>
+              <span className={cn(ws.lbl, "hidden md:block text-[#F5F4F0]/75")}>{w.typeShort}</span>
               <span className={cn(ws.lbl, "text-[#F5F4F0]/75")}>{w.status}</span>
               <span className="text-right">
                 <Arrow />

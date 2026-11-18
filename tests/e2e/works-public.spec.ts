@@ -39,6 +39,45 @@ test("/it/works/inesistente risponde 404", async ({ page }) => {
   expect(res?.status()).toBe(404)
 })
 
+test("la tabella indice usa la tipologia breve", async ({ page }) => {
+  await page.goto("/it/works")
+  const index = page.getByRole("navigation", { name: "Indice progetti" })
+  await expect(index.getByText("Installazione fisica · AI", { exact: true })).toBeVisible()
+  await expect(index.getByText("Assistente digitale · AI", { exact: true })).toBeVisible()
+  // la scheda continua a usare la tipologia completa
+  await expect(page.getByTestId("work-card").first()).toContainText("Installazione fisica · Motore AI")
+})
+
+const NAV_ORDER = {
+  it: ["About", "Technologies", "Works", "Contatti", "Radio"],
+  en: ["About", "Technologies", "Works", "Contact", "Radio"],
+}
+
+for (const [locale, labels] of Object.entries(NAV_ORDER)) {
+  test(`nav desktop ${locale}: 5 voci in ordine`, async ({ page }) => {
+    await page.goto(`/${locale}/works`)
+    const nav = page.getByRole("navigation", { name: "Main navigation" })
+    await expect(nav.getByRole("link")).toHaveText(labels)
+  })
+}
+
+test("nav mobile: 5 voci in ordine, attiva anche su /works/* e /radio", async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } })
+  const page = await ctx.newPage()
+  for (const [path, active] of [
+    ["/it/works/kbox", "Works"],
+    ["/it/radio", "Radio"],
+  ]) {
+    await page.goto(path)
+    await page.getByRole("button", { name: "Apri menu" }).click()
+    const drawer = page.getByRole("navigation", { name: "Mobile navigation" })
+    await expect(drawer.getByRole("link")).toHaveText(NAV_ORDER.it)
+    await expect(drawer.getByRole("link", { name: active })).toHaveAttribute("aria-current", "page")
+    await expect(drawer.getByRole("link", { name: "About" })).not.toHaveAttribute("aria-current", "page")
+  }
+  await ctx.close()
+})
+
 test("la voce Works del nav è attiva su /works e /works/*", async ({ page }) => {
   for (const path of ["/it/works", "/it/works/kbox", "/en/works/k-avatar"]) {
     await page.goto(path)
