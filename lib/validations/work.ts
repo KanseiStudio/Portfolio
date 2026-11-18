@@ -248,5 +248,42 @@ export const emptyWorkForm: WorkFormValues = {
 
 // ─── Upload immagini ───────────────────────────────────────────────────────
 
-export const WORK_IMAGE_MAX_BYTES = 8 * 1024 * 1024
+// Client upload diretto su Vercel Blob (il file non passa dalle Functions,
+// quindi niente limite di 4,5 MB sul body): vedi app/api/admin/works/upload.
+export const WORK_IMAGE_MAX_BYTES = 20 * 1024 * 1024
+export const WORK_IMAGE_MAX_LABEL = "20 MB"
 export const WORK_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"] as const
+export type WorkImageType = (typeof WORK_IMAGE_TYPES)[number]
+
+const WORK_IMAGE_EXT: Record<WorkImageType, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/avif": "avif",
+}
+
+export function isWorkImageType(type: string): type is WorkImageType {
+  return (WORK_IMAGE_TYPES as readonly string[]).includes(type)
+}
+
+/** Cartella blob di un lavoro: lo slug se valido, altrimenti `_draft` (lavoro non ancora salvato) */
+export function workBlobFolder(slug: string | null | undefined) {
+  return slug && /^[a-z0-9-]+$/.test(slug) ? slug : "_draft"
+}
+
+/** Pathname blob `works/<slug>/<nome-file>.<ext>` con nome normalizzato (minuscole, trattini) */
+export function workBlobPathname(slug: string | null | undefined, fileName: string, type: WorkImageType) {
+  const dot = fileName.lastIndexOf(".")
+  const base =
+    (dot > 0 ? fileName.slice(0, dot) : fileName)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 60) || "image"
+  return `works/${workBlobFolder(slug)}/${base}.${WORK_IMAGE_EXT[type]}`
+}
+
+/** Solo pathname prodotti da workBlobPathname sono accettati dalla route di upload */
+export const WORK_BLOB_PATHNAME_RE = /^works\/(?:[a-z0-9-]+|_draft)\/[a-z0-9-]{1,60}\.(?:jpg|png|webp|avif)$/

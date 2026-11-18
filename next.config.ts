@@ -17,12 +17,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    serverActions: {
-      // Upload immagini Works: max 8 MB per file + overhead multipart
-      bodySizeLimit: "9mb",
-    },
-  },
 }
 
 export default withNextIntl(nextConfig)

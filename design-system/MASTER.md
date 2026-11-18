@@ -245,15 +245,24 @@ Fonte unica: `SECTION_KIND_CONFIG` in `lib/validations/work.ts` (la usano editor
 - `/admin/works`: lista con riordino (frecce), switch Pubblicato/Bozza, Modifica, Vedi sul sito, eliminazione con conferma dello slug. Mentre lo switch salva compare «salvataggio…» e lasciare la pagina chiede conferma (`beforeunload`).
 - `/admin/works/new`, `/admin/works/[id]`: editor a schede **Generale · Hero · Stats · Sezioni · Chiusura**. Le schede sono solo visive: tutti i campi restano montati e si salva tutto in un colpo. IT ed EN sempre affiancati. Su errore l'editor salta alla prima scheda con errori (badge rossi) e apre le sezioni interessate.
 - "Salva bozza" = `published: false`, "Salva e pubblica" = `published: true`, "Anteprima" = `/it/works/<slug>?preview=1` (la verifica della sessione admin è nella pagina pubblica, task 2).
-- Server Actions in `app/admin/_actions/works.ts` (`createWork`, `updateWork`, `deleteWork`, `reorderWorks`, `togglePublished`, `uploadWorkImage`, `discardWorkImage`): `requireAdmin()` + Zod; figli sostituiti completamente in transazione; `revalidatePath` su `/{it,en}/works` e `/{it,en}/works/<slug>` (anche il vecchio slug).
+- Server Actions in `app/admin/_actions/works.ts` (`createWork`, `updateWork`, `deleteWork`, `reorderWorks`, `togglePublished`, `discardWorkImage`; l'upload passa dalla route `/api/admin/works/upload`): `requireAdmin()` + Zod; figli sostituiti completamente in transazione; `revalidatePath` su `/{it,en}/works` e `/{it,en}/works/<slug>` (anche il vecchio slug).
 - Query pubbliche localizzate: `lib/works.ts` → `getPublishedWorks(locale)`, `getWorkBySlug(slug, locale, { preview })`, `getPublishedWorkSlugs()`.
 
-### Immagini — Vercel Blob
-- Env: `BLOB_READ_WRITE_TOKEN`. Upload da Server Action con `put()` in `works/<slug>/<file>` (suffisso casuale), accesso public. Senza slug valido: `works/_draft/`.
-- JPG, PNG, WebP, AVIF fino a 8 MB, validati lato client e server (`experimental.serverActions.bodySizeLimit: "9mb"`).
+### Immagini — Vercel Blob (client upload)
+Le immagini vanno **dal browser direttamente a Vercel Blob**: il file non passa dalle Vercel Functions, che in produzione accettano al massimo 4,5 MB di body.
+
+1. `ImageField` chiama `upload()` di `@vercel/blob/client` con `access: "public"` e `handleUploadUrl: "/api/admin/works/upload"`; l'avanzamento (`onUploadProgress`) è mostrato con una barra. Sopra 5 MB l'upload è multipart.
+2. `app/api/admin/works/upload/route.ts` (`handleUpload`) rilascia un **token temporaneo** solo se:
+   - c'è una sessione admin (`isAdminSession()`, stessa verifica di `requireAdmin()`): altrimenti **401**, senza redirect. Le route `/api` sono fuori dal matcher di `proxy.ts`, quindi la verifica sta nella route;
+   - il pathname è `works/<slug>/<nome-file>.<ext>` (`WORK_BLOB_PATHNAME_RE`; `_draft` se il lavoro non ha ancora uno slug valido), altrimenti **400**. Il pathname lo sceglie il client (`workBlobPathname()`), la route lo valida;
+   - il token limita `allowedContentTypes` a JPG, PNG, WebP, AVIF, `maximumSizeInBytes` a **20 MB**, e impone `addRandomSuffix: true`.
+3. A upload finito l'URL finisce nel campo del form; lo salva l'editor con "Salva bozza" / "Salva e pubblica". Non usiamo `onUploadCompleted`.
+
+- Env: `BLOB_READ_WRITE_TOKEN` **solo sul server** (route di upload e `del()`); al browser arriva solo il token temporaneo.
+- Limiti ripetuti lato client (tipo e 20 MB) per un errore immediato; la garanzia è il token.
 - I campi immagine accettano anche path locali (`/works/<slug>/…`, usati dal seed).
-- Pulizia: quando un'immagine viene sostituita/rimossa o un lavoro eliminato, `del()` cancella i blob non più referenziati da nessun lavoro. Solo URL `*.public.blob.vercel-storage.com/works/…`; i path locali non vengono mai toccati. Un upload sostituito prima del salvataggio viene scartato subito.
-- `next.config.ts` → `images.remotePatterns` include `*.public.blob.vercel-storage.com`.
+- Pulizia: quando un'immagine viene sostituita/rimossa o un lavoro eliminato, `del()` cancella — **lato server**, nelle action `updateWork` / `deleteWork` / `discardWorkImage` — i blob non più referenziati da nessun lavoro. Solo URL `*.public.blob.vercel-storage.com/works/…`; i path locali non vengono mai toccati. Un upload sostituito prima del salvataggio viene scartato subito.
+- `next.config.ts` → `images.remotePatterns` include `*.public.blob.vercel-storage.com`. Nessun `serverActions.bodySizeLimit`: le Server Actions non trasportano più file.
 
 ### Comandi
 ```bash

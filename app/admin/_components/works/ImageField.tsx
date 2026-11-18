@@ -3,8 +3,15 @@
 import { createContext, useContext, useId, useRef, useState, type RefObject } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { ImageIcon, Loader2, Upload, X } from "lucide-react"
-import { discardWorkImage, uploadWorkImage } from "@/app/admin/_actions/works"
-import { WORK_IMAGE_MAX_BYTES, WORK_IMAGE_TYPES } from "@/lib/validations/work"
+import { upload } from "@vercel/blob/client"
+import { discardWorkImage } from "@/app/admin/_actions/works"
+import {
+  WORK_IMAGE_MAX_BYTES,
+  WORK_IMAGE_MAX_LABEL,
+  WORK_IMAGE_TYPES,
+  isWorkImageType,
+  workBlobPathname,
+} from "@/lib/validations/work"
 import { BiField, eyebrowCls, inputCls, useFieldError } from "./fields"
 
 /**
@@ -37,6 +44,7 @@ export function ImageField({
   const error = useFieldError(name)
   const fileRef = useRef<HTMLInputElement>(null)
   const [busy, setBusy] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const inputId = useId()
 
@@ -50,30 +58,44 @@ export function ImageField({
   async function onFile(file: File | undefined) {
     if (!file) return
     setUploadError(null)
-    if (!(WORK_IMAGE_TYPES as readonly string[]).includes(file.type)) {
+    const type = file.type
+    if (!isWorkImageType(type)) {
       setUploadError("Formato non supportato: usa JPG, PNG, WebP o AVIF")
       return
     }
     if (file.size > WORK_IMAGE_MAX_BYTES) {
-      setUploadError("File troppo grande: massimo 8 MB")
+      setUploadError(`File troppo grande: massimo ${WORK_IMAGE_MAX_LABEL}`)
       return
     }
     setBusy(true)
+    setProgress(0)
     try {
-      const fd = new FormData()
-      fd.append("file", file)
-      fd.append("slug", ctx?.slugRef.current ?? "")
-      const res = await uploadWorkImage(fd)
-      if (!res.ok) {
-        setUploadError(res.error)
-        return
-      }
+      // Client upload: il file va dal browser direttamente a Vercel Blob,
+      // la route /api/admin/works/upload rilascia solo un token temporaneo
+      const blob = await upload(workBlobPathname(ctx?.slugRef.current, file.name, type), file, {
+        access: "public",
+        handleUploadUrl: "/api/admin/works/upload",
+        contentType: type,
+        multipart: file.size > 5 * 1024 * 1024,
+        onUploadProgress: ({ percentage }) => setProgress(Math.round(percentage)),
+      })
       const previous = value
-      ctx?.sessionUploads.current.add(res.url)
-      setValue(name, res.url, { shouldDirty: true, shouldValidate: true })
+      ctx?.sessionUploads.current.add(blob.url)
+      setValue(name, blob.url, { shouldDirty: true, shouldValidate: true })
       discardIfSessionUpload(previous)
-    } catch {
-      setUploadError("Upload fallito. Riprova.")
+    } catch (err) {
+      // Il client di @vercel/blob non espone lo status della route del token:
+      // distinguiamo i casi dal messaggio dell'errore
+      const msg = err instanceof Error ? err.message : ""
+      setUploadError(
+        /client token/i.test(msg)
+          ? "Upload non autorizzato: la sessione potrebbe essere scaduta (ricarica e accedi di nuovo) oppure manca BLOB_READ_WRITE_TOKEN sul server."
+          : /too large|size/i.test(msg)
+            ? `File troppo grande: massimo ${WORK_IMAGE_MAX_LABEL}`
+            : /content.?type/i.test(msg)
+              ? "Formato non supportato: usa JPG, PNG, WebP o AVIF"
+              : "Upload fallito. Riprova.",
+      )
     } finally {
       setBusy(false)
       if (fileRef.current) fileRef.current.value = ""
@@ -111,7 +133,7 @@ export function ImageField({
             <div className="flex flex-wrap gap-2">
               <button type="button" className={btn} disabled={busy} onClick={() => fileRef.current?.click()}>
                 {busy ? <Loader2 size={12} className="animate-spin" /> : <Upload size={12} strokeWidth={1.5} />}
-                {busy ? "Caricamento…" : value ? "Sostituisci" : "Carica"}
+                {busy ? `Caricamento… ${progress}%` : value ? "Sostituisci" : "Carica"}
               </button>
               {value && (
                 <button type="button" className={btn} disabled={busy} onClick={remove}>
@@ -135,7 +157,21 @@ export function ImageField({
               aria-invalid={!!error}
               className={`${inputCls(!!error)} font-mono text-xs`}
             />
-            <p className="text-xs opacity-40">JPG, PNG, WebP o AVIF · max 8 MB · accetta anche path locali /works/…</p>
+            {busy && (
+              <div
+                role="progressbar"
+                aria-label={`Caricamento ${label}`}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={progress}
+                className="h-1 w-full bg-ks-fg/10 overflow-hidden"
+              >
+                <div className="h-full bg-ks-fg transition-[width] duration-200" style={{ width: `${progress}%` }} />
+              </div>
+            )}
+            <p className="text-xs opacity-40">
+              JPG, PNG, WebP o AVIF · max {WORK_IMAGE_MAX_LABEL} · accetta anche path locali /works/…
+            </p>
             {(uploadError || error) && <p className="text-xs text-red-600">{uploadError ?? error}</p>}
           </div>
         </div>

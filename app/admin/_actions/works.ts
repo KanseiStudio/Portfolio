@@ -2,16 +2,13 @@
 
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { put } from "@vercel/blob"
 import { z } from "zod"
 import { prisma } from "@/lib/prisma"
 import { Prisma } from "@/lib/generated/prisma/client"
-import { getAdminSession } from "@/lib/session"
-import { collectWorkImages, deleteUnusedBlobs, hasBlobToken, isWorkBlobUrl } from "@/lib/blob"
+import { isAdminSession } from "@/lib/session"
+import { collectWorkImages, deleteUnusedBlobs, isWorkBlobUrl } from "@/lib/blob"
 import {
   SECTION_KIND_CONFIG,
-  WORK_IMAGE_MAX_BYTES,
-  WORK_IMAGE_TYPES,
   workFormSchema,
   type WorkFormValues,
 } from "@/lib/validations/work"
@@ -23,8 +20,7 @@ export type SaveWorkResult =
 type SimpleResult = { ok: true } | { ok: false; error: string }
 
 async function requireAdmin() {
-  const session = await getAdminSession()
-  if (!session.isAdmin) redirect("/admin/login")
+  if (!(await isAdminSession())) redirect("/admin/login")
 }
 
 function revalidateWorks(...slugs: (string | undefined)[]) {
@@ -276,58 +272,6 @@ export async function togglePublished(id: string, published: boolean): Promise<S
 }
 
 // ─── Immagini ──────────────────────────────────────────────────────────────
-
-export type UploadResult = { ok: true; url: string } | { ok: false; error: string }
-
-function safeFileName(name: string) {
-  const dot = name.lastIndexOf(".")
-  const base = (dot > 0 ? name.slice(0, dot) : name)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 60)
-  return base || "image"
-}
-
-const EXT: Record<(typeof WORK_IMAGE_TYPES)[number], string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-  "image/webp": "webp",
-  "image/avif": "avif",
-}
-
-export async function uploadWorkImage(formData: FormData): Promise<UploadResult> {
-  await requireAdmin()
-
-  if (!hasBlobToken())
-    return { ok: false, error: "Upload non configurato: manca BLOB_READ_WRITE_TOKEN" }
-
-  const file = formData.get("file")
-  if (!(file instanceof File) || file.size === 0) return { ok: false, error: "Nessun file selezionato" }
-
-  const type = file.type as (typeof WORK_IMAGE_TYPES)[number]
-  if (!WORK_IMAGE_TYPES.includes(type))
-    return { ok: false, error: "Formato non supportato: usa JPG, PNG, WebP o AVIF" }
-  if (file.size > WORK_IMAGE_MAX_BYTES)
-    return { ok: false, error: "File troppo grande: massimo 8 MB" }
-
-  const rawSlug = String(formData.get("slug") ?? "")
-  const folder = /^[a-z0-9-]+$/.test(rawSlug) ? rawSlug : "_draft"
-
-  try {
-    const blob = await put(`works/${folder}/${safeFileName(file.name)}.${EXT[type]}`, file, {
-      access: "public",
-      addRandomSuffix: true,
-      contentType: type,
-    })
-    return { ok: true, url: blob.url }
-  } catch (err) {
-    console.error("[blob] upload fallito", err)
-    return { ok: false, error: "Upload fallito. Riprova." }
-  }
-}
 
 /**
  * Scarta un'immagine caricata in questa sessione dell'editor e poi sostituita
