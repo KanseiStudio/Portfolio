@@ -1,12 +1,12 @@
 import Link from "next/link"
-import { FolderOpen, Tags, TrendingUp, LogOut, Globe, Zap, Settings2 } from "lucide-react"
+import { FolderOpen, Tags, TrendingUp, LogOut, Globe, Zap, Layers } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { logoutAction } from "@/app/admin/_actions/auth"
 import { Container } from "@/components/atoms/Container"
 import { HairlineDivider } from "@/components/atoms/HairlineDivider"
 
 export default async function AdminDashboardPage() {
-  const [totalProjects, publishedProjects, totalCategories, totalTechnologies, latestProjects] =
+  const [totalProjects, publishedProjects, totalCategories, totalTechnologies, latestProjects, totalWorks] =
     await Promise.all([
       prisma.project.count(),
       prisma.project.count({ where: { published: true } }),
@@ -17,6 +17,7 @@ export default async function AdminDashboardPage() {
         take: 5,
         include: { translations: { where: { locale: "it" } } },
       }),
+      prisma.work.count(),
     ])
 
   return (
@@ -70,6 +71,7 @@ export default async function AdminDashboardPage() {
           />
           <StatCard icon={Tags} label="Categorie" value={String(totalCategories)} />
           <StatCard icon={Zap} label="Tecnologie" value={String(totalTechnologies)} />
+          <StatCard icon={Layers} label="Works" value={String(totalWorks)} />
         </div>
 
         <HairlineDivider />
@@ -80,6 +82,11 @@ export default async function AdminDashboardPage() {
             title="Gestisci progetti"
             description="Crea, modifica ed elimina i case study"
             href="/admin/projects"
+          />
+          <ActionCard
+            title="Gestisci works"
+            description="Pagine prodotto a sezioni: KDoors, KBox, K-Avatar e nuovi lavori"
+            href="/admin/works"
           />
           <ActionCard
             title="Gestisci categorie"

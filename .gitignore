@@ -65,3 +65,6 @@ next-env.d.ts
 
 # Local scripts (debug, temp)
 scripts/
+# Playwright
+/test-results/
+/playwright-report/

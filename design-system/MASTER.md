@@ -203,3 +203,63 @@ Tutti i `HairlineDivider` usano `border-ks-hairline-active` — cambiano colore 
 - Hairline: 1px `rgba(10,10,10,0.12)` visibili ✓
 - Mobile 375px: layout funzionale, display text scala correttamente (overflow atteso a 7rem)
 - `next.config.ts`: vuoto, nessuna configurazione dev accidentale
+
+---
+
+## Works — dati e admin (aggiunto Task works-1)
+
+Pagine prodotto (KDoors, KBox, K-Avatar…) gestite da `/admin/works`, separate dal modello `Project`.
+Ogni pagina è composta da **sezioni a blocchi ordinabili**: un lavoro nuovo può avere una struttura diversa dagli altri.
+
+### Modello (`prisma/schema.prisma`)
+| Modello | Contenuto |
+|---|---|
+| `Work` (`works`) | slug, name (non tradotto), order, published, tipologia, stato, tagline, intro, testo scheda indice (`summary`, fallback intro), frase finale, etichetta CTA, hero (immagine, alt, didascalia, `heroTone`) |
+| `WorkTag` | tag ordinati (IT/EN) |
+| `WorkStat` | `value` + etichetta; `onPage` = fascia stats sotto l'hero; `onCard` = scheda dell'indice (**max 3**, con `cardLabel` breve opzionale) |
+| `WorkSection` | `kind` + eyebrow/titolo/testo, intestazioni colonne (`columns`, solo TABLE), immagine + alt |
+| `WorkSectionItem` | voci della sezione: label, titolo, testo, extra, immagine + alt |
+
+- Campi bilingui = coppie di colonne `xxxIt` / `xxxEn`. Per `en`, un campo EN vuoto ricade sull'IT.
+- `heroTone`: colore di angoli HUD e didascalia **sopra** l'immagine — `LIGHT` per immagini scure, `DARK` per immagini chiare.
+- Tutti i figli hanno `onDelete: Cascade`: eliminare un `Work` pulisce tag, stats, sezioni e voci.
+- L'eyebrow numerata ("03 — L'esperienza") è un dato salvato, non calcolato. Una sezione senza eyebrow prosegue visivamente la precedente.
+
+### Tipi di sezione
+Fonte unica: `SECTION_KIND_CONFIG` in `lib/validations/work.ts` (la usano editor, Server Actions e seed).
+
+| Tipo | Quando usarlo | Campi sezione | Campi voce |
+|---|---|---|---|
+| `CARDS` | griglia di celle: problema, idea, come funziona, garanzie | eyebrow, titolo, testo | label, titolo, testo |
+| `TIMELINE` | esperienza passo per passo con tempi | eyebrow, titolo, testo | label (numero), titolo, testo, extra (tempo) |
+| `TABLE` | righe a 3 colonne con intestazione (stati di presenza) | eyebrow, titolo, testo, columns (`A \| B \| C`) | label, body, extra = colonne 1-2-3 |
+| `SPECS` | specifiche tecniche, ambiti/stato | eyebrow, titolo, testo | label, body (valore) |
+| `GALLERY` | immagini con didascalia (mondi, personaggi, step) | eyebrow, titolo, testo | immagine*, label (didascalia), testo opz. |
+| `QUOTE` | citazione con barra rossa | titolo (etichetta), testo* | — |
+| `IMAGE` | immagine a tutta colonna, intestazione opzionale | eyebrow, titolo, testo, immagine* | — |
+| `SPLIT` | immagine a sinistra + celle a destra (anatomia) | eyebrow, titolo, testo, immagine* | label, titolo, testo |
+
+`*` = obbligatorio. Cambiando tipo, i valori dei campi non pertinenti restano nel form ma il salvataggio li azzera.
+
+### Admin
+- `/admin/works`: lista con riordino (frecce), switch Pubblicato/Bozza, Modifica, Vedi sul sito, eliminazione con conferma dello slug.
+- `/admin/works/new`, `/admin/works/[id]`: editor a schede **Generale · Hero · Stats · Sezioni · Chiusura**. Le schede sono solo visive: tutti i campi restano montati e si salva tutto in un colpo. IT ed EN sempre affiancati. Su errore l'editor salta alla prima scheda con errori (badge rossi) e apre le sezioni interessate.
+- "Salva bozza" = `published: false`, "Salva e pubblica" = `published: true`, "Anteprima" = `/it/works/<slug>?preview=1` (la verifica della sessione admin è nella pagina pubblica, task 2).
+- Server Actions in `app/admin/_actions/works.ts` (`createWork`, `updateWork`, `deleteWork`, `reorderWorks`, `togglePublished`, `uploadWorkImage`, `discardWorkImage`): `requireAdmin()` + Zod; figli sostituiti completamente in transazione; `revalidatePath` su `/{it,en}/works` e `/{it,en}/works/<slug>` (anche il vecchio slug).
+- Query pubbliche localizzate: `lib/works.ts` → `getPublishedWorks(locale)`, `getWorkBySlug(slug, locale, { preview })`, `getPublishedWorkSlugs()`.
+
+### Immagini — Vercel Blob
+- Env: `BLOB_READ_WRITE_TOKEN`. Upload da Server Action con `put()` in `works/<slug>/<file>` (suffisso casuale), accesso public. Senza slug valido: `works/_draft/`.
+- JPG, PNG, WebP, AVIF fino a 8 MB, validati lato client e server (`experimental.serverActions.bodySizeLimit: "9mb"`).
+- I campi immagine accettano anche path locali (`/works/<slug>/…`, usati dal seed).
+- Pulizia: quando un'immagine viene sostituita/rimossa o un lavoro eliminato, `del()` cancella i blob non più referenziati da nessun lavoro. Solo URL `*.public.blob.vercel-storage.com/works/…`; i path locali non vengono mai toccati. Un upload sostituito prima del salvataggio viene scartato subito.
+- `next.config.ts` → `images.remotePatterns` include `*.public.blob.vercel-storage.com`.
+
+### Comandi
+```bash
+npx prisma migrate dev --name <nome>   # migrazione (dev)
+npx prisma migrate deploy              # migrazione su produzione
+npm run seed:works                     # seed idempotente di KDoors, KBox, K-Avatar (upsert per slug)
+npm run test:e2e                       # Playwright (usa .env.local; avvia/riusa `npm run dev`)
+```
+Il seed riscrive completamente tag, stats e sezioni dei 3 lavori: modifiche fatte dall'admin a quei lavori vengono sovrascritte.
