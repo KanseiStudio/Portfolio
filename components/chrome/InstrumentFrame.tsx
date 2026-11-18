@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useSyncExternalStore } from "react"
 import { motion, AnimatePresence } from "motion/react"
 import { useLocale, useTranslations } from "next-intl"
 import { Link, usePathname, useRouter } from "@/i18n/routing"
@@ -22,9 +22,25 @@ function stripLocalePrefix(pathname: string, locales: readonly string[]): string
 const NAV_HREFS = [
   "/about",
   "/technologies",
+  "/works",
   "/contact",
   "/radio",
 ] as const
+
+// "Mounted" e SEED senza setState in effect né Math.random in render:
+// lo snapshot server ("false" / "13F3") viene usato in SSR e in hydration,
+// poi il client passa al proprio valore — stesso comportamento di prima.
+const noopSubscribe = () => () => {}
+let clientSeed: string | null = null
+function getClientSeed() {
+  clientSeed ??= Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0")
+  return clientSeed
+}
+
+/** Voce attiva anche sulle sottopagine (es. /works/kbox) */
+function isNavActive(pathname: string, href: string) {
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
 
 interface InstrumentFrameProps {
   children: React.ReactNode
@@ -51,22 +67,18 @@ export function InstrumentFrame({
   const nav = [
     { href: NAV_HREFS[0], label: t("about")        },
     { href: NAV_HREFS[1], label: t("technologies")  },
-    { href: NAV_HREFS[2], label: t("contact")       },
-    { href: NAV_HREFS[3], label: t("radio")         },
+    { href: NAV_HREFS[2], label: t("works")         },
+    { href: NAV_HREFS[3], label: t("contact")       },
+    { href: NAV_HREFS[4], label: t("radio")         },
   ] as const
 
-  const [mounted,    setMounted]    = useState(false)
+  const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false)
   const [time,       setTime]       = useState("")
   const [cycles,     setCycles]     = useState(8316)
   const [seconds,    setSeconds]    = useState(0)
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  const seed = useMemo(() => {
-    if (typeof window === "undefined") return "13F3"
-    return Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, "0")
-  }, [])
-
-  useEffect(() => { setMounted(true) }, [])
+  const seed = useSyncExternalStore(noopSubscribe, getClientSeed, () => "13F3")
 
   // Body scroll lock when mobile drawer is open
   useEffect(() => {
@@ -143,11 +155,12 @@ export function InstrumentFrame({
           {/* Desktop nav */}
           <nav aria-label="Main navigation" className="hidden md:flex items-center gap-8">
             {nav.map(({ href, label }) => {
-              const isActive = pathname === href || pathname.startsWith(`${href}/`)
+              const isActive = isNavActive(pathname, href)
               return (
                 <Link
                   key={href}
                   href={href}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest transition-opacity duration-300",
                     isActive ? "opacity-100" : "opacity-50 hover:opacity-90"
@@ -256,9 +269,10 @@ export function InstrumentFrame({
                   <Link
                     href={href}
                     onClick={() => setMobileOpen(false)}
+                    aria-current={isNavActive(pathname, href) ? "page" : undefined}
                     className={cn(
                       "block font-display text-[2.6rem] leading-tight tracking-tight text-[#F5F4F0]",
-                      pathname === href ? "opacity-100" : "opacity-55 hover:opacity-90",
+                      isNavActive(pathname, href) ? "opacity-100" : "opacity-55 hover:opacity-90",
                       "transition-opacity duration-300"
                     )}
                   >

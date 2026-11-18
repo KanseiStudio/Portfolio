@@ -210,3 +210,137 @@ model ContactChannelTranslation {
   @@unique([contactChannelId, locale])
   @@map("contact_channel_translations")
 }
+
+// ---------- Works ----------
+// Pagine prodotto (KDoors, KBox, K-Avatar…) composte da sezioni a blocchi ordinabili.
+// Campi bilingui come coppie di colonne xxxIt / xxxEn.
+
+enum HeroTone {
+  DARK  // angoli HUD e didascalia scuri (immagine chiara)
+  LIGHT // angoli HUD e didascalia chiari (immagine scura)
+}
+
+enum SectionKind {
+  CARDS    // griglia di celle: label, titolo, testo
+  TIMELINE // righe numerate con tempo a destra
+  TABLE    // righe a 3 colonne con intestazione
+  SPECS    // tabella etichetta / valore
+  GALLERY  // immagini con didascalia
+  QUOTE    // box citazione con barra rossa
+  IMAGE    // immagine larga a tutta colonna
+  SPLIT    // immagine a sinistra + celle a destra
+}
+
+model Work {
+  id          String   @id @default(cuid())
+  slug        String   @unique @db.VarChar(120)
+  name        String   @db.VarChar(120) // non si traduce
+  order       Int      @default(0) @map("sort_order")
+  published   Boolean  @default(false)
+  typeIt      String   @map("type_it") @db.VarChar(180)
+  typeEn      String   @map("type_en") @db.VarChar(180)
+  typeShortIt String?  @map("type_short_it") @db.VarChar(120) // tipologia breve per la tabella indice (fallback: type)
+  typeShortEn String?  @map("type_short_en") @db.VarChar(120)
+  statusIt    String   @map("status_it") @db.VarChar(80)
+  statusEn    String   @map("status_en") @db.VarChar(80)
+  taglineIt   String   @map("tagline_it") @db.VarChar(300)
+  taglineEn   String   @map("tagline_en") @db.VarChar(300)
+  introIt     String   @map("intro_it") @db.Text
+  introEn     String   @map("intro_en") @db.Text
+  summaryIt   String?  @map("summary_it") @db.Text // testo della scheda nell'indice (fallback: intro)
+  summaryEn   String?  @map("summary_en") @db.Text
+  closingIt   String?  @map("closing_it") @db.Text // frase finale prima del "Prossimo"
+  closingEn   String?  @map("closing_en") @db.Text
+  ctaLabelIt  String?  @map("cta_label_it") @db.VarChar(120)
+  ctaLabelEn  String?  @map("cta_label_en") @db.VarChar(120)
+  heroImage   String   @map("hero_image") @db.VarChar(500)
+  heroAltIt   String   @map("hero_alt_it") @db.VarChar(300)
+  heroAltEn   String   @map("hero_alt_en") @db.VarChar(300)
+  heroCaption String?  @map("hero_caption") @db.VarChar(160)
+  heroTone    HeroTone @default(DARK) @map("hero_tone")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tags     WorkTag[]
+  stats    WorkStat[]
+  sections WorkSection[]
+
+  @@map("works")
+}
+
+model WorkTag {
+  id      String @id @default(cuid())
+  workId  String @map("work_id")
+  order   Int    @map("sort_order")
+  labelIt String @map("label_it") @db.VarChar(80)
+  labelEn String @map("label_en") @db.VarChar(80)
+
+  work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([workId])
+  @@map("work_tags")
+}
+
+model WorkStat {
+  id          String  @id @default(cuid())
+  workId      String  @map("work_id")
+  order       Int     @map("sort_order")
+  value       String  @db.VarChar(40) // "45–60″", "500+", "H24"
+  labelIt     String  @map("label_it") @db.VarChar(200)
+  labelEn     String  @map("label_en") @db.VarChar(200)
+  cardLabelIt String? @map("card_label_it") @db.VarChar(80) // etichetta breve nella scheda indice (fallback: label)
+  cardLabelEn String? @map("card_label_en") @db.VarChar(80)
+  onCard      Boolean @default(false) @map("on_card") // max 3: mostrati nella scheda dell'indice
+  onPage      Boolean @default(true) @map("on_page")  // mostrato nella fascia stats della pagina
+
+  work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([workId])
+  @@map("work_stats")
+}
+
+model WorkSection {
+  id         String      @id @default(cuid())
+  workId     String      @map("work_id")
+  order      Int         @map("sort_order")
+  kind       SectionKind
+  eyebrowIt  String?     @map("eyebrow_it") @db.VarChar(160) // "03 — L'esperienza"
+  eyebrowEn  String?     @map("eyebrow_en") @db.VarChar(160)
+  titleIt    String?     @map("title_it") @db.VarChar(300)
+  titleEn    String?     @map("title_en") @db.VarChar(300)
+  bodyIt     String?     @map("body_it") @db.Text
+  bodyEn     String?     @map("body_en") @db.Text
+  columnsIt  String?     @map("columns_it") @db.VarChar(300) // intestazioni TABLE separate da " | "
+  columnsEn  String?     @map("columns_en") @db.VarChar(300)
+  image      String?     @db.VarChar(500)
+  imageAltIt String?     @map("image_alt_it") @db.VarChar(300)
+  imageAltEn String?     @map("image_alt_en") @db.VarChar(300)
+
+  work  Work              @relation(fields: [workId], references: [id], onDelete: Cascade)
+  items WorkSectionItem[]
+
+  @@index([workId])
+  @@map("work_sections")
+}
+
+model WorkSectionItem {
+  id         String  @id @default(cuid())
+  sectionId  String  @map("section_id")
+  order      Int     @map("sort_order")
+  labelIt    String? @map("label_it") @db.VarChar(160) // "01", "Un citofono", "Passante"
+  labelEn    String? @map("label_en") @db.VarChar(160)
+  titleIt    String? @map("title_it") @db.VarChar(300)
+  titleEn    String? @map("title_en") @db.VarChar(300)
+  bodyIt     String? @map("body_it") @db.Text
+  bodyEn     String? @map("body_en") @db.Text
+  extraIt    String? @map("extra_it") @db.VarChar(300) // 3ª colonna TABLE o tempo TIMELINE ("3–12″")
+  extraEn    String? @map("extra_en") @db.VarChar(300)
+  image      String? @db.VarChar(500)
+  imageAltIt String? @map("image_alt_it") @db.VarChar(300)
+  imageAltEn String? @map("image_alt_en") @db.VarChar(300)
+
+  section WorkSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([sectionId])
+  @@map("work_section_items")
+}

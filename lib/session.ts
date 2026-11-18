@@ -26,3 +26,15 @@ export async function getAdminSession(): Promise<IronSession<AdminSession>> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return getIronSession<AdminSession>(cookieStore as any, getSessionOptions())
 }
+
+/**
+ * Stessa verifica di `requireAdmin()` nelle Server Actions, ma senza redirect:
+ * per le Route Handler che devono rispondere 401.
+ */
+export async function isAdminSession(): Promise<boolean> {
+  try {
+    return Boolean((await getAdminSession()).isAdmin)
+  } catch {
+    return false
+  }
+}

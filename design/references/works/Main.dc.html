@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Works · Kansei Studio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&amp;family=Geist:wght@200;300;400;500&amp;family=Geist+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a0a}
+a{color:#f5f4f0;text-decoration:none}a:hover{color:#ffffff}
+.mono{font-family:'Geist Mono',ui-monospace,monospace;text-transform:uppercase;letter-spacing:.1em}
+.lbl{font-family:'Geist Mono',ui-monospace,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(245,244,240,.55)}
+.body{font-family:'Geist Mono',ui-monospace,monospace;font-size:13px;line-height:1.7;color:rgba(245,244,240,.74)}
+.serif{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-.01em}
+.nav a{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,244,240,.7)}
+.nav a:hover{color:#f5f4f0}
+.cta{display:inline-flex;align-items:center;gap:10px;min-height:44px;padding:0 18px;border:1px solid rgba(245,244,240,.28);font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#f5f4f0}
+.cta:hover{background:#f5f4f0;color:#0a0a0a}
+.work:hover .work-img{transform:scale(1.025)}
+.work-img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.row:hover{background:rgba(245,244,240,.04)}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #0a0a0a; color: #f5f4f0; font-family: 'Geist', 'Helvetica Neue', Arial, sans-serif; position: relative; overflow: hidden">
+
+  <!-- HUD rails -->
+  <div aria-hidden="true" style="position: absolute; top: 0; bottom: 0; left: 28px; width: 1px; background: rgba(245,244,240,.07)"></div>
+  <div aria-hidden="true" style="position: absolute; top: 0; bottom: 0; right: 28px; width: 1px; background: rgba(245,244,240,.07)"></div>
+
+  <!-- Header -->
+  <header style="position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 48px; border-bottom: 1px solid rgba(245,244,240,.08)">
+    <a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px">
+      <img src="/_blob/8b63ddb920ee00609415a54f21909b86" alt="" style="width: 26px; height: 25px">
+      <span style="font-family: 'Geist', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: -.02em; text-transform: uppercase">Kansei Studio</span>
+    </a>
+    <nav class="nav" aria-label="Principale" style="display: flex; flex-wrap: wrap; align-items: center; gap: 28px">
+      <a href="#">About</a>
+      <a href="#">Technologies</a>
+      <a href="Main.dc.html" aria-current="page" style="color: #f5f4f0">• Works</a>
+      <a href="#">Contatti</a>
+      <a href="#">Radio</a>
+      <span style="display: flex; align-items: center; gap: 8px">
+        <span class="mono" style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: 1px solid rgba(245,244,240,.4); border-radius: 50%; font-size: 9px">IT</span>
+        <span class="mono" style="font-size: 9px; color: rgba(245,244,240,.5)">EN</span>
+      </span>
+    </nav>
+  </header>
+
+  <!-- HUD telemetry -->
+  <div style="display: flex; justify-content: space-between; gap: 16px; padding: 10px 48px 0">
+    <div style="display: flex; flex-direction: column; gap: 3px">
+      <span class="lbl" style="font-size: 8px; color: rgba(245,244,240,.45)">Status</span>
+      <span class="lbl" style="font-size: 8px; color: rgba(245,244,240,.7); display: flex; align-items: center; gap: 6px"><span style="width: 5px; height: 5px; border-radius: 50%; background: #3DDC84"></span>Online</span>
+    </div>
+    <div class="lbl" style="font-size: 8px; text-align: right; line-height: 1.6; color: rgba(245,244,240,.45)">LAT 41.8934°N<br>LON 12.4827°E<br>UTC+1 ROME</div>
+  </div>
+
+  <main style="max-width: 1280px; margin: 0 auto; padding: 0 48px">
+
+    <!-- Page head -->
+    <section style="padding: 72px 0 56px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 40px; align-items: end">
+      <div style="display: flex; flex-direction: column; gap: 22px">
+        <span class="lbl">Works</span>
+        <h1 class="serif" style="margin: 0; font-size: clamp(48px, 7vw, 96px); line-height: .95">Works</h1>
+        <p class="body" style="margin: 0; max-width: 560px; font-size: 14px">Installazioni e piattaforme che abbiamo progettato e costruito: oggetti fisici, presenze digitali, esperienze da attraversare. Ognuna nasce da un gesto semplice e lo trasforma in sensazione.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px">
+        <span class="lbl" style="color: rgba(245,244,240,.45)">Progetti in archivio</span>
+        <span style="font-family: 'Geist', sans-serif; font-weight: 200; font-size: 64px; line-height: 1; letter-spacing: -.03em">03</span>
+      </div>
+    </section>
+
+    <!-- Index table -->
+    <section aria-label="Indice progetti" style="border-top: 1px solid rgba(245,244,240,.14); margin-bottom: 96px">
+      <div class="lbl" style="display: grid; grid-template-columns: 64px minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr) 40px; gap: 16px; padding: 12px 0; font-size: 9px; color: rgba(245,244,240,.45); border-bottom: 1px solid rgba(245,244,240,.08)">
+        <span>#</span><span>Progetto</span><span>Tipologia</span><span>Stato</span><span></span>
+      </div>
+      <a class="row" href="KDoors.dc.html" style="display: grid; grid-template-columns: 64px minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr) 40px; gap: 16px; align-items: center; min-height: 64px; border-bottom: 1px solid rgba(245,244,240,.08)">
+        <span class="lbl">01</span>
+        <span class="serif" style="font-size: 24px">KDoors</span>
+        <span class="lbl" style="color: rgba(245,244,240,.7)">Installazione fisica · AI</span>
+        <span class="lbl" style="color: rgba(245,244,240,.7)">Disponibile</span>
+        <span aria-hidden="true" style="text-align: right">↗</span>
+      </a>
+      <a class="row" href="KBox.dc.html" style="display: grid; grid-template-columns: 64px minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr) 40px; gap: 16px; align-items: center; min-height: 64px; border-bottom: 1px solid rgba(245,244,240,.08)">
+        <span class="lbl">02</span>
+        <span class="serif" style="font-size: 24px">KBox</span>
+        <span class="lbl" style="color: rgba(245,244,240,.7)">Display LED · Unreal Engine</span>
+        <span class="lbl" style="color: rgba(245,244,240,.7)">Disponibile</span>
+        <span aria-hidden="true" style="text-align: right">↗</span>
+      </a>
+      <a class="row" href="Avatar.dc.html" style="display: grid; grid-template-columns: 64px minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr) 40px; gap: 16px; align-items: center; min-height: 64px; border-bottom: 1px solid rgba(245,244,240,.08)">
+        <span class="lbl">03</span>
+        <span class="serif" style="font-size: 24px">K-Avatar</span>
+        <span class="lbl" style="color: rgba(245,244,240,.7)">Assistente digitale · AI</span>
+        <span class="lbl" style="color: rgba(245,244,240,.7)">In esercizio</span>
+        <span aria-hidden="true" style="text-align: right">↗</span>
+      </a>
+    </section>
+
+    <!-- 01 KDoors -->
+    <article class="work" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 0; border: 1px solid rgba(245,244,240,.12); margin-bottom: 40px">
+      <a href="KDoors.dc.html" style="display: block; position: relative; overflow: hidden; background: #15161a; min-height: 520px; border-right: 1px solid rgba(245,244,240,.12)">
+        <img class="work-img" src="/_blob/c40b60e31f4b796db578cf0dc0194d34" alt="Illustrazione: una porta aperta su una casa illuminata, una persona davanti al citofono" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 40%">
+        <span class="lbl" style="position: absolute; left: 16px; top: 14px; color: rgba(245,244,240,.8)">01</span>
+        <span class="lbl" style="position: absolute; right: 16px; bottom: 14px; font-size: 9px; color: rgba(245,244,240,.6)">Ding-dong · Sei già a casa</span>
+      </a>
+      <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 40px; padding: 40px">
+        <div style="display: flex; flex-direction: column; gap: 18px">
+          <span class="lbl">Installazione fisica · Motore AI</span>
+          <h2 class="serif" style="margin: 0; font-size: 56px; line-height: 1">KDoors</h2>
+          <p class="serif" style="margin: 0; font-size: 22px; font-weight: 300; font-style: italic; color: rgba(245,244,240,.88)">Apri la porta. Dietro ci sei già tu.</p>
+          <p class="body" style="margin: 0; max-width: 480px">Una porta vera, con citofono e serratura, in mezzo al pubblico. Suoni, la serratura scatta, e dall'altra parte trovi la tua vita futura: tu e i tuoi, già dentro la casa, il prodotto, il mondo che il brand vuole raccontare.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid rgba(245,244,240,.1); padding-top: 20px">
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">45–60″</span><span class="lbl" style="font-size: 9px">per gruppo</span></div>
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">500+</span><span class="lbl" style="font-size: 9px">porte al giorno</span></div>
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">0</span><span class="lbl" style="font-size: 9px">schermi in vista</span></div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px">
+          <span class="lbl" style="font-size: 9px; color: rgba(245,244,240,.45)">Real estate · Hospitality · Retail · Fiere</span>
+          <a class="cta" href="KDoors.dc.html">Apri progetto <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 02 KBox -->
+    <article class="work" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 0; border: 1px solid rgba(245,244,240,.12); margin-bottom: 40px">
+      <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 40px; padding: 40px; border-right: 1px solid rgba(245,244,240,.12)">
+        <div style="display: flex; flex-direction: column; gap: 18px">
+          <span class="lbl">Display LED · Unreal Engine</span>
+          <h2 class="serif" style="margin: 0; font-size: 56px; line-height: 1">KBox</h2>
+          <p class="serif" style="margin: 0; font-size: 22px; font-weight: 300; font-style: italic; color: rgba(245,244,240,.88)">Una teca di luce che contiene un mondo intero.</p>
+          <p class="body" style="margin: 0; max-width: 480px">Un cubo LED su cinque facce, posato su una base di un metro. Dentro, scenari costruiti in Unreal Engine; al centro, sempre il prodotto da raccontare. Non uno schermo appeso al muro: un volume da girare intorno, come un diorama vivo.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid rgba(245,244,240,.1); padding-top: 20px">
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">150 cm</span><span class="lbl" style="font-size: 9px">altezza colonna</span></div>
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">5</span><span class="lbl" style="font-size: 9px">facce luminose</span></div>
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">1,9 mm</span><span class="lbl" style="font-size: 9px">passo pixel</span></div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px">
+          <span class="lbl" style="font-size: 9px; color: rgba(245,244,240,.45)">Real estate · Automotive · Pharma · Lusso</span>
+          <a class="cta" href="KBox.dc.html">Apri progetto <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <a href="KBox.dc.html" style="display: block; position: relative; overflow: hidden; background: #d9d9d7; min-height: 520px">
+        <img class="work-img" src="/_blob/cc21130f701898e997f8e8e9f4ccfbdc" alt="Colonna KBox: base nera opaca con cubo LED che mostra una foresta" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%">
+        <span class="lbl" style="position: absolute; left: 16px; top: 14px; color: rgba(10,10,10,.75)">02</span>
+        <span class="lbl" style="position: absolute; right: 16px; bottom: 14px; font-size: 9px; color: rgba(10,10,10,.6)">150 × 50 × 50 cm</span>
+      </a>
+    </article>
+
+    <!-- 03 Avatar -->
+    <article class="work" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 0; border: 1px solid rgba(245,244,240,.12); margin-bottom: 120px">
+      <a href="Avatar.dc.html" style="display: block; position: relative; overflow: hidden; background: #2a0d0d; min-height: 520px; border-right: 1px solid rgba(245,244,240,.12)">
+        <img class="work-img" src="/_blob/6a798843e2cab2a86fb09578163ba533" alt="Avatar fotorealistico: donna in abito scuro su fondo rosso" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 22%">
+        <span class="lbl" style="position: absolute; left: 16px; top: 14px; color: rgba(245,244,240,.85)">03</span>
+        <span class="lbl" style="position: absolute; right: 16px; bottom: 14px; font-size: 9px; color: rgba(245,244,240,.7)">Un volto, una persona</span>
+      </a>
+      <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 40px; padding: 40px">
+        <div style="display: flex; flex-direction: column; gap: 18px">
+          <span class="lbl">Assistente digitale · AI conversazionale</span>
+          <h2 class="serif" style="margin: 0; font-size: 56px; line-height: 1">K-Avatar</h2>
+          <p class="serif" style="margin: 0; font-size: 22px; font-weight: 300; font-style: italic; color: rgba(245,244,240,.88)">Un volto che ti vede, una voce che ti ascolta.</p>
+          <p class="body" style="margin: 0; max-width: 480px">Assistenti digitali 3D fotorealistici che accolgono, informano e accompagnano le persone negli spazi reali. Una presenza che sa quando parlare e quando tacere, addestrata sui contenuti del cliente.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid rgba(245,244,240,.1); padding-top: 20px">
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">H24</span><span class="lbl" style="font-size: 9px">senza operatore</span></div>
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">24</span><span class="lbl" style="font-size: 9px">espressioni</span></div>
+          <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 200; font-size: 32px; letter-spacing: -.02em">0</span><span class="lbl" style="font-size: 9px">immagini in uscita</span></div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px">
+          <span class="lbl" style="font-size: 9px; color: rgba(245,244,240,.45)">Musei · Fiere · Hospitality · Reception</span>
+          <a class="cta" href="Avatar.dc.html">Apri progetto <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Closing CTA -->
+    <section style="border-top: 1px solid rgba(245,244,240,.14); padding: 72px 0 96px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 640px">
+        <span class="lbl">Prossimo progetto</span>
+        <p class="serif" style="margin: 0; font-size: 40px; line-height: 1.15; font-weight: 300">Hai uno spazio, un prodotto, un pubblico? Costruiamo insieme il prossimo.</p>
+      </div>
+      <a class="cta" href="#">Contattaci <span aria-hidden="true">↗</span></a>
+    </section>
+  </main>
+
+  <!-- HUD footer -->
+  <footer style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 48px; border-top: 1px solid rgba(245,244,240,.08)">
+    <span class="lbl" style="font-size: 8px; color: rgba(245,244,240,.45)">◦ Snd off</span>
+    <span class="lbl" style="font-size: 10px; color: rgba(245,244,240,.6)">[ 16:54:48 CET ]</span>
+    <span class="lbl" style="font-size: 8px; color: rgba(245,244,240,.45)">Where technology becomes sensation</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
