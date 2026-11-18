@@ -6,6 +6,8 @@ import { getPublishedWorkSlugs, getWorkBySlug, type WorkLocale } from "@/lib/wor
 import { ws } from "@/components/works/ui"
 import { WorkSections } from "@/components/works/WorkSections"
 import { WorkBreadcrumb, WorkHero, WorkNext, WorkStats } from "@/components/works/WorkDetail"
+import { ArtifactEmbed } from "@/components/works/ArtifactEmbed"
+import { cn } from "@/lib/utils"
 
 type Params = Promise<{ locale: string; slug: string }>
 type SearchParams = Promise<{ preview?: string | string[] }>
@@ -77,7 +79,31 @@ export default async function WorkPage({ params, searchParams }: { params: Param
       <WorkBreadcrumb work={work} />
       <WorkHero work={work} />
       <WorkStats work={work} />
-      <WorkSections sections={work.sections} scrollLabel={t("scrollHint")} borderFirst={work.stats.length === 0} />
+      {/* Esplora: artefatti interattivi pubblicati, subito dopo hero e stats. Solo se ce ne sono. */}
+      {work.artifacts.length > 0 && (
+        <section
+          aria-labelledby="explore-heading"
+          // Sotto 768px almeno 15vh liberi dopo l'ultima didascalia: il canvas degli artefatti
+          // (es. KBox, touch-action: none) intercetta il dito, serve una zona per continuare a scorrere
+          className={cn(
+            "flex flex-col gap-10 py-14 md:py-[72px] max-md:pb-[max(15vh,3.5rem)]",
+            work.stats.length === 0 && `border-t ${ws.hairline}`,
+          )}
+          data-testid="works-explore"
+        >
+          <h2 id="explore-heading" className={ws.lbl}>
+            {t("exploreLabel")}
+          </h2>
+          {work.artifacts.map((a) => (
+            <ArtifactEmbed key={a.id} artifact={a} />
+          ))}
+        </section>
+      )}
+      <WorkSections
+        sections={work.sections}
+        scrollLabel={t("scrollHint")}
+        borderFirst={work.stats.length === 0 || work.artifacts.length > 0}
+      />
       <WorkNext work={work} />
     </main>
   )

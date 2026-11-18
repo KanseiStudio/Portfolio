@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma"
 import { Prisma } from "@/lib/generated/prisma/client"
 import { isAdminSession } from "@/lib/session"
 import { collectWorkImages, deleteUnusedBlobs, isWorkBlobUrl } from "@/lib/blob"
+import { deleteArtifactPoster, deleteArtifactPrefix } from "@/lib/artifacts-server"
 import {
   SECTION_KIND_CONFIG,
   workFormSchema,
@@ -226,9 +227,24 @@ export async function deleteWork(id: string): Promise<SimpleResult> {
 
   const work = await prisma.work.findUnique({
     where: { id },
-    include: { sections: { select: { image: true, items: { select: { image: true } } } } },
+    include: {
+      sections: { select: { image: true, items: { select: { image: true } } } },
+      artifacts: { select: { blobPrefix: true, previousBlobPrefix: true, posterUrl: true } },
+    },
   })
   if (!work) return { ok: false, error: "Lavoro non trovato" }
+
+  // Il cascade elimina i record degli artefatti ma non i loro blob: puliscili prima
+  try {
+    for (const a of work.artifacts) {
+      await deleteArtifactPrefix(a.blobPrefix)
+      if (a.previousBlobPrefix) await deleteArtifactPrefix(a.previousBlobPrefix)
+      await deleteArtifactPoster(a.posterUrl)
+    }
+  } catch (err) {
+    console.error("[artifacts] pulizia blob del lavoro fallita", id, err)
+    return { ok: false, error: "Eliminazione dei file degli artefatti non riuscita: riprova." }
+  }
 
   // Hard delete: il cascade dello schema elimina tag, stats, sezioni e voci
   await prisma.work.delete({ where: { id } })

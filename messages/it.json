@@ -196,7 +196,15 @@
     "defaultCta": "Richiedi la presentazione",
     "draftBadge": "Bozza · anteprima",
     "scrollHint": "Scorri la tabella",
-    "metaTitle": "Works · Kansei Studio"
+    "metaTitle": "Works · Kansei Studio",
+    "exploreLabel": "Esplora",
+    "artifactTelemetry": "Artefatto · Interattivo",
+    "artifactLaunch": "Avvia esperienza",
+    "artifactFullscreen": "Schermo intero",
+    "artifactExitFullscreen": "Esci da schermo intero",
+    "artifactNewTab": "Apri in nuova scheda",
+    "artifactClose": "Chiudi",
+    "artifactRegion": "Artefatto interattivo: {title}"
   },
   "Radio": {
     "metaTitle": "Radio — Kansei Studio",

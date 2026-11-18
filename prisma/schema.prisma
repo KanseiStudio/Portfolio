@@ -263,7 +263,8 @@ model Work {
 
   tags     WorkTag[]
   stats    WorkStat[]
-  sections WorkSection[]
+  sections  WorkSection[]
+  artifacts WorkArtifact[]
 
   @@map("works")
 }
@@ -343,4 +344,36 @@ model WorkSectionItem {
 
   @@index([sectionId])
   @@map("work_section_items")
+}
+
+// ---------- Artefatti interattivi dei Works ----------
+// Mini-siti HTML autonomi (HTML + JS + asset) su Vercel Blob, mostrati in iframe nella pagina del lavoro.
+// File in artifacts/<blobPrefix>/...; l'HTML entry è servito da /artifacts/[id], gli asset dal rewrite /artifact-files/*.
+// onDelete: Cascade elimina i record ma NON i blob: le action di delete puliscono prima i prefix.
+
+model WorkArtifact {
+  id          String   @id @default(cuid())
+  workId      String   @map("work_id")
+  titleIt     String   @map("title_it") @db.VarChar(200)
+  titleEn     String?  @map("title_en") @db.VarChar(200)
+  captionIt   String?  @map("caption_it") @db.Text
+  captionEn   String?  @map("caption_en") @db.Text
+  blobPrefix  String   @map("blob_prefix") @db.VarChar(200) // "<workId>/<uploadId>" → artifacts/<blobPrefix>/...
+  // Versione sostituita, tenuta finché non arriva la successiva: l'HTML in cache CDN (fino a 5 min)
+  // punta ancora alla sua <base>, cancellarla subito manderebbe i video in 404.
+  previousBlobPrefix String? @map("previous_blob_prefix") @db.VarChar(200)
+  entryPath   String   @default("index.html") @map("entry_path") @db.VarChar(300)
+  aspectRatio String   @default("16/9") @map("aspect_ratio") @db.VarChar(10)
+  posterUrl   String?  @map("poster_url") @db.VarChar(500)
+  fileCount   Int      @map("file_count")
+  totalBytes  Int      @map("total_bytes")
+  position    Int      @default(0)
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([workId, position])
+  @@map("work_artifacts")
 }

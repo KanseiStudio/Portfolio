@@ -41,6 +41,17 @@ export interface LocalizedWorkSection {
   items: LocalizedWorkSectionItem[]
 }
 
+/** Artefatto interattivo pubblicato (sezione "Esplora"); HTML servito da /artifacts/<id> */
+export interface LocalizedWorkArtifact {
+  id: string
+  title: string
+  caption: string | null
+  aspectRatio: string
+  posterUrl: string | null
+  fileCount: number
+  totalBytes: number
+}
+
 export interface LocalizedWorkSummary {
   id: string
   slug: string
@@ -69,6 +80,8 @@ export interface LocalizedWork extends LocalizedWorkSummary {
   /** Stats della fascia in pagina (onPage) */
   stats: LocalizedWorkStat[]
   sections: LocalizedWorkSection[]
+  /** Solo artefatti pubblicati, in ordine di position */
+  artifacts: LocalizedWorkArtifact[]
   /** Lavoro pubblicato successivo per order (l'ultimo torna al primo); null se è l'unico */
   next: { slug: string; name: string; position: number } | null
   updatedAt: string
@@ -97,6 +110,10 @@ function findWorkRow(where: { slug: string; published?: boolean }) {
         orderBy: { order: "asc" },
         include: { items: { orderBy: { order: "asc" } } },
       },
+      artifacts: {
+        where: { published: true },
+        orderBy: [{ position: "asc" }, { createdAt: "asc" }],
+      },
     },
   })
 }
@@ -114,7 +131,7 @@ function localizeStat(locale: WorkLocale, s: WorkRow["stats"][number]): Localize
 
 function localizeSummary(
   locale: WorkLocale,
-  w: Omit<WorkRow, "sections">,
+  w: Omit<WorkRow, "sections" | "artifacts">,
   position: number,
 ): LocalizedWorkSummary {
   const intro = pick(locale, { it: w.introIt, en: w.introEn }) ?? ""
@@ -214,6 +231,15 @@ export async function getWorkBySlug(
         image: it.image,
         imageAlt: pick(locale, { it: it.imageAltIt, en: it.imageAltEn }) ?? "",
       })),
+    })),
+    artifacts: w.artifacts.map((a) => ({
+      id: a.id,
+      title: pick(locale, { it: a.titleIt, en: a.titleEn }) ?? "",
+      caption: pick(locale, { it: a.captionIt, en: a.captionEn }),
+      aspectRatio: a.aspectRatio,
+      posterUrl: a.posterUrl,
+      fileCount: a.fileCount,
+      totalBytes: a.totalBytes,
     })),
     next: nextRow
       ? { slug: nextRow.slug, name: nextRow.name, position: sequence.indexOf(nextRow) + 1 }
