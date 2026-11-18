@@ -263,3 +263,48 @@ npm run seed:works                     # seed idempotente di KDoors, KBox, K-Ava
 npm run test:e2e                       # Playwright (usa .env.local; avvia/riusa `npm run dev`)
 ```
 Il seed riscrive completamente tag, stats e sezioni dei 3 lavori: modifiche fatte dall'admin a quei lavori vengono sovrascritte.
+
+## Works — pagine pubbliche (aggiunto Task works-2)
+
+Le pagine Works seguono il tema scuro del sito (`#0A0A0A` / `#F5F4F0`, come Technologies) e le anteprime approvate in `design/references/works/`. Nessun contenuto è hardcoded: i dati arrivano da `lib/works.ts`, i testi UI ricorrenti dal namespace `Works` di `messages/{it,en}.json`.
+
+### Route
+| Rotta | File | Note |
+|---|---|---|
+| `/[locale]/works` | `app/[locale]/works/page.tsx` | page head + contatore, tabella indice, schede alternate immagine/testo (3 stats `onCard`), CTA verso Contatti |
+| `/[locale]/works/[slug]` | `app/[locale]/works/[slug]/page.tsx` | `generateStaticParams` dai lavori pubblicati, `dynamicParams = true`, `notFound()` per slug sconosciuti o in bozza |
+
+Struttura della pagina lavoro: breadcrumb `← Works / 0N — Nome` · hero (tipologia, H1 Fraunces, tagline Fraunces italic, intro, tag, immagine 4:5 con angoli HUD nel tono `heroTone`) · fascia stats (`onPage`) · sezioni · chiusura con CTA (→ `/contact`) e "Prossimo", che cicla per `order` tra i pubblicati (l'ultimo torna al primo).
+
+`generateMetadata`: `"<Nome> · Works · Kansei Studio"`, description = tagline, OG image = hero.
+
+### Componenti (`components/works/`)
+| File | Ruolo |
+|---|---|
+| `ui.tsx` | token tipografici `ws.*` (lbl, body mono, serif, num, h3, cta ≥ 44px), `WorkImage` (next/image, path locali e Blob), `SectionHeader`, `Cell` |
+| `WorkSections.tsx` | dispatcher `SectionKind → componente`; un tipo sconosciuto non renderizza nulla. Raggruppa le sezioni: una sezione **con eyebrow** apre un blocco numerato con filetto, quelle **senza eyebrow** lo proseguono (es. KDoors "L'idea" = IMAGE + CARDS + QUOTE) |
+| `sections/CardsSection` | celle con filetto se le voci hanno etichetta; riquadri a hairline se non ce l'hanno (garanzie) |
+| `sections/TimelineSection` | righe numero · titolo · testo · tempo; sotto 768px numero e tempo in alto |
+| `sections/TableSection` | `<table>` con intestazioni da `columns`; sotto 768px scorre nel proprio box (focusabile, etichetta «Scorri la tabella») |
+| `sections/SpecsSection` | `<dl>` etichetta/valore; con titolo → intestazione a sinistra, solo eyebrow → etichetta sopra |
+| `sections/GallerySection` | formato dal contenuto: voci con testo → 16:10; 4+ senza testo → 3:5 dall'alto (personaggi); altrimenti 4:5 |
+| `sections/QuoteSection` | citazione con barra rossa |
+| `sections/ImageSection` | immagine a tutta colonna, proporzioni naturali |
+| `sections/SplitSection` | immagine a sinistra, intestazione e celle a destra |
+| `WorkDetail.tsx` / `WorksIndex.tsx` | breadcrumb, hero, stats, "Prossimo" / page head, tabella indice, schede, chiusura |
+
+Il numero delle sezioni ("01 —") è quello salvato nell'eyebrow, mai calcolato. La posizione `0N` di breadcrumb, indice e "Prossimo" è invece l'ordine tra i lavori pubblicati.
+
+### Accento rosso
+Il rosso del logo `#E31E24` compare **solo** nella barra verticale di `QuoteSection`. Nessun altro uso: l'etichetta della citazione resta nel colore delle label. (Il verde `#4ADE80` resta solo sul pallino ONLINE della rail.)
+
+### Anteprima bozze
+1. L'admin clicca "Anteprima" nell'editor (o "Vedi sul sito" su una bozza) → `/it/works/<slug>?preview=1`.
+2. La pagina verifica la sessione admin (`getAdminSession().isAdmin`). Senza sessione `?preview=1` viene ignorato → 404 per le bozze.
+3. Con sessione: la bozza viene renderizzata con badge HUD "Bozza · anteprima" e `robots: noindex, nofollow`. Nell'anteprima la posizione e il "Prossimo" includono la bozza; per i visitatori le bozze sono escluse da indice, contatore e "Prossimo".
+
+### Nav
+Voce **Works** tra Technologies e Contatti (`Nav.works`), attiva su `/works` e `/works/*` in desktop e drawer mobile (`aria-current="page"`).
+
+### Immagini
+`next/image` ovunque, con `alt` dal DB e `sizes` per colonna. Le hero sono ritratti verticali: in hero e schede il fuoco è in alto (`object-position: center top`) per non tagliare i volti.

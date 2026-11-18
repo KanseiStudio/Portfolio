@@ -2,6 +2,7 @@
   "Nav": {
     "about": "About",
     "technologies": "Technologies",
+    "works": "Works",
     "contact": "Contact",
     "menuOpen": "Open menu",
     "menuClose": "Close menu"
@@ -171,5 +172,29 @@
     "loading": "Loading…",
     "error": "An error occurred.",
     "languageSwitcher": "Language"
+  },
+  "Works": {
+    "sectionLabel": "Works",
+    "title": "Works",
+    "description": "Installations and platforms we have designed and built: physical objects, digital presences, experiences to move through. Each one starts from a simple gesture and turns it into sensation.",
+    "archiveLabel": "Projects in archive",
+    "indexLabel": "Project index",
+    "colNumber": "#",
+    "colProject": "Project",
+    "colType": "Type",
+    "colStatus": "Status",
+    "openProject": "Open project",
+    "closingLabel": "Next project",
+    "closingText": "Do you have a space, a product, an audience? Let's build the next one together.",
+    "contactCta": "Contact us",
+    "breadcrumbRoot": "Works",
+    "ref": "Ref.",
+    "statsLabel": "At a glance",
+    "next": "Next",
+    "allWorks": "All works",
+    "defaultCta": "Request the presentation",
+    "draftBadge": "Draft · preview",
+    "scrollHint": "Scroll the table",
+    "metaTitle": "Works · Kansei Studio"
   }
 }
