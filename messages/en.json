@@ -5,7 +5,8 @@
     "works": "Works",
     "contact": "Contact",
     "menuOpen": "Open menu",
-    "menuClose": "Close menu"
+    "menuClose": "Close menu",
+    "radio": "Radio"
   },
   "Home": {
     "titleLine1": "KANSEI",
@@ -196,5 +197,10 @@
     "draftBadge": "Draft · preview",
     "scrollHint": "Scroll the table",
     "metaTitle": "Works · Kansei Studio"
+  },
+  "Radio": {
+    "metaTitle": "Radio — Kansei Studio",
+    "metaDescription": "Kansei Radio: live generative music, the same for everyone at the same moment.",
+    "iframeTitle": "Kansei Radio player"
   }
 }

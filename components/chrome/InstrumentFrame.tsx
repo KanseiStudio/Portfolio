@@ -24,6 +24,7 @@ const NAV_HREFS = [
   "/technologies",
   "/works",
   "/contact",
+  "/radio",
 ] as const
 
 /** Voce attiva anche sulle sottopagine (es. /works/kbox) */
@@ -58,6 +59,7 @@ export function InstrumentFrame({
     { href: NAV_HREFS[1], label: t("technologies")  },
     { href: NAV_HREFS[2], label: t("works")         },
     { href: NAV_HREFS[3], label: t("contact")       },
+    { href: NAV_HREFS[4], label: t("radio")         },
   ] as const
 
   const [mounted,    setMounted]    = useState(false)
@@ -429,7 +431,8 @@ export function InstrumentFrame({
       </div>
 
       {/* ══ BACKGROUND MUSIC ════════════════════════════════════════════════ */}
-      {musicEnabled && musicUrl && (
+      {/* Su /radio suona il player della radio: niente musica di sottofondo */}
+      {musicEnabled && musicUrl && pathname !== "/radio" && (
         <BackgroundMusic musicUrl={musicUrl} />
       )}
 
