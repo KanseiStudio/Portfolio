@@ -63,8 +63,13 @@ next-env.d.ts
 *.bak
 *.broken.tsx
 
-# Local scripts (debug, temp)
-scripts/
+# Local scripts (debug, temp) — tranne lo script di build usato da Vercel
+scripts/*
+!scripts/vercel-build.mjs
 # Playwright
 /test-results/
 /playwright-report/
+
+# env scaricate da `vercel env pull` (.env.example resta versionato)
+.env*
+!.env.example
