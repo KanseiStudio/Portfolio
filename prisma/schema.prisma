@@ -348,7 +348,7 @@ model WorkSectionItem {
 
 // ---------- Artefatti interattivi dei Works ----------
 // Mini-siti HTML autonomi (HTML + JS + asset) su Vercel Blob, mostrati in iframe nella pagina del lavoro.
-// File in artifacts/<blobPrefix>/...; l'HTML entry è servito da /artifacts/[id], gli asset dal rewrite /artifact-files/*.
+// File in artifacts/<blobPrefix>/...; l'HTML entry è servito da /artifacts/[id], gli asset direttamente da Blob (<base> assoluta).
 // onDelete: Cascade elimina i record ma NON i blob: le action di delete puliscono prima i prefix.
 
 model WorkArtifact {

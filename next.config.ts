@@ -8,10 +8,10 @@ const blobBase = getBlobPublicBaseUrl()
 
 const nextConfig: NextConfig = {
   /**
-   * Asset degli artefatti interattivi (video, immagini, js…) serviti dal dominio del sito:
-   * il rewrite esterno fa da proxy verso Vercel Blob e inoltra l'header Range (risposte 206,
-   * scrubbing dei video). Same-origin = i video si possono usare come texture WebGL.
-   * L'HTML entry passa invece da app/artifacts/[artifactId]/route.ts.
+   * DEPRECATO — solo compatibilità: l'HTML degli artefatti ancora in cache CDN (fino a 5 min)
+   * può avere la vecchia <base href="/artifact-files/…">. Dalla route
+   * app/artifacts/[artifactId]/route.ts la <base> punta direttamente a Blob (URL assoluto):
+   * via questo rewrite Safari iOS non riusciva a riprodurre i video (MediaError 4).
    */
   async rewrites() {
     if (!blobBase) {
