@@ -8,9 +8,13 @@ import { getBlobPublicBaseUrl } from "@/lib/blob-base-url"
  * Vercel Blob serve i file con `content-disposition: attachment`, `CSP default-src 'none'`
  * e `X-Frame-Options: DENY`: l'HTML non si può incorporare direttamente da lì.
  * Questa route legge l'entry dal Blob e la serve dal dominio del sito, iniettando
- * `<base href="/artifact-files/<blobPrefix>/">`: tutti i percorsi relativi (video,
- * immagini, js) passano dal rewrite /artifact-files/* di next.config.ts e restano
- * same-origin, condizione necessaria per usare i video come texture WebGL senza `crossOrigin`.
+ * `<base href="<BLOB_PUBLIC_BASE_URL>/artifacts/<blobPrefix>/">` (URL assoluto): i percorsi
+ * relativi (video, immagini, js) si caricano DIRETTAMENTE dalla CDN di Blob, che gestisce i
+ * Range come serve a Safari iOS (via rewrite /artifact-files/ i video davano MediaError 4).
+ * Gli asset sono quindi cross-origin: Blob risponde `Access-Control-Allow-Origin: *`, e gli
+ * artefatti che usano video/immagini come texture WebGL o in canvas devono impostare
+ * `crossOrigin = "anonymous"` su quegli elementi. Il rewrite /artifact-files/ resta solo per
+ * compatibilità (HTML ancora in cache CDN), non viene più usato.
  *
  * Fuori dal layout [locale] e dal proxy (matcher di proxy.ts): niente next-intl, niente nav.
  * Le bozze sono visibili solo con una sessione admin valida, altrimenti 404.
@@ -53,7 +57,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ artifac
     console.error("[artifacts] entry non leggibile", artifactId, upstream.status)
     return notFound()
   }
-  const html = injectBase(await upstream.text(), `/artifact-files/${artifact.blobPrefix}/`)
+  const html = injectBase(await upstream.text(), `${base}/artifacts/${artifact.blobPrefix}/`)
 
   return new Response(html, {
     status: 200,

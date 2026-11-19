@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto"
 import { expect, test, type APIRequestContext, type Page } from "@playwright/test"
 import { del, list } from "@vercel/blob"
+import { getBlobPublicBaseUrl } from "../../lib/blob-base-url"
 import { TEST_SLUG_PREFIX, loginAsAdmin, testDb } from "./helpers"
 
 /**
@@ -8,8 +9,8 @@ import { TEST_SLUG_PREFIX, loginAsAdmin, testDb } from "./helpers"
  *
  * Vincoli:
  * - store Blob reale, tutti i file sotto artifacts/e2e-<runId>/ (il lavoro di test ha slug
- *   e2e-test-<runId>, e artifactRootFor() lo mappa su e2e-<runId>): il rewrite /artifact-files
- *   li copre, quindi il 206 è verificato davvero;
+ *   e2e-test-<runId>, e artifactRootFor() lo mappa su e2e-<runId>): la <base> punta a Blob,
+ *   quindi Range/206 e CORS sono verificati sulla CDN vera;
  * - il lavoro di test resta SEMPRE in bozza e viene cancellato in afterAll, come i suoi blob,
  *   anche se un test fallisce; all'avvio si eliminano i residui e2e-* più vecchi di 24 h;
  * - non si tocca nessun altro lavoro né il modello Project (Mico).
@@ -18,6 +19,9 @@ import { TEST_SLUG_PREFIX, loginAsAdmin, testDb } from "./helpers"
 const sql = testDb()
 const hasToken = Boolean(process.env.BLOB_READ_WRITE_TOKEN)
 const DAY_MS = 24 * 60 * 60 * 1000
+const BLOB_BASE = getBlobPublicBaseUrl()
+/** <base> attesa: URL assoluto Blob (gli asset non passano più dal rewrite /artifact-files/) */
+const baseHref = (prefix: string) => `${BLOB_BASE}/artifacts/${prefix}/`
 const UPLOAD = "/api/admin/works/upload"
 
 const runId = `${Date.now().toString(36)}${randomBytes(3).toString("hex")}`
@@ -210,22 +214,35 @@ test.describe.serial("artefatti interattivi", () => {
     expect(h["x-robots-tag"]).toBe("noindex")
     expect(h["cache-control"]).toBe("private, no-store") // bozza: mai in cache CDN
     const html = await res.text()
-    expect(html).toContain(`<head><base href="/artifact-files/${row.blob_prefix}/">`)
+    expect(html).toContain(`<head><base href="${baseHref(row.blob_prefix)}">`)
     expect(html).toContain("artifact-min v1")
   })
 
-  test("asset via /artifact-files/: stesso origin, mp4 con Range → 206 video/mp4", async ({ request }) => {
+  test("la <base> punta a BLOB_PUBLIC_BASE_URL; gli asset Blob rispondono con CORS e Range (206)", async ({ request }) => {
+    expect(BLOB_BASE, "BLOB_PUBLIC_BASE_URL (o BLOB_STORE_ID) deve essere impostata").toMatch(
+      /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com$/,
+    )
     const [row] = await artifactRows()
-    const png = await request.get(`/artifact-files/${row.blob_prefix}/img/a.png`)
+    const html = await (await page.request.get(`/artifacts/${row.id}`)).text()
+    const href = html.match(/<base href="([^"]+)">/)?.[1]
+    expect(href).toBe(baseHref(row.blob_prefix))
+    expect(href).not.toContain("/artifact-files/")
+
+    // Gli asset relativi si risolvono sulla <base> → URL Blob, cross-origin rispetto al sito
+    const origin = new URL(page.url()).origin
+    const png = await request.get(new URL("img/a.png", href).href, { headers: { Origin: origin } })
     expect(png.status()).toBe(200)
     expect(png.headers()["content-type"]).toBe("image/png")
+    expect(png.headers()["access-control-allow-origin"]).toBe("*")
 
-    const mp4 = await request.get(`/artifact-files/${row.blob_prefix}/video/clip.mp4`, {
-      headers: { Range: "bytes=0-1023" },
+    // Video: Range → 206 dalla CDN Blob (quello che serve a Safari iOS), sempre con CORS
+    const mp4 = await request.get(new URL("video/clip.mp4", href).href, {
+      headers: { Origin: origin, Range: "bytes=0-1023" },
     })
     expect(mp4.status()).toBe(206)
     expect(mp4.headers()["content-type"]).toBe("video/mp4")
     expect(mp4.headers()["content-range"]).toBe("bytes 0-1023/4096")
+    expect(mp4.headers()["access-control-allow-origin"]).toBe("*")
     expect((await mp4.body()).length).toBe(1024)
   })
 
@@ -298,7 +315,7 @@ test.describe.serial("artefatti interattivi", () => {
     expect(await pathsUnder(after.blob_prefix)).toHaveLength(3)
 
     const html = await (await page.request.get(`/artifacts/${after.id}`)).text()
-    expect(html).toContain(`<base href="/artifact-files/${after.blob_prefix}/">`)
+    expect(html).toContain(`<base href="${baseHref(after.blob_prefix)}">`)
     expect(html).toContain("artifact-min v2")
 
     // Seconda sostituzione: si cancella solo la versione di due sostituzioni fa

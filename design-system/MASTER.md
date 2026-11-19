@@ -334,14 +334,21 @@ Ogni lavoro (`Work`) può avere uno o più **artefatti**: mini-siti HTML autonom
 | Storage | Vercel Blob (store pubblico) | file in `artifacts/<blobPrefix>/<relpath>`, `blobPrefix = <root>/<uploadId>`; copertina in `artifacts/<blobPrefix>-poster.<ext>` |
 | Upload | `ArtifactUploader` + `/api/admin/works/upload` | dal browser direttamente a Blob (`upload()` di `@vercel/blob/client`), niente file nelle Functions |
 | Azioni | `app/admin/_actions/artifacts.ts` | riserva prefix, crea, sostituisci, pubblica, riordina, elimina, pulizia dopo errore |
-| HTML entry | `app/artifacts/[artifactId]/route.ts` | legge `index.html` da Blob, inietta `<base href="/artifact-files/<blobPrefix>/">` subito dopo `<head>`, risponde `text/html` dal dominio del sito |
-| Asset | rewrite in `next.config.ts` | `/artifact-files/:path*` → `<BLOB_PUBLIC_BASE_URL>/artifacts/:path*`; proxy esterno che inoltra `Range` (206, scrubbing video) |
+| HTML entry | `app/artifacts/[artifactId]/route.ts` | legge `index.html` da Blob, inietta `<base href="<BLOB_PUBLIC_BASE_URL>/artifacts/<blobPrefix>/">` (URL **assoluto** Blob) subito dopo `<head>`, risponde `text/html` dal dominio del sito |
+| Asset | **direttamente da Blob** (CDN) | i percorsi relativi si risolvono sulla `<base>` assoluta: video, immagini e js arrivano da `*.public.blob.vercel-storage.com`, con `Range`/206 gestiti dalla CDN di Blob e `Access-Control-Allow-Origin: *` |
+| *(deprecato)* | rewrite in `next.config.ts` | `/artifact-files/:path*` → `<BLOB_PUBLIC_BASE_URL>/artifacts/:path*`: resta attivo solo per l'HTML ancora in cache con la vecchia `<base>`; **non usarlo** |
 | Embed | `components/works/ArtifactEmbed.tsx` | click-to-load dell'iframe nella pagina del lavoro |
 
 - **Perché la route HTML:** Blob serve l'HTML con `content-disposition: attachment`, `CSP default-src 'none'` e `X-Frame-Options: DENY`: non si può incorporare direttamente.
-- **Perché lo stesso origin:** gli artefatti usano i video come `VideoTexture` WebGL **senza** `crossOrigin`. Una texture da un altro origin "sporca" il canvas e WebGL va in errore. Con `<base>` + rewrite, HTML e video arrivano entrambi dal dominio del sito.
+- **Perché gli asset direttamente da Blob:** in origine la `<base>` puntava a `/artifact-files/…` (rewrite same-origin), così i video potevano diventare texture WebGL senza `crossOrigin`. Su **Safari iOS** però i video via rewrite non partivano (`MediaError 4`, `NotSupportedError`), mentre lo stesso file aperto su Blob funzionava: la CDN di Blob gestisce le richieste `Range` come serve a iOS, il proxy del rewrite no. Ora gli asset si caricano dalla CDN di Blob.
+- **Regola per chi scrive un artefatto — `crossOrigin="anonymous"`:** gli asset sono **cross-origin** rispetto alla pagina (l'HTML è sul dominio del sito, i file su Blob). Ogni `<video>`/`<img>` usato come **texture WebGL** (`THREE.VideoTexture`, `TextureLoader`…) o disegnato in un **`<canvas>`** letto poi con `getImageData`/`toDataURL` deve avere `crossOrigin = "anonymous"`, impostato **prima** di `src`. Blob risponde con `Access-Control-Allow-Origin: *`, quindi basta quello. Senza, WebGL lancia `SecurityError: … texImage2D … The video element contains cross-origin data` e la texture resta nera. I video riprodotti e basta (un `<video controls>`) non ne hanno bisogno; `fetch`, moduli ES e `importmap` relativi funzionano già grazie al CORS di Blob.
+  ```js
+  const video = document.createElement("video")
+  video.crossOrigin = "anonymous" // PRIMA di src
+  video.src = "video/clip.mp4"    // relativo → risolto sulla <base> Blob
+  ```
 - `/artifacts` e `/artifact-files` sono esclusi dal matcher di `proxy.ts` (niente redirect di lingua, niente auth) e stanno fuori dal layout `[locale]` (niente nav né telemetria).
-- **Env:** `BLOB_READ_WRITE_TOKEN` (solo server) e `BLOB_PUBLIC_BASE_URL` (`https://<id>.public.blob.vercel-storage.com`). Fallback di `lib/blob-base-url.ts`: `BLOB_STORE_ID` `store_AbC123` → `https://abc123.public.blob.vercel-storage.com`. Senza nessuno dei due il rewrite viene disattivato (avviso nel log).
+- **Env:** `BLOB_READ_WRITE_TOKEN` (solo server) e `BLOB_PUBLIC_BASE_URL` (`https://<id>.public.blob.vercel-storage.com`). Fallback di `lib/blob-base-url.ts`: `BLOB_STORE_ID` `store_AbC123` → `https://abc123.public.blob.vercel-storage.com`. Senza nessuno dei due la route risponde 500 e il rewrite deprecato viene disattivato (avviso nel log).
 
 ### Upload e validazione
 1. Zip scelto in admin, decompresso nel browser con `fflate` (`unzipSync`). Scartati `__MACOSX/`, `.DS_Store`, `._*`, `Thumbs.db` e cartelle vuote. Se tutti i file stanno sotto un'unica cartella radice (es. `kbox/`) viene rimossa.
@@ -362,11 +369,11 @@ Altri header della route: `Content-Security-Policy: frame-ancestors 'self'`, `X-
 
 - **«Sostituisci zip»:** carica su un prefix nuovo, poi `blobPrefix = nuovo`, `previousBlobPrefix = quello appena sostituito`. L'URL `/artifacts/<id>` non cambia. La versione appena sostituita **resta su Blob per una sostituzione**: l'HTML in cache CDN (fino a 5 min) ha ancora la `<base>` verso di lei, e cancellarla subito manderebbe i video in 404. Si cancella solo il `previousBlobPrefix` precedente (due versioni fa). Poi `revalidatePath` delle pagine pubbliche IT/EN e dell'admin.
 - **Elimina artefatto** (conferma digitando il titolo) ed **elimina lavoro:** cancellano `blobPrefix`, `previousBlobPrefix` e copertina **prima** del record. Il cascade di Prisma elimina i record ma non i blob.
-- Gli asset da `/artifact-files/*` mantengono la cache di Blob (`max-age=2592000`): è sicuro perché ogni versione ha un prefix nuovo.
+- Gli asset Blob hanno la cache della CDN di Blob (`max-age=2592000`): è sicuro perché ogni versione ha un prefix nuovo.
 
 ### Sandbox e modello di fiducia
 `sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups"`, `allow="fullscreen; autoplay; xr-spatial-tracking"`.
-L'iframe è same-origin (serve per le texture video) e ha sia `allow-scripts` sia `allow-same-origin`: **non è isolato dal sito** (Chrome lo segnala in console, è voluto). È accettabile solo perché **caricano artefatti esclusivamente gli admin**: un artefatto va trattato come codice del sito. Il commento è in `ArtifactEmbed.tsx`.
+L'HTML dell'iframe è same-origin (servito da `/artifacts/<id>`; gli asset arrivano da Blob con CORS) e ha sia `allow-scripts` sia `allow-same-origin`: **non è isolato dal sito** (Chrome lo segnala in console, è voluto). È accettabile solo perché **caricano artefatti esclusivamente gli admin**: un artefatto va trattato come codice del sito. Il commento è in `ArtifactEmbed.tsx`.
 
 ### `ArtifactEmbed` — specifiche visive
 - **Click-to-load:** nessun iframe finché non si clicca «Avvia esperienza» / «Launch experience» (KBox scarica three.js e ~16 MB di video). «Chiudi» smonta l'iframe e libera la GPU.
@@ -380,15 +387,17 @@ L'iframe è same-origin (serve per le texture video) e ha sia `allow-scripts` si
 ### Limiti noti
 - La `<base>` vale solo per l'**HTML entry**: link a pagine HTML secondarie dentro l'artefatto non sono supportati (verrebbero scaricate come allegato da Blob). Un artefatto = una pagina.
 - **Gli artefatti devono gestire da soli il layout sotto i 760px.** L'embed fornisce un riquadro 3:4 alto almeno il 70% dello schermo, ma pannelli e barre interni (es. i comandi di KBox) vanno resi responsive nell'HTML dell'artefatto, con le sue media query.
-- Gli header CSP di Blob arrivano anche tramite il rewrite: non contano per i file caricati dalla pagina (immagini, script, video), ma un Web Worker caricato da `/artifact-files/` ne sarebbe limitato.
+- **Web Worker:** un worker deve avere lo stesso origin della pagina, quindi uno script worker relativo (risolto su Blob) non si può avviare con `new Worker("worker.js")`. Va caricato con `fetch` e avviato da un URL `blob:` (`new Worker(URL.createObjectURL(blob))`), oppure il codice va tenuto nel thread principale.
 - L'anteprima di un lavoro (`?preview=1`) mostra solo gli artefatti pubblicati; un artefatto in bozza si apre dal pulsante «Anteprima» dell'admin.
 
 ### Test
-`tests/e2e/artifacts.spec.ts` (store Blob reale): file sotto `artifacts/e2e-<runId>/`, lavoro `e2e-test-<runId>` sempre in bozza, pulizia in `afterAll` anche se un test fallisce e, all'avvio, dei residui `e2e-*` più vecchi di 24 h. Fixture in `tests/fixtures/` (`artifact-min.zip`, `artifact-min-v2.zip`, `artifact-no-index.zip`).
+`tests/e2e/artifacts.spec.ts` (store Blob reale): file sotto `artifacts/e2e-<runId>/`, lavoro `e2e-test-<runId>` sempre in bozza, pulizia in `afterAll` anche se un test fallisce e, all'avvio, dei residui `e2e-*` più vecchi di 24 h. Fixture in `tests/fixtures/` (`artifact-min.zip`, `artifact-min-v2.zip`, `artifact-no-index.zip`). Un test verifica che la `<base>` sia `${BLOB_PUBLIC_BASE_URL}/artifacts/<blobPrefix>/` e che gli asset risolti su di essa rispondano dalla CDN Blob con `Access-Control-Allow-Origin: *` (png 200, mp4 con `Range` → 206 `video/mp4`).
 
 ## Database e migration (aggiunto fix/prod-migrations)
 
 **Due database distinti.** `.env.local` punta a un DB Neon di **sviluppo** (`ep-little-tooth-…`), non alla produzione: `migrate dev`, seed, `npm run dev` e i test e2e lavorano solo lì. Una migration applicata in locale **non** arriva in produzione da sola (è così che `/admin/works/[id]` è andato in errore: `work_artifacts` esisteva solo sul DB di sviluppo).
+
+**Non lasciare il repo collegato con `vercel link`.** Con `.vercel/project.json` presente e la CLI loggata, `@vercel/blob` in locale ottiene un token OIDC (o legge `VERCEL_OIDC_TOKEN`, che `vercel link` / `env pull` aggiungono a `.env.local`) e lo preferisce a `BLOB_READ_WRITE_TOKEN`: i test e2e e gli upload falliscono con `OIDC is enabled for this project, but not for the "development" environment`. Dopo un eventuale `vercel env pull`, rimuovere `.vercel/` e la riga `VERCEL_OIDC_TOKEN`.
 
 **I segreti di produzione non sono leggibili in locale.** Su Vercel `DATABASE_URL`, `DIRECT_URL`, `ADMIN_*`, `BLOB_READ_WRITE_TOKEN` e `BLOB_PUBLIC_BASE_URL` sono di tipo *Secret*: `vercel env pull` non li scarica e al loro posto lascia i valori già presenti in locale. Un `.env.production.local` ottenuto così **punta comunque al DB di sviluppo**: non usarlo per migrare.
 

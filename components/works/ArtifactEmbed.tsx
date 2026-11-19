@@ -15,11 +15,11 @@ import { ws } from "./ui"
  * Click-to-load: l'iframe (three.js + decine di MB di video) si monta solo dopo
  * "Avvia esperienza"; "Chiudi" lo smonta e libera la GPU.
  *
- * Modello di fiducia: caricano artefatti solo gli admin. L'iframe è SAME-ORIGIN
- * (/artifacts/<id> + asset da /artifact-files/*) perché i video devono poter
- * diventare texture WebGL senza crossOrigin; per questo il sandbox include
- * `allow-same-origin` insieme ad `allow-scripts`, il che di fatto non isola
- * l'artefatto dal sito. È accettabile SOLO perché il contenuto è fidato.
+ * Modello di fiducia: caricano artefatti solo gli admin. L'HTML è servito SAME-ORIGIN
+ * da /artifacts/<id> (gli asset arrivano invece da Blob, con CORS `*`) e il sandbox
+ * include `allow-same-origin` insieme ad `allow-scripts`: serve a storage, fullscreen
+ * e fetch dell'artefatto, ma di fatto non lo isola dal sito. È accettabile SOLO perché
+ * il contenuto è fidato.
  */
 
 const noopSubscribe = () => () => {}
