@@ -266,8 +266,8 @@ Le immagini vanno **dal browser direttamente a Vercel Blob**: il file non passa 
 
 ### Comandi
 ```bash
-npx prisma migrate dev --name <nome>   # migrazione (dev)
-npx prisma migrate deploy              # migrazione su produzione
+npx prisma migrate dev --name <nome>   # nuova migration, applicata al DB di SVILUPPO (.env.local)
+# produzione: nessun comando locale, la applica Vercel in build → vedi "Database e migration"
 npm run seed:works                     # crea SOLO i lavori mancanti (KDoors, KBox, K-Avatar); quelli esistenti restano intatti
 npm run seed:works -- --force          # riscrive TUTTO (campi, tag, stats, sezioni) dei 3 lavori; prima stampa gli slug coinvolti
 npm run test:e2e                       # Playwright (usa .env.local; avvia/riusa `npm run dev`)
@@ -385,3 +385,28 @@ L'iframe è same-origin (serve per le texture video) e ha sia `allow-scripts` si
 
 ### Test
 `tests/e2e/artifacts.spec.ts` (store Blob reale): file sotto `artifacts/e2e-<runId>/`, lavoro `e2e-test-<runId>` sempre in bozza, pulizia in `afterAll` anche se un test fallisce e, all'avvio, dei residui `e2e-*` più vecchi di 24 h. Fixture in `tests/fixtures/` (`artifact-min.zip`, `artifact-min-v2.zip`, `artifact-no-index.zip`).
+
+## Database e migration (aggiunto fix/prod-migrations)
+
+**Due database distinti.** `.env.local` punta a un DB Neon di **sviluppo** (`ep-little-tooth-…`), non alla produzione: `migrate dev`, seed, `npm run dev` e i test e2e lavorano solo lì. Una migration applicata in locale **non** arriva in produzione da sola (è così che `/admin/works/[id]` è andato in errore: `work_artifacts` esisteva solo sul DB di sviluppo).
+
+**I segreti di produzione non sono leggibili in locale.** Su Vercel `DATABASE_URL`, `DIRECT_URL`, `ADMIN_*`, `BLOB_READ_WRITE_TOKEN` e `BLOB_PUBLIC_BASE_URL` sono di tipo *Secret*: `vercel env pull` non li scarica e al loro posto lascia i valori già presenti in locale. Un `.env.production.local` ottenuto così **punta comunque al DB di sviluppo**: non usarlo per migrare.
+
+**Le migration di produzione le applica Vercel in build** (`scripts/vercel-build.mjs`, lanciato da `npm run vercel-build`; il progetto non ha un Build Command personalizzato, quindi Vercel usa `vercel-build` al posto di `build`):
+
+| `VERCEL_ENV` | Cosa fa |
+|---|---|
+| `production` | stampa **solo l'host** del DB, poi `prisma migrate deploy` con `DATABASE_URL=DIRECT_URL` (connessione diretta, non il pooler: Prisma Migrate usa advisory lock); poi `prisma generate` + `next build` |
+| `preview`, `development`, assente | **nessuna migration**; solo `prisma generate` + `next build` |
+
+- Se `DIRECT_URL` manca, non è un URL o contiene `-pooler`, la build si ferma prima di migrare.
+- Se una migration fallisce la build fallisce: il deploy non va online e resta servito quello precedente.
+- Il runtime continua a usare `DATABASE_URL` (pooler) tramite `@prisma/adapter-neon`.
+- `prisma.config.ts` carica `.env.local` con `dotenv`, che **non sovrascrive** variabili già presenti nell'ambiente: è così che lo script impone `DATABASE_URL=DIRECT_URL`.
+
+**Flusso per una modifica allo schema**
+1. `npx prisma migrate dev --name <nome>` in locale (DB di sviluppo); commit di `schema.prisma` + `prisma/migrations/<…>`.
+2. PR → merge su `main` → il deploy di produzione applica la migration prima di `next build`.
+3. Migration **additive** (nuove tabelle/colonne nullable): il deploy precedente resta compatibile mentre la build gira. Rinomine o drop vanno spezzate in due rilasci.
+
+**Attenzione alle Preview.** `DATABASE_URL` / `DIRECT_URL` sono impostate anche su *Preview* con gli stessi valori di produzione: una Preview legge e scrive sul DB di produzione **senza** averlo migrato. Un branch con una migration nuova, in Preview, può andare in errore finché non è in produzione.
