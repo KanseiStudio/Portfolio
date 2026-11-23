@@ -14,11 +14,16 @@ const nextConfig: NextConfig = {
    * via questo rewrite Safari iOS non riusciva a riprodurre i video (MediaError 4).
    */
   async rewrites() {
+    // Microsite statico della proposta Eni: file in public/Eni/, esclusi dal proxy next-intl (proxy.ts)
+    const eni = [
+      { source: "/Eni", destination: "/Eni/index.html" },
+      { source: "/eni", destination: "/Eni/index.html" },
+    ]
     if (!blobBase) {
       console.warn("[artifacts] BLOB_PUBLIC_BASE_URL/BLOB_STORE_ID mancanti: rewrite /artifact-files disattivato")
-      return []
+      return eni
     }
-    return [{ source: "/artifact-files/:path*", destination: `${blobBase}/artifacts/:path*` }]
+    return [...eni, { source: "/artifact-files/:path*", destination: `${blobBase}/artifacts/:path*` }]
   },
   images: {
     remotePatterns: [

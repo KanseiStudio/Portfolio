@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sala immersiva Eni</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@200;300;400;500;600&display=swap">
+<style>
+/* VOICE  occasion: installazione immersiva, buia, silenziosa, precisa
+   IDEA   la sala vera vista dall'ingresso: tre pareti proiettate, pavimento, visitatori in controluce
+   PICTURE la sala in prospettiva, con i contenuti che scorrono sulle pareti; si trascina per girarsi
+   COLOUR nero sala #050608, carta #F4F3F0, rosso Kansei #E3121B, azzurro #8FB0D6 per i Middle
+   TYPE   Saira, pesi leggeri per i titoli, medi per i dati
+   LAYOUT sala a tutta larghezza in alto, comandi e lettura dei dati in una fascia sotto; su telefono impilato */
+:root{color-scheme:dark;--bg:#050608;--ink:#F4F3F0;--mute:#9EA1A9;--line:#23262E;--red:#E3121B;--j:#F4F3F0;--m:#8FB0D6;--s:#E3121B}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Saira,Arial,sans-serif;overflow-x:clip}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;padding:20px max(4vw,16px) 12px}
+h1{font-size:clamp(26px,3.2vw,40px);font-weight:300;line-height:1.05;margin:0}
+h1 b{font-weight:600}
+.by{color:var(--mute);font-size:14px;margin:0}
+.stage{position:relative;margin:0 max(4vw,16px);height:clamp(380px,58vh,640px);border-radius:10px;overflow:hidden;background:#000;cursor:grab;touch-action:pan-y}
+.stage:active{cursor:grabbing}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%}
+.hint{position:absolute;right:16px;top:22px;margin:0;font-size:13px;color:#8A8D95;pointer-events:none}
+.modes{position:absolute;top:14px;left:14px;display:flex;gap:8px;flex-wrap:wrap}
+button{font:500 15px Saira,sans-serif;cursor:pointer;min-height:44px;border-radius:30px;padding:10px 18px;color:var(--mute);background:rgba(10,11,14,.8);border:1px solid #333845}
+button[aria-pressed=true]{color:var(--ink);border-color:var(--red);background:#1A0C0E}
+button:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.panel{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;padding:24px max(4vw,16px) 40px}
+.panel h2{font-size:24px;font-weight:500;margin:0 0 6px}
+.panel p{margin:0;color:var(--mute)}
+.dims{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+table{border-collapse:collapse;width:100%;font-size:15px;margin-top:6px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mute);font-weight:500}
+td b{font-weight:600}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:var(--c)}
+.add{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.add input{flex:1 1 200px;font:16px Saira,sans-serif;color:var(--ink);background:#0B0D12;border:1px solid #333845;border-radius:8px;padding:10px 12px;min-height:44px}
+ul{margin:8px 0 0;padding-left:18px;color:var(--mute);font-size:15px}
+li{margin-bottom:6px}
+.sample{font-size:13px;color:#7A7D85;margin-top:12px!important}
+.insight{font-size:20px;color:var(--ink)!important;font-weight:400;margin-top:12px!important}
+[hidden]{display:none!important}
+@media(max-width:760px){.panel{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header>
+<h1><b>La sala della rilevanza</b> · prototipo della sala immersiva</h1>
+<p class="by"><a href="/Eni" style="color:inherit">← Torna alla proposta</a> · Kansei Studio per Eni Corporate University</p>
+</header>
+
+<div class="stage" id="stage">
+<canvas id="cv" aria-label="Sala con tre pareti proiettate vista dall’ingresso"></canvas>
+<div class="modes">
+<button id="b-words" aria-pressed="true">Tempo 1 · Costellazioni di parole</button>
+<button id="b-data" aria-pressed="false">Tempo 2 · Cento persone, i dati</button>
+</div>
+<p class="hint">Trascina per guardarti intorno</p>
+</div>
+
+<div class="panel">
+<div id="p-words">
+<h2>Le parole del touch wall entrano nella sala</h2>
+<p>Ogni frase scritta sul muro diventa una stella. Le parole dello stesso tema si collegano tra loro e il colore dice da quale generazione arrivano.</p>
+<form class="add" id="add">
+<input id="w" maxlength="24" placeholder="Prova ad aggiungere una parola, es. fiducia" autocomplete="off">
+<button type="button" class="g" data-g="J" aria-pressed="true">Junior</button>
+<button type="button" class="g" data-g="M" aria-pressed="false">Middle</button>
+<button type="button" class="g" data-g="S" aria-pressed="false">Senior</button>
+<button type="submit" aria-pressed="false">Proietta</button>
+</form>
+</div>
+<div id="p-data" hidden>
+<h2 id="dtitle"></h2>
+<p>Cento figure rappresentano la popolazione e si ridispongono sulle tre pareti a ogni domanda. Il facilitatore cambia dimensione e apre la discussione.</p>
+<div class="dims" id="dims"></div>
+<table id="tab"></table>
+<p class="insight" id="insight"></p>
+</div>
+<div>
+<h2>Nell’installazione reale</h2>
+<ul>
+<li>Proiettori su tre pareti con edge blending, audio spaziale, gruppi da 10–15 persone.</li>
+<li>Le parole arrivano in tempo reale dal touch wall; i dati dal set che Eni mette a disposizione.</li>
+<li>Regia in TouchDesigner, pilotata da tablet dal facilitatore.</li>
+</ul>
+<p class="sample">Parole e percentuali di questa demo sono esempi.</p>
+</div>
+</div>
+
+<script>
+{
+const C={J:'#F4F3F0',M:'#8FB0D6',S:'#E3121B'},GN={J:'Junior',M:'Middle',S:'Senior'};
+const stage=document.getElementById('stage'),cv=document.getElementById('cv'),x=cv.getContext('2d');
+const pano=document.createElement('canvas'),px=pano.getContext('2d');
+const PW=1820,PH=700;pano.width=PW;pano.height=PH;
+const SEG=[0,560,1260,1820]; // left wall | front | right wall
+let mode='words',pan=0,tPan=0,dpr=1,W=0,H=0;
+
+/* ---- parole ---- */
+const THEMES=['Ascolto','Riconoscimento','Apprendimento','Autonomia','Impatto'];
+const SEEDW=[['parere','J',0],['ascolta','S',0],['coinvolge','M',0],['decisioni','J',0],['opinione','M',0],['consultato','S',0],
+['grazie','J',1],['merito','M',1],['valore','S',1],['nome','M',1],['riconosce','J',1],['esperienza','S',1],
+['imparo','J',2],['insegno','S',2],['mentor','M',2],['strumenti','S',2],['crescere','J',2],['reverse','M',2],
+['fiducia','J',3],['libertà','M',3],['provare','S',3],['sbagliare','J',3],['scegliere','M',3],['responsabilità','S',3],
+['risultati','M',4],['serve','S',4],['cambia','J',4],['progetto','M',4],['risolvo','S',4],['aiuto','J',4]];
+let stars=[];let seed=7;const rnd=()=>(seed=seed*16807%2147483647)/2147483647;
+function addStar(w,g,th,fresh){
+  const cx=120+th*(PW-240)/4;
+  stars.push({w,g,th,x:fresh?PW/2:cx+(rnd()-.5)*300,y:fresh?PH+40:120+rnd()*(PH-260),tx:cx+(rnd()-.5)*300,ty:110+rnd()*(PH-240),vx:0,vy:0,a:rnd()*6.28,born:fresh?performance.now():0});
+}
+SEEDW.forEach(([w,g,t])=>addStar(w,g,t,false));
+
+/* ---- dati ---- */
+const DIMS=[
+{k:'Mi sento ascoltato',cats:['Spesso','A volte','Raramente'],p:{J:[.28,.42,.30],M:[.40,.40,.20],S:[.33,.35,.32]}},
+{k:'Imparo da altre generazioni',cats:['Spesso','A volte','Raramente'],p:{J:[.55,.35,.10],M:[.38,.42,.20],S:[.22,.40,.38]}},
+{k:'Percepisco stereotipi sull’età',cats:['Spesso','A volte','Mai'],p:{J:[.36,.44,.20],M:[.18,.46,.36],S:[.41,.39,.20]}},
+{k:'Farei mentoring o reverse mentoring',cats:['Sì','Forse','No'],p:{J:[.58,.32,.10],M:[.49,.37,.14],S:[.52,.30,.18]}},
+{k:'Mi sento rilevante',cats:['Spesso','A volte','Raramente'],p:{J:[.30,.46,.24],M:[.45,.39,.16],S:[.34,.36,.30]}}
+];
+const POP={J:34,M:38,S:28};
+const people=[];['J','M','S'].forEach(g=>{for(let i=0;i<POP[g];i++)people.push({g,i,x:PW/2,y:PH/2,tx:PW/2,ty:PH/2})});
+let dim=0,counts=[];
+function assign(){
+  const d=DIMS[dim];counts=d.cats.map(()=>({J:0,M:0,S:0,n:0}));
+  ['J','M','S'].forEach(g=>{
+    const grp=people.filter(p=>p.g===g),n=grp.length;
+    let c0=Math.round(d.p[g][0]*n),c1=Math.round(d.p[g][1]*n);
+    grp.forEach((p,i)=>{p.c=i<c0?0:i<c0+c1?1:2;counts[p.c][g]++;counts[p.c].n++});
+  });
+  d.cats.forEach((_,c)=>{
+    const grp=people.filter(p=>p.c===c).sort((a,b)=>'JMS'.indexOf(a.g)-'JMS'.indexOf(b.g));
+    const x0=SEG[c],x1=SEG[c+1],w=x1-x0,cols=Math.max(5,Math.floor((w-80)/46)),cell=Math.min(46,(w-80)/cols);
+    grp.forEach((p,i)=>{p.tx=x0+40+cell*(i%cols)+cell/2+(w-80-cell*Math.min(cols,grp.length))/2;p.ty=PH-80-Math.floor(i/cols)*cell*1.35});
+  });
+  document.getElementById('dtitle').textContent=d.k;
+  document.getElementById('tab').innerHTML=`<tr><th></th>${d.cats.map(c=>`<th>${c}</th>`).join('')}</tr>`+
+    ['J','M','S'].map(g=>`<tr><td><span class="dot" style="--c:${C[g]}"></span>${GN[g]}</td>${d.cats.map((c,i)=>`<td>${Math.round(counts[i][g]/POP[g]*100)}%</td>`).join('')}</tr>`).join('')+
+    `<tr><td><b>Tutta la sala</b></td>${counts.map(c=>`<td><b>${c.n}</b> su 100</td>`).join('')}</tr>`;
+  const v=['J','M','S'].map(g=>[g,counts[0][g]/POP[g]]).sort((a,b)=>b[1]-a[1]);
+  const gap=Math.round((v[0][1]-v[2][1])*100);
+  document.getElementById('insight').textContent=gap<12?`Su «${d.k.toLowerCase()}» le tre generazioni rispondono in modo simile: lo scarto è di ${gap} punti.`:`I ${GN[v[0][0]]} rispondono «${d.cats[0].toLowerCase()}» più dei ${GN[v[2][0]]}: ${gap} punti di scarto.`;
+}
+document.getElementById('dims').innerHTML=DIMS.map((d,i)=>`<button data-i="${i}" aria-pressed="${i===0}">${d.k}</button>`).join('');
+document.getElementById('dims').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;dim=+b.dataset.i;document.querySelectorAll('#dims button').forEach(x=>x.setAttribute('aria-pressed',x===b));assign()});
+assign();
+
+/* ---- disegno panorama ---- */
+function drawPano(t){
+  const g=px.createLinearGradient(0,0,0,PH);g.addColorStop(0,'#0C0F17');g.addColorStop(1,'#07080C');
+  px.fillStyle=g;px.fillRect(0,0,PW,PH);
+  px.textAlign='center';px.textBaseline='middle';
+  if(mode==='words'){
+    px.font='500 22px Saira, Arial';px.fillStyle='#6E737E';
+    THEMES.forEach((th,i)=>px.fillText(th.toUpperCase(),120+i*(PW-240)/4,60));
+    stars.forEach(s=>{s.a+=.004;const k=s.born&&t-s.born<2600?.04:.012;s.x+=(s.tx+Math.cos(s.a)*14-s.x)*k;s.y+=(s.ty+Math.sin(s.a*1.3)*10-s.y)*k});
+    px.lineWidth=1.2;
+    for(let i=0;i<stars.length;i++)for(let j=i+1;j<stars.length;j++){const a=stars[i],b=stars[j];if(a.th!==b.th)continue;const d=Math.hypot(a.x-b.x,a.y-b.y);if(d<260){px.strokeStyle=`rgba(244,243,240,${.22*(1-d/260)})`;px.beginPath();px.moveTo(a.x,a.y);px.lineTo(b.x,b.y);px.stroke()}}
+    stars.forEach(s=>{
+      const fresh=s.born&&t-s.born<3000,glow=fresh?1-(t-s.born)/3000:0;
+      px.fillStyle=C[s.g];px.beginPath();px.arc(s.x,s.y,4+glow*6,0,6.28);px.fill();
+      px.font=`${fresh?600:400} ${26+glow*14}px Saira, Arial`;px.fillText(s.w,s.x,s.y-24);
+    });
+  }else{
+    const d=DIMS[dim];
+    d.cats.forEach((c,i)=>{const cx=(SEG[i]+SEG[i+1])/2;px.fillStyle='#F4F3F0';px.font='300 44px Saira, Arial';px.fillText(c,cx,70);px.fillStyle='#9EA1A9';px.font='500 26px Saira, Arial';px.fillText(counts[i].n+' su 100',cx,118)});
+    px.fillStyle='#6E737E';px.font='500 22px Saira, Arial';px.fillText(d.k.toUpperCase(),PW/2,170);
+    people.forEach(p=>{p.x+=(p.tx-p.x)*.06;p.y+=(p.ty-p.y)*.06;px.fillStyle=C[p.g];px.beginPath();px.arc(p.x,p.y-30,9,0,6.28);px.fill();px.beginPath();px.roundRect(p.x-11,p.y-18,22,30,[11,11,3,3]);px.fill()});
+  }
+  px.fillStyle='rgba(0,0,0,.35)';[SEG[1],SEG[2]].forEach(s=>px.fillRect(s-1,0,2,PH));
+}
+
+/* ---- sala in prospettiva ---- */
+function resize(){dpr=Math.min(2,window.devicePixelRatio||1);W=stage.clientWidth;H=stage.clientHeight;cv.width=W*dpr;cv.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)}
+const ro=new ResizeObserver(resize);ro.observe(stage);resize();
+function wall(sx0,sx1,u0,u1,ytNear,ybNear,ytFar,ybFar,near){
+  // near: which screen end is near (0 = sx0 near). strips with perspective-correct u
+  const N=90,Zf=(ybNear-ytNear)/(ybFar-ytFar);
+  for(let i=0;i<N;i++){
+    const s=i/N,s2=(i+1)/N;
+    const uf=v=>{const iz=1-v*(1-1/Zf);return (1/iz-1)/(Zf-1)};
+    const ua=uf(s),ub=uf(s2);
+    const xa=near===0?sx0+(sx1-sx0)*s:sx1-(sx1-sx0)*s,xb=near===0?sx0+(sx1-sx0)*s2:sx1-(sx1-sx0)*s2;
+    const yt=ytNear+(ytFar-ytNear)*s,yb=ybNear+(ybFar-ybNear)*s;
+    const pa=near===0?u0+(u1-u0)*ua:u1-(u1-u0)*ua,pb=near===0?u0+(u1-u0)*ub:u1-(u1-u0)*ub;
+    const sx=Math.min(pa,pb),sw=Math.max(1,Math.abs(pb-pa));
+    x.drawImage(pano,sx,0,sw,PH,Math.min(xa,xb),yt,Math.abs(xb-xa)+.8,yb-yt);
+  }
+}
+function frame(t){
+  pan+=(tPan-pan)*.08;
+  drawPano(t);
+  x.fillStyle='#000';x.fillRect(0,0,W,H);
+  const fw=Math.min(W*.46,H*.72*((SEG[2]-SEG[1])/PH)),fx0=W/2-fw/2+pan*W*.18,fx1=fx0+fw,fy0=H*.13,fy1=fy0+fw*(PH/(SEG[2]-SEG[1]));
+  const ytN=-H*.08,ybN=H*.98;
+  // pavimento
+  const fl=x.createLinearGradient(0,fy1,0,H);fl.addColorStop(0,'#14161C');fl.addColorStop(1,'#08090C');
+  x.fillStyle=fl;x.beginPath();x.moveTo(fx0,fy1);x.lineTo(fx1,fy1);x.lineTo(W*1.2,H*1.4);x.lineTo(-W*.2,H*1.4);x.fill();
+  wall(-W*.06,fx0,SEG[0],SEG[1],ytN,ybN,fy0,fy1,0);
+  wall(fx1,W*1.06,SEG[2],SEG[3],ytN,ybN,fy0,fy1,1);
+  x.drawImage(pano,SEG[1],0,SEG[2]-SEG[1],PH,fx0,fy0,fw,fy1-fy0);
+  // riflesso sul pavimento
+  x.save();x.globalAlpha=.12;x.translate(0,fy1*2);x.scale(1,-1);x.drawImage(pano,SEG[1],PH*.6,SEG[2]-SEG[1],PH*.4,fx0,fy1-(fy1-fy0)*.4,fw,(fy1-fy0)*.4);x.restore();
+  // fasci dei proiettori
+  x.globalCompositeOperation='lighter';
+  [[W*.3,fx0+fw*.5],[W*.5,fx0+fw*.15],[W*.7,fx0+fw*.85]].forEach(([sx,tx])=>{const g=x.createLinearGradient(sx,0,tx,fy0);g.addColorStop(0,'rgba(200,210,255,.10)');g.addColorStop(1,'rgba(200,210,255,0)');x.fillStyle=g;x.beginPath();x.moveTo(sx-6,-2);x.lineTo(sx+6,-2);x.lineTo(tx+fw*.28,fy0+20);x.lineTo(tx-fw*.28,fy0+20);x.fill()});
+  x.globalCompositeOperation='source-over';
+  // visitatori in controluce
+  const fig=(cx,base,h)=>{x.fillStyle='#020203';x.beginPath();x.arc(cx,base-h*.86,h*.09,0,6.28);x.fill();x.beginPath();x.roundRect(cx-h*.13,base-h*.76,h*.26,h*.5,[h*.1,h*.1,4,4]);x.fill();x.fillRect(cx-h*.1,base-h*.3,h*.08,h*.3);x.fillRect(cx+h*.02,base-h*.3,h*.08,h*.3)};
+  fig(W*.30+pan*W*.05,H*1.04,H*.30);fig(W*.36+pan*W*.05,H*1.06,H*.33);fig(W*.72+pan*W*.05,H*1.05,H*.29);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+let dragX=null;
+stage.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;dragX=e.clientX});
+window.addEventListener('pointermove',e=>{if(dragX===null)return;tPan=Math.max(-1,Math.min(1,tPan+(e.clientX-dragX)/W*2));dragX=e.clientX});
+window.addEventListener('pointerup',()=>dragX=null);
+
+function setMode(m){mode=m;document.getElementById('b-words').setAttribute('aria-pressed',m==='words');document.getElementById('b-data').setAttribute('aria-pressed',m==='data');document.getElementById('p-words').hidden=m!=='words';document.getElementById('p-data').hidden=m!=='data';if(m==='data'){people.forEach(p=>{p.x=PW/2+(Math.random()-.5)*400;p.y=PH/2})}}
+document.getElementById('b-words').onclick=()=>setMode('words');document.getElementById('b-data').onclick=()=>setMode('data');
+
+let gsel='J';
+document.querySelectorAll('.g').forEach(b=>b.onclick=()=>{gsel=b.dataset.g;document.querySelectorAll('.g').forEach(o=>o.setAttribute('aria-pressed',o===b))});
+const KW=[['ascolt','parer','opinion','coinvol','decis','voce'],['grazi','merit','valor','ricono','nome','apprezz'],['impar','insegn','mentor','cresc','strument','nuov'],['fiduc','libert','prov','sbagl','scegl','respons','autonom'],[]];
+document.getElementById('add').addEventListener('submit',e=>{e.preventDefault();const i=document.getElementById('w');const w=i.value.trim().toLowerCase();if(!w)return;let th=KW.findIndex(k=>k.some(s=>w.includes(s)));if(th<0)th=4;addStar(w,gsel,th,true);if(stars.length>60)stars.splice(0,1);i.value=''});
+}
+</script>
+</body>
+</html>

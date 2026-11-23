@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Generazioni in dialogo · Kansei Studio per Eni</title>
+<link rel="icon" href="/icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@100;200;300;400;500;600&display=swap">
+<style>
+/* VOICE  proposta a un cliente enterprise: sobria, editoriale, sicura
+   IDEA   la copertina della proposta Kansei che diventa una sala d'ingresso alle quattro esperienze
+   PICTURE quattro grandi schermate dei prototipi, ognuna una porta verso la demo
+   COLOUR inchiostro Kansei #0B0D12, carta #F4F3F0, rosso #E3121B solo per i dettagli
+   TYPE   Saira: titolo display sottile in maiuscolo, testo leggero
+   LAYOUT titolo e sintesi in alto, griglia 2×2 di esperienze, poi tabella del brief e documento */
+:root{color-scheme:dark;--bg:#0B0D12;--ink:#F4F3F0;--mute:#A6A8AF;--line:#262A33;--red:#E3121B}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Saira,Arial,sans-serif;overflow-x:clip}
+a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 max(4vw,16px)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
+.top img{height:28px;width:auto;display:block}
+.top span{font-size:14px;color:var(--mute);text-align:right}
+.hero{padding:clamp(40px,7vw,96px) 0 clamp(28px,4vw,48px);display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+.hero>div:last-child{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+.hero .lede{margin-top:0}
+.kick{font-size:14px;font-weight:500;color:var(--red);margin:0 0 14px}
+h1{font-size:clamp(40px,7.4vw,104px);font-weight:100;letter-spacing:.06em;text-transform:uppercase;line-height:.98;margin:0}
+.hero p.sub{font-size:clamp(18px,1.8vw,22px);font-weight:300;color:#D2D3D8;margin:0}
+.lede{border-left:2px solid var(--red);padding-left:18px;margin-top:18px;color:var(--mute);font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;padding:12px 0 56px}
+.card{display:flex;flex-direction:column;gap:14px;text-decoration:none;border-top:1px solid var(--line);padding-top:18px}
+.shot{aspect-ratio:16/10;border-radius:8px;overflow:hidden;background:#15171D;box-shadow:0 0 0 1px #2A2E38}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .6s ease}
+.card:hover .shot img{transform:scale(1.03)}
+.card:focus-visible{outline:2px solid var(--red);outline-offset:6px;border-radius:8px}
+.meta{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.card h2{font-size:clamp(24px,2.4vw,32px);font-weight:300;margin:0;line-height:1.1}
+.card .tag{font-size:14px;color:var(--mute);white-space:nowrap}
+.card p{margin:0;color:#C9CAD0;font-size:16px;max-width:60ch}
+.go{font-size:15px;font-weight:500}
+.go::after{content:" →";color:var(--red)}
+.band{border-top:1px solid var(--line);padding:48px 0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:40px}
+.band h3{font-size:28px;font-weight:300;margin:0 0 10px;line-height:1.15}
+.band p{margin:0 0 12px;color:var(--mute)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{background:var(--ink);color:var(--bg);font-weight:500;text-align:left;padding:10px 12px;font-size:13px}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+td:first-child{white-space:nowrap}
+.btn{display:inline-flex;align-items:center;min-height:48px;padding:12px 24px;border-radius:30px;background:var(--red);color:#FBFAF7;text-decoration:none;font-weight:500;margin-top:8px}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:#7A7D85;font-size:13px;line-height:1.7}
+footer i{color:var(--red);font-style:normal;padding:0 6px}
+@media(max-width:820px){.hero>div:last-child,.band{grid-template-columns:minmax(0,1fr)}.grid{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.shot img{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+<a href="/"><img src="/logo-white.png" alt="Kansei Studio"></a>
+<span>Proposta per Eni Corporate University · Novembre 2026</span>
+</header>
+
+<section class="hero">
+<div>
+<p class="kick">Kick-off · Impact Installations</p>
+<h1>Generazioni in dialogo</h1>
+</div>
+<div>
+<p class="sub">Uno spazio multimediale per passare dalla rilevanza individuale alla forza della collaborazione.</p>
+<p class="lede">Non osserviamo il tema: ci entriamo dentro. Quattro tecnologie Kansei coprono le cinque installazioni del brief, e ogni traccia lasciata dai partecipanti torna in plenaria. Qui sotto i prototipi interattivi, da provare.</p>
+</div>
+</section>
+
+<section class="grid" aria-label="Le quattro esperienze">
+<a class="card" href="/Eni/touch-wall.html">
+<div class="shot"><img src="/Eni/img/tw-words.jpg" alt="Touch wall: le parole si compongono per tema"></div>
+<div class="meta"><h2>Touch wall</h2><span class="tag">Installazioni 01 e 02</span></div>
+<p>«Chi l’ha detto?» e «Mi sento rilevante quando…»: si attribuiscono frasi alle generazioni, poi le parole si compongono da sole in una mappa collettiva.</p>
+<span class="go">Prova il prototipo</span>
+</a>
+<a class="card" href="/Eni/sala-immersiva.html">
+<div class="shot"><img src="/Eni/img/sala-data.jpg" alt="Sala immersiva: cento figure sulle tre pareti"></div>
+<div class="meta"><h2>Sala immersiva</h2><span class="tag">Installazioni 02 e 04</span></div>
+<p>Tre pareti proiettate: prima le costellazioni di parole del touch wall, poi cento figure che si ridispongono seguendo i dati.</p>
+<span class="go">Prova il prototipo</span>
+</a>
+<a class="card" href="/Eni/avatar-conversazionali.html">
+<div class="shot"><img src="/Eni/img/avatar.jpg" alt="Avatar conversazionali: dialogo con un collega senior"></div>
+<div class="meta"><h2>Avatar conversazionali</h2><span class="tag">Installazione 03</span></div>
+<p>Nei panni degli altri: si parla a voce con colleghi di altre generazioni, costruiti sulle testimonianze raccolte nel co-design.</p>
+<span class="go">Prova il prototipo</span>
+</a>
+<a class="card" href="/Eni/porte-del-futuro.html">
+<div class="shot"><img src="/Eni/img/porte.jpg" alt="Porte del futuro: tre porte aperte sulle epoche del lavoro"></div>
+<div class="meta"><h2>Porte del futuro</h2><span class="tag">Installazione 05</span></div>
+<p>Il Museo del lavoro: tre porte su ieri, oggi e domani. Il gruppo si ritrova dentro la scena e decide cosa lasciare andare e cosa portare con sé.</p>
+<span class="go">Prova il prototipo</span>
+</a>
+</section>
+
+<section class="band">
+<div>
+<h3>Dal brief alle nostre tecnologie</h3>
+<p>Le cinque installazioni proposte da Eni restano tutte. Il touch wall e la sala immersiva lavorano insieme sulla rilevanza.</p>
+</div>
+<div class="scroll">
+<table>
+<tr><th>Installazione del brief</th><th>Tecnologia Kansei</th></tr>
+<tr><td>01 · The Bias Wall</td><td>Touch wall</td></tr>
+<tr><td>02 · The Relevance Room</td><td>Touch wall + sala immersiva</td></tr>
+<tr><td>03 · Nei panni degli altri</td><td>Avatar conversazionali</td></tr>
+<tr><td>04 · The Data Room</td><td>Sala immersiva</td></tr>
+<tr><td>05 · Il Museo del lavoro</td><td>Porte del futuro</td></tr>
+</table>
+</div>
+</section>
+
+<section class="band">
+<div>
+<h3>La proposta completa</h3>
+<p>Concept, funzionamento di ogni installazione, restituzione in plenaria, dati e privacy, prossimi passi.</p>
+</div>
+<div>
+<p>I prototipi mostrano il funzionamento delle esperienze: frasi, dati e personaggi sono di esempio. Nel progetto si costruiscono sui contenuti e sui dati che Eni metterà a disposizione.</p>
+<a class="btn" href="/Eni/Proposta_Generazioni_in_dialogo_Eni.pdf">Scarica la proposta (PDF)</a>
+</div>
+</section>
+
+<footer>Kansei Studio S.R.L.<i>•</i>Start-Up innovativa<i>•</i>Via Sant’Andrea 8, Bitritto 70020 (BA), Italy<br>P.IVA IT09202510724<i>•</i>+39 347 901 0218<i>•</i>info@kansei-studio.art</footer>
+</div>
+</body>
+</html>

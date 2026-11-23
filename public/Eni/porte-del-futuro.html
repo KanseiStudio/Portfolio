@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Porte del futuro Eni</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@200;300;400;500;600&display=swap">
+<style>
+/* VOICE  occasion: un museo temporaneo, teatrale ma sobrio
+   IDEA   un corridoio con tre porte vere, ognuna su un'epoca del lavoro
+   PICTURE le tre porte a tutta larghezza; aprendole compare la scena con il gruppo dentro
+   COLOUR nero museo #0B0D12, carta #F4F3F0, rosso Kansei; ogni epoca il suo tono (ambra, chiaro, blu notte)
+   TYPE   Saira, targhette delle porte in maiuscolo sottile come le didascalie museali
+   LAYOUT punto foto in alto, porte al centro, didascalia e scelte sotto; su telefono le porte si impilano */
+:root{color-scheme:dark;--bg:#07080B;--ink:#F4F3F0;--mute:#9EA1A9;--line:#262A33;--red:#E3121B}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Saira,Arial,sans-serif;overflow-x:clip}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;padding:20px max(4vw,16px) 12px}
+h1{font-size:clamp(26px,3.2vw,40px);font-weight:300;line-height:1.05;margin:0}
+h1 b{font-weight:600}
+.by{color:var(--mute);font-size:14px;margin:0}
+.photo{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:6px max(4vw,16px) 0;padding:12px 14px;background:#101217;border:1px solid var(--line);border-radius:12px}
+.photo .thumb{width:64px;height:48px;border-radius:6px;background:#1B1E26 center/cover;flex:none;display:grid;place-items:center;font-size:12px;color:var(--mute)}
+.photo p{margin:0;flex:1 1 260px;color:var(--mute);font-size:15px}
+.photo p b{color:var(--ink);font-weight:500}
+label.up,button{font:500 15px Saira,sans-serif;cursor:pointer;min-height:44px;border-radius:30px;padding:10px 18px;color:var(--ink);background:#14171E;border:1px solid #3A3E49;display:inline-flex;align-items:center}
+label.up:focus-within,button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+input[type=file]{position:absolute;opacity:0;width:1px;height:1px}
+.corridor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,3vw,40px);padding:28px max(4vw,16px) 0;background:linear-gradient(#07080B 0 78%,#121419 78%)}
+.door{display:flex;flex-direction:column;align-items:center;gap:10px}
+.plaque{font-size:13px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);text-align:center}
+.plaque b{display:block;font-size:22px;letter-spacing:.02em;text-transform:none;color:var(--ink);font-weight:400}
+.frame{position:relative;height:min(64vh,600px);aspect-ratio:8/21;max-width:100%;background:#1A1C22;border:10px solid var(--fr);border-bottom:0;border-radius:4px 4px 0 0;perspective:1400px;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.scene{position:absolute;inset:0;overflow:hidden;background:#000}
+.scene svg{position:absolute;inset:0;width:100%;height:100%}
+.leaf{position:absolute;inset:0;transform-origin:left center;transition:transform 1.4s cubic-bezier(.3,.1,.2,1);background:var(--lf);box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);cursor:pointer;border:0;padding:0;border-radius:0;transform-style:preserve-3d}
+.leaf::before,.leaf::after{content:"";position:absolute;left:14%;right:14%;border:2px solid rgba(0,0,0,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.leaf::before{top:7%;height:38%}
+.leaf::after{top:52%;height:40%}
+.knob{position:absolute;right:9%;top:50%;width:12px;height:34px;border-radius:6px;background:var(--kn);box-shadow:0 2px 4px rgba(0,0,0,.5)}
+.open .leaf{transform:rotateY(-104deg)}
+.open .frame{box-shadow:0 30px 80px rgba(227,18,27,.12),0 30px 60px rgba(0,0,0,.6)}
+.ring{font-size:14px}
+.door.open .ring{border-color:var(--red)}
+.below{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;padding:28px max(4vw,16px) 44px;background:#121419}
+.cap h2{font-size:clamp(24px,2.6vw,32px);font-weight:300;line-height:1.15;margin:0 0 8px}
+.cap p{margin:0 0 10px;color:#C9CAD0;max-width:62ch}
+.cap .q{color:var(--ink);font-size:19px}
+.picks{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.pick{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;border-top:1px solid var(--line);padding-top:10px}
+.pick span{font-size:16px}
+.pick button{font-size:14px;padding:8px 14px}
+.pick button[aria-pressed=true]{background:var(--ink);color:#0B0D12;border-color:var(--ink)}
+.pick button.keep[aria-pressed=true]{background:var(--red);color:#fff;border-color:var(--red)}
+.coll h3{font-size:20px;font-weight:500;margin:0 0 8px}
+.coll ul{margin:0 0 14px;padding-left:18px;color:#C9CAD0}
+.coll p{color:var(--mute);font-size:15px;margin:0 0 8px}
+.sample{font-size:13px!important;color:#7A7D85!important}
+.empty{color:var(--mute)}
+@media(max-width:760px){.corridor{grid-template-columns:minmax(0,1fr)}.frame{height:460px}.below{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.leaf{transition:none}}
+</style>
+</head>
+<body>
+<header>
+<h1><b>Il Museo del lavoro: le porte</b> · prototipo delle Porte del futuro</h1>
+<p class="by"><a href="/Eni" style="color:inherit">← Torna alla proposta</a> · Kansei Studio per Eni Corporate University</p>
+</header>
+
+<div class="photo">
+<div class="thumb" id="thumb">sagome</div>
+<p><b>Punto foto.</b> Il gruppo intergenerazionale si fotografa all’ingresso. Qui puoi caricare una foto di gruppo per vederla dentro le scene, oppure usare le sagome di esempio.</p>
+<label class="up" for="file">Carica una foto</label><input type="file" id="file" accept="image/*">
+<button id="reset" type="button">Usa le sagome</button>
+</div>
+
+<div class="corridor" id="corridor"></div>
+
+<div class="below">
+<div class="cap" id="cap"><h2 class="empty">Scegli una porta e aprila.</h2><p>Dietro ogni porta c’è un modo di lavorare: quello di ieri, quello di oggi, quello che potrebbe arrivare. Il gruppo si ritrova dentro la scena e ne discute con il facilitatore.</p></div>
+<div class="coll">
+<h3>La collezione del gruppo</h3>
+<p>Davanti a ogni porta il gruppo decide cosa lasciare andare e cosa portare con sé. Le scelte arrivano in plenaria.</p>
+<div id="coll"><p class="empty">Ancora nessuna scelta.</p></div>
+<p class="sample">Nell’installazione reale la scena è un’immagine generata con l’AI a partire dalla foto, su un monitor dietro una porta vera. In questa demo scene e didascalie sono illustrazioni di esempio.</p>
+</div>
+</div>
+
+<script>
+{
+const ERAS=[
+{k:'ieri',y:'1975',t:'L’ufficio di ieri',fr:'#5A3A22',lf:'linear-gradient(90deg,#7A4E2C,#8E5D36 50%,#6E4426)',kn:'#C9A15A',filter:'sepia(.85) contrast(1.05) brightness(.9)',
+ cap:'Macchine da scrivere, telefoni a disco, archivi di carta e cartellino timbrato all’ingresso. Le decisioni passavano dalla scrivania del capo e il sapere si trasmetteva affiancando chi era lì da più tempo.',
+ q:'Cosa di questo modo di lavorare ci manca? Cosa siamo felici di aver lasciato?',
+ items:['Il cartellino da timbrare','L’apprendistato accanto ai colleghi esperti','Le pratiche su carta','La pausa caffè dove si decideva tutto']},
+{k:'oggi',y:'2026',t:'L’ufficio di oggi',fr:'#9AA0AA',lf:'linear-gradient(90deg,#D9DCE1,#EEF0F2 50%,#CDD1D7)',kn:'#6B7079',filter:'none',
+ cap:'Open space, videochiamate, chat sempre accese, lavoro ibrido. Le informazioni corrono veloci, ma l’attenzione è frammentata e non sempre è chiaro chi decide.',
+ q:'Cosa funziona davvero oggi? Cosa ci sta togliendo qualcosa?',
+ items:['Le riunioni in videochiamata','Il lavoro ibrido','Le chat sempre attive','Il feedback a fine anno']},
+{k:'domani',y:'2035',t:'L’ufficio di domani',fr:'#1B2440',lf:'linear-gradient(90deg,#121A30,#1C2848 50%,#0F1628)',kn:'#E3121B',filter:'grayscale(1) contrast(1.15) brightness(1.05)',
+ cap:'Assistenti AI che preparano analisi e bozze, visori per la manutenzione a distanza, team che si compongono per progetto. Resta da capire quale parte del lavoro rimane umana, e chi la insegna.',
+ q:'Cosa vale la pena portare con noi in questo futuro? Cosa insegnerà chi c’era prima?',
+ items:['Un copilota AI per ogni ruolo','La manutenzione guidata con visore','I team che cambiano a ogni progetto','Il mentoring tra generazioni']}
+];
+let photo=null;const picks={};
+const $=s=>document.querySelector(s);
+
+function people(era){
+  if(photo)return `<defs><radialGradient id="m${era.k}" cx="50%" cy="45%" r="55%"><stop offset=".6" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient><mask id="mk${era.k}"><rect width="200" height="525" fill="url(#m${era.k})"/></mask></defs>
+  <image href="${photo}" x="-10" y="250" width="220" height="200" preserveAspectRatio="xMidYMid slice" mask="url(#mk${era.k})" style="filter:${era.filter}"/>`;
+  const c=era.k==='ieri'?'#2A1A10':era.k==='oggi'?'#2E3440':'#05070D';
+  const fig=(x,h)=>`<g fill="${c}"><circle cx="${x}" cy="${470-h}" r="${h*.09}"/><rect x="${x-h*.14}" y="${470-h*.9}" width="${h*.28}" height="${h*.52}" rx="${h*.1}"/><rect x="${x-h*.11}" y="${470-h*.42}" width="${h*.09}" height="${h*.42}"/><rect x="${x+h*.02}" y="${470-h*.42}" width="${h*.09}" height="${h*.42}"/></g>`;
+  return fig(62,150)+fig(104,170)+fig(146,140);
+}
+function scene(era){
+  let bg='';
+  if(era.k==='ieri')bg=`<rect width="200" height="525" fill="#C98A4B"/><rect y="0" width="200" height="330" fill="#B87A40"/><rect x="24" y="60" width="72" height="90" fill="#E8C98A"/><path d="M24 105 H96 M60 60 V150" stroke="#8E5D36" stroke-width="4"/>
+  <rect x="122" y="70" width="58" height="72" fill="#F2E4C4"/><text x="151" y="98" text-anchor="middle" font-size="12" fill="#8E3B1E" font-family="Arial">1975</text><path d="M130 112 H172 M130 122 H172 M130 132 H160" stroke="#B99A6A" stroke-width="2"/>
+  <rect x="140" y="190" width="50" height="140" fill="#7A5A3A"/><path d="M140 236 H190 M140 282 H190" stroke="#5A3A22" stroke-width="3"/><rect x="160" y="210" width="12" height="4" fill="#C9A15A"/><rect x="160" y="256" width="12" height="4" fill="#C9A15A"/>
+  <rect x="0" y="330" width="200" height="195" fill="#6E4426"/><rect x="8" y="300" width="130" height="14" fill="#5A3A22"/><rect x="20" y="314" width="8" height="70" fill="#5A3A22"/><rect x="118" y="314" width="8" height="70" fill="#5A3A22"/>
+  <rect x="34" y="272" width="54" height="28" rx="4" fill="#3E4A3A"/><rect x="40" y="262" width="42" height="12" fill="#F2E4C4"/><circle cx="110" cy="290" r="10" fill="#1A1A1A"/>`;
+  if(era.k==='oggi')bg=`<rect width="200" height="525" fill="#E9ECEF"/><rect x="0" y="40" width="200" height="200" fill="#DDE3EA"/><path d="M0 120 H200 M66 40 V240 M133 40 V240" stroke="#C5CDD6" stroke-width="3"/>
+  <rect x="30" y="80" width="140" height="80" rx="4" fill="#20242C"/><rect x="36" y="86" width="40" height="32" fill="#4E6A8A"/><rect x="80" y="86" width="40" height="32" fill="#8FB0D6"/><rect x="124" y="86" width="40" height="32" fill="#5C7A5A"/><rect x="36" y="122" width="40" height="32" fill="#9A7A6A"/><rect x="80" y="122" width="40" height="32" fill="#6A6F8A"/><rect x="124" y="122" width="40" height="32" fill="#B9BCC4"/>
+  <rect x="0" y="330" width="200" height="195" fill="#C9CED6"/><rect x="0" y="300" width="200" height="12" fill="#F4F3F0"/><rect x="20" y="268" width="48" height="32" rx="2" fill="#2B2F38"/><rect x="40" y="300" width="8" height="4" fill="#2B2F38"/><rect x="120" y="282" width="52" height="18" rx="2" fill="#3A3F4B"/>
+  <path d="M178 300 Q170 250 186 236 Q196 256 186 300 Z" fill="#4E7A4E"/><rect x="176" y="292" width="16" height="10" fill="#8E5D36"/>`;
+  if(era.k==='domani')bg=`<defs><linearGradient id="gd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1430"/><stop offset="1" stop-color="#05070D"/></linearGradient></defs><rect width="200" height="525" fill="url(#gd)"/>
+  <g fill="none" stroke="#5E8BFF" stroke-opacity=".55" stroke-width="1.5"><rect x="20" y="70" width="70" height="46" rx="4"/><rect x="104" y="54" width="78" height="60" rx="4"/><rect x="40" y="140" width="120" height="56" rx="4"/><path d="M28 104 L44 92 L58 98 L80 80 M112 100 L130 82 L146 90 L174 64 M50 180 H150 M50 168 H120"/></g>
+  <circle cx="160" cy="160" r="3" fill="#E3121B"/><circle cx="34" cy="86" r="2" fill="#E3121B"/>
+  <rect x="0" y="330" width="200" height="195" fill="#060A16"/><ellipse cx="100" cy="400" rx="90" ry="18" fill="#5E8BFF" opacity=".12"/>
+  <path d="M0 330 H200" stroke="#5E8BFF" stroke-opacity=".4"/><path d="M20 525 L80 330 M180 525 L120 330" stroke="#5E8BFF" stroke-opacity=".15"/>`;
+  return `<svg viewBox="0 0 200 525" preserveAspectRatio="xMidYMid slice" aria-label="Scena: ${era.t}">${bg}${people(era)}</svg>`;
+}
+function render(){
+  $('#corridor').innerHTML=ERAS.map((e,i)=>`<div class="door${e.open?' open':''}" data-i="${i}" style="--fr:${e.fr};--lf:${e.lf};--kn:${e.kn}">
+  <div class="plaque">Porta ${i+1}<b>${e.t} · ${e.y}</b></div>
+  <div class="frame"><div class="scene">${scene(e)}</div><button class="leaf" aria-label="Apri la porta: ${e.t}"><span class="knob"></span></button></div>
+  <button class="ring" data-i="${i}">${e.open?'Chiudi la porta':'Apri la porta'}</button></div>`).join('');
+}
+function caption(i){
+  const e=ERAS[i];
+  $('#cap').innerHTML=`<h2>${e.t} · ${e.y}</h2><p>${e.cap}</p><p class="q">${e.q}</p>
+  <div class="picks">${e.items.map((it,j)=>{const v=picks[e.k+j];return `<div class="pick"><span>${it}</span><button data-k="${e.k+j}" data-v="go" aria-pressed="${v==='go'}">Lasciamo andare</button><button class="keep" data-k="${e.k+j}" data-v="keep" aria-pressed="${v==='keep'}">Portiamo con noi</button></div>`}).join('')}</div>`;
+}
+function coll(){
+  const all=ERAS.flatMap(e=>e.items.map((it,j)=>({it,v:picks[e.k+j],e})));
+  const keep=all.filter(a=>a.v==='keep'),go=all.filter(a=>a.v==='go');
+  $('#coll').innerHTML=!keep.length&&!go.length?'<p class="empty">Ancora nessuna scelta.</p>':
+   `${keep.length?`<p><b style="color:var(--ink)">Da portare con noi</b></p><ul>${keep.map(a=>`<li>${a.it} <span class="empty">· ${a.e.y}</span></li>`).join('')}</ul>`:''}
+    ${go.length?`<p><b style="color:var(--ink)">Da lasciare andare</b></p><ul>${go.map(a=>`<li>${a.it} <span class="empty">· ${a.e.y}</span></li>`).join('')}</ul>`:''}`;
+}
+let last=0;
+function toggle(i){
+  const e=ERAS[i];e.open=!e.open;last=i;
+  const d=$(`.door[data-i="${i}"]`);d.classList.toggle('open',e.open);d.querySelector('.ring').textContent=e.open?'Chiudi la porta':'Apri la porta';
+  if(e.open)caption(i);
+}
+$('#corridor').addEventListener('click',ev=>{const d=ev.target.closest('.leaf,.ring');if(!d)return;toggle(+d.closest('.door').dataset.i)});
+$('#cap').addEventListener('click',ev=>{const b=ev.target.closest('.pick button');if(!b)return;const k=b.dataset.k;picks[k]=picks[k]===b.dataset.v?undefined:b.dataset.v;caption(last);coll()});
+$('#file').addEventListener('change',ev=>{const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{photo=r.result;$('#thumb').style.backgroundImage=`url(${photo})`;$('#thumb').textContent='';render()};r.readAsDataURL(f)});
+$('#reset').addEventListener('click',()=>{photo=null;$('#thumb').style.backgroundImage='';$('#thumb').textContent='sagome';render()});
+render();
+setTimeout(()=>{if(!ERAS.some(e=>e.open))toggle(1)},900);
+}
+</script>
+</body>
+</html>

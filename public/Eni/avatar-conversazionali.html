@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Avatar conversazionali Eni</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@200;300;400;500;600&display=swap">
+<style>
+/* VOICE  occasion: un dialogo intimo, calmo, rispettoso
+   IDEA   lo schermo verticale dell'installazione, come un camerino: un volto che ti parla
+   PICTURE il totem con l'avatar che muove la bocca mentre risponde, sotto i sottotitoli
+   COLOUR inchiostro #0B0D12, carta #F4F3F0, rosso Kansei; un tono di fondo diverso per ogni persona
+   TYPE   Saira, sottotitoli grandi e leggeri
+   LAYOUT persone a sinistra, totem al centro, conversazione a destra; su telefono: totem, persone, conversazione */
+:root{color-scheme:dark;--bg:#07080B;--ink:#F4F3F0;--mute:#9EA1A9;--line:#262A33;--red:#E3121B;--tone:#2B3A55}
+*{box-sizing:border-box;min-width:0}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Saira,Arial,sans-serif;overflow-x:clip}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;padding:20px max(4vw,16px) 12px}
+h1{font-size:clamp(26px,3.2vw,40px);font-weight:300;line-height:1.05;margin:0}
+h1 b{font-weight:600}
+.by{color:var(--mute);font-size:14px;margin:0}
+main{display:grid;grid-template-columns:240px minmax(0,380px) minmax(0,1fr);gap:28px;padding:8px max(4vw,16px) 40px;align-items:start}
+.people{display:flex;flex-direction:column;gap:10px}
+.person{display:flex;gap:12px;align-items:center;text-align:left;font:inherit;color:var(--ink);background:#101217;border:1px solid var(--line);border-radius:12px;padding:10px;min-height:44px;cursor:pointer}
+.person[aria-pressed=true]{border-color:var(--red);background:#1A0C0E}
+.person svg{width:56px;height:56px;border-radius:8px;flex:none}
+.person b{display:block;font-weight:600}
+.person span{font-size:14px;color:var(--mute);line-height:1.3;display:block}
+button:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.totem{background:#15171D;border-radius:22px;padding:14px;box-shadow:0 0 0 1px #2A2E38 inset}
+.screen{position:relative;aspect-ratio:9/14;border-radius:12px;overflow:hidden;background:var(--tone);transition:background .6s}
+.screen svg{position:absolute;inset:0;width:100%;height:100%}
+.sub{position:absolute;left:12px;right:12px;bottom:14px;font-size:clamp(16px,1.6vw,19px);line-height:1.35;font-weight:400;text-align:center;background:rgba(5,6,8,.72);border-radius:8px;padding:10px 12px;min-height:48px}
+.sub:empty{display:none}
+.tag{position:absolute;top:12px;left:12px;font-size:13px;background:rgba(5,6,8,.6);padding:4px 10px;border-radius:20px}
+.base{height:16px;margin:10px auto 0;width:40%;background:#0E0F13;border-radius:0 0 10px 10px}
+.mouth{transform-box:fill-box;transform-origin:center}
+.talk .mouth{animation:talk .22s infinite alternate ease-in-out}
+@keyframes talk{from{transform:scaleY(.25)}to{transform:scaleY(1.25)}}
+.lid{transform-box:fill-box;transform-origin:center top;animation:blink 5.2s infinite}
+@keyframes blink{0%,95%,100%{transform:scaleY(0)}97%{transform:scaleY(1)}}
+.idle .head{animation:sway 6s ease-in-out infinite;transform-origin:50% 60%}
+@keyframes sway{50%{transform:rotate(1.2deg) translateY(2px)}}
+.chat{display:flex;flex-direction:column;gap:14px}
+.who h2{font-size:26px;font-weight:500;margin:0;line-height:1.1}
+.who p{margin:4px 0 0;color:var(--mute);font-size:15px}
+.log{display:flex;flex-direction:column;gap:10px;max-height:380px;overflow:auto;padding-right:4px}
+.msg{max-width:88%;padding:10px 14px;border-radius:12px;font-size:16px}
+.msg.me{align-self:flex-end;background:#F4F3F0;color:#0B0D12;border-bottom-right-radius:3px}
+.msg.av{align-self:flex-start;background:#14171E;border:1px solid var(--line);border-bottom-left-radius:3px}
+.msg.av small{display:block;color:var(--mute);font-size:13px;margin-bottom:2px}
+.sugg{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:400 14px Saira,sans-serif;color:var(--ink);background:transparent;border:1px solid #3A3E49;border-radius:20px;padding:8px 14px;min-height:44px;cursor:pointer;text-align:left}
+.chip:hover{border-color:var(--ink)}
+form{display:flex;gap:8px;flex-wrap:wrap}
+form input{flex:1 1 220px;font:16px Saira,sans-serif;color:var(--ink);background:#0B0D12;border:1px solid #333845;border-radius:10px;padding:10px 12px;min-height:48px}
+.btn{font:500 16px Saira,sans-serif;border:0;border-radius:30px;padding:10px 20px;min-height:48px;cursor:pointer;background:var(--red);color:#FBFAF7}
+.ico{font:500 15px Saira,sans-serif;background:#14171E;color:var(--ink);border:1px solid #333845;border-radius:30px;padding:10px 16px;min-height:48px;cursor:pointer}
+.ico[aria-pressed=true]{border-color:var(--red);color:#fff;background:#1A0C0E}
+.note{font-size:13px;color:#7A7D85;margin:0}
+.real{border-top:1px solid var(--line);padding-top:14px;color:var(--mute);font-size:15px}
+.real b{color:var(--ink);font-weight:500}
+@media(max-width:1000px){main{grid-template-columns:minmax(0,320px) minmax(0,1fr)}.people{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;order:2}.person{flex:1 1 200px}.totem{order:1}.chat{order:3;grid-column:2}}
+@media(max-width:640px){main{grid-template-columns:minmax(0,1fr)}.totem{max-width:340px;margin:0 auto;width:100%}.chat{grid-column:1}}
+@media(prefers-reduced-motion:reduce){.talk .mouth,.lid,.idle .head{animation:none}}
+</style>
+</head>
+<body>
+<header>
+<h1><b>Nei panni degli altri</b> · prototipo degli avatar conversazionali</h1>
+<p class="by"><a href="/Eni" style="color:inherit">← Torna alla proposta</a> · Kansei Studio per Eni Corporate University</p>
+</header>
+<main>
+<div class="people" id="people" aria-label="Con chi vuoi parlare"></div>
+
+<div class="totem">
+<div class="screen idle" id="screen">
+<div id="face"></div>
+<span class="tag" id="tag"></span>
+<p class="sub" id="sub" aria-live="polite"></p>
+</div>
+<div class="base"></div>
+</div>
+
+<section class="chat">
+<div class="who"><h2 id="wname"></h2><p id="wdesc"></p></div>
+<div class="log" id="log"></div>
+<div class="sugg" id="sugg"></div>
+<form id="f">
+<input id="q" autocomplete="off" maxlength="300" placeholder="Fai una domanda…">
+<button type="button" class="ico" id="mic" hidden aria-pressed="false">Parla</button>
+<button type="button" class="ico" id="voice" hidden aria-pressed="true">Voce attiva</button>
+<button class="btn" type="submit">Chiedi</button>
+</form>
+<p class="note" id="mode"></p>
+<div class="real"><b>Nell’installazione reale</b>: avatar in tempo reale su schermi verticali dentro i camerini dello shop, voce e riconoscimento vocale, risposte vincolate alle testimonianze raccolte nel co-design con Eni. Persone e testimonianze di questa demo sono di esempio.</div>
+</section>
+</main>
+
+<script>
+{
+const P=[
+{id:'giulia',name:'Giulia',age:27,gen:'Junior',role:'Ingegnera di processo, in azienda da due anni',tone:'#3A2E4A',voice:'airy',
+ hair:'#2A1C18',skin:'#E6B89C',shirt:'#F4F3F0',style:'bob',
+ facts:['entrata due anni fa dopo la laurea','vorrebbe più spazio per provare e sbagliare','in riunione spesso parla per ultima e teme di non essere presa sul serio','insegna volentieri strumenti digitali e AI ai colleghi','si sente rilevante quando le chiedono un parere prima di decidere','ha paura di restare bloccata su compiti esecutivi'],
+ canned:['Mi sento rilevante quando qualcuno mi chiede cosa ne penso prima di decidere, non dopo. Succede di rado, ma quando succede lavoro il doppio.','Quando in riunione propongo un’idea e la stessa idea diventa buona solo se la ripete qualcuno con più anni di me. Non è cattiveria, è abitudine.','Gli strumenti nuovi: fogli di calcolo automatizzati, l’AI per scrivere report. Li insegno volentieri, se nessuno si sente giudicato.','Come si legge un impianto, come si gestisce un cliente difficile, come si capisce quando una cosa non torna. Queste cose non stanno in nessun manuale.','Per me è stata naturale, la uso ogni giorno. Però capisco chi ha paura: io stessa mi chiedo cosa resterà del mio lavoro tra cinque anni.']},
+{id:'marco',name:'Marco',age:45,gen:'Middle',role:'Responsabile di progetto, in azienda da diciotto anni',tone:'#23384A',voice:'rounded',
+ hair:'#3B3330',skin:'#D9A585',shirt:'#8FB0D6',style:'short',
+ facts:['sta in mezzo: gestisce junior e risponde a senior','si sente spesso un ponte tra due linguaggi','teme di non avere tempo per aggiornarsi','fa da mentor a due giovani e ha imparato molto da loro','si sente rilevante quando sblocca un problema che fermava il team','vorrebbe che le decisioni coinvolgessero di più chi lavora sul campo'],
+ canned:['Quando sblocco un problema che fermava tutti. Non serve un grazie formale: basta vedere che il team riparte.','Quando le decisioni arrivano già prese. Io sto in mezzo: le devo spiegare ai ragazzi senza averle potute discutere.','Il metodo: come si porta a casa un progetto quando tutto va storto. E come si parla con le persone, cosa che si impara solo sbagliando.','Moltissimo, a dire il vero. Uno dei miei ragazzi mi ha cambiato il modo di organizzare le giornate. Il reverse mentoring l’ho fatto senza saperlo.','Con curiosità e un po’ di ansia. Non ho mai abbastanza tempo per aggiornarmi, e ho paura di restare indietro proprio mentre devo guidare gli altri.']},
+{id:'franca',name:'Franca',age:61,gen:'Senior',role:'Tecnica di laboratorio senior, in azienda da trentaquattro anni',tone:'#4A2A2A',voice:'glassy',
+ hair:'#C9C6C0',skin:'#E2B49A',shirt:'#E3121B',style:'bun',glasses:true,
+ facts:['in azienda da trentaquattro anni, ha visto passare tre riorganizzazioni','ha paura che quello che sa fare non serva più','si sente rilevante quando le chiedono come si faceva e perché','ha imparato strumenti nuovi da colleghi giovani, con pazienza','non sopporta essere data per scontata o già in pensione','vorrebbe lasciare qualcosa prima di andare via'],
+ canned:['Quando un giovane viene a chiedermi perché una procedura si fa così. Dietro c’è sempre una storia, e raccontarla mi fa sentire utile.','Quando sento dire che “tanto tra poco vado in pensione”. Ho ancora molto da dare, e da imparare.','Il senso delle cose: perché si fa un controllo in quel modo, quale errore abbiamo fatto vent’anni fa per arrivarci. Così non lo rifanno.','A non avere paura degli strumenti nuovi. Una collega di venticinque anni mi ha insegnato a usare il nuovo gestionale, e non mi ha mai fatto sentire lenta.','All’inizio con diffidenza, lo ammetto. Ho paura che quello che so fare non serva più. Poi ho visto che senza esperienza l’AI sbaglia, e allora serve qualcuno che se ne accorga.']}
+];
+const QS=['Quando ti senti rilevante al lavoro?','Cosa ti fa sentire non ascoltato?','Cosa potresti insegnare a un collega di un’altra generazione?','Cosa vorresti imparare da loro?','Come hai vissuto l’arrivo dell’AI nel tuo lavoro?'];
+const $=s=>document.querySelector(s);
+let cur=P[0],busy=false,ai=null,tts=null,dict=null,voiceOn=true;const hist={giulia:[],marco:[],franca:[]};
+
+function face(p,small){
+  const hairBack=p.style==='bob'?`<path d="M88 150 Q90 70 180 66 Q270 70 272 150 L276 250 Q250 268 236 240 L236 150 L124 150 L124 240 Q110 268 84 250 Z" fill="${p.hair}"/>`:
+    p.style==='bun'?`<circle cx="180" cy="62" r="34" fill="${p.hair}"/><path d="M104 160 Q104 78 180 76 Q256 78 256 160 L246 150 Q230 104 180 104 Q130 104 114 150 Z" fill="${p.hair}"/>`:
+    `<path d="M108 150 Q106 82 180 78 Q254 82 252 150 Q240 110 180 108 Q120 110 108 150 Z" fill="${p.hair}"/>`;
+  const fringe=p.style==='bob'?`<path d="M112 140 Q130 88 200 92 Q246 98 250 150 Q220 118 170 120 Q132 122 112 140 Z" fill="${p.hair}"/>`:'';
+  const beard=p.style==='short'?`<path d="M128 196 Q132 262 180 268 Q228 262 232 196 Q220 238 180 240 Q140 238 128 196 Z" fill="${p.hair}" opacity=".35"/>`:'';
+  const glasses=p.glasses?`<g fill="none" stroke="#1A1C22" stroke-width="4"><circle cx="152" cy="168" r="17"/><circle cx="208" cy="168" r="17"/><path d="M169 168 H191"/></g>`:'';
+  return `<svg viewBox="0 0 360 560" preserveAspectRatio="xMidYMid slice" aria-label="Avatar di ${p.name}">
+  <defs><radialGradient id="lt${small?'s':''}${p.id}" cx="30%" cy="20%" r="80%"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+  <rect width="360" height="560" fill="${p.tone}"/>
+  <g class="head">
+  ${hairBack}
+  <path d="M40 560 Q44 380 180 360 Q316 380 320 560 Z" fill="${p.shirt}"/>
+  <path d="M40 560 Q44 380 180 360 L180 560 Z" fill="#000" opacity=".12"/>
+  <rect x="154" y="250" width="52" height="80" rx="20" fill="${p.skin}"/>
+  <path d="M154 300 Q180 320 206 300 L206 330 L154 330 Z" fill="#000" opacity=".12"/>
+  <ellipse cx="180" cy="180" rx="72" ry="92" fill="${p.skin}"/>
+  <path d="M180 88 Q252 92 252 180 Q252 262 180 272 Z" fill="#000" opacity=".07"/>
+  ${beard}${fringe}
+  <ellipse cx="152" cy="168" rx="7" ry="8" fill="#1A1C22"/><ellipse cx="208" cy="168" rx="7" ry="8" fill="#1A1C22"/>
+  <rect class="lid" x="142" y="158" width="20" height="18" fill="${p.skin}"/><rect class="lid" x="198" y="158" width="20" height="18" fill="${p.skin}"/>
+  <path d="M140 148 Q152 140 164 147 M196 147 Q208 140 220 148" stroke="${p.hair}" stroke-width="5" fill="none" stroke-linecap="round"/>
+  ${glasses}
+  <path d="M178 176 Q172 204 182 208" stroke="#000" stroke-opacity=".18" stroke-width="3" fill="none"/>
+  <ellipse class="mouth" cx="180" cy="232" rx="17" ry="6" fill="#7A2E2E"/>
+  </g>
+  <rect width="360" height="560" fill="url(#lt${small?'s':''}${p.id})"/>
+  </svg>`;
+}
+$('#people').innerHTML=P.map(p=>`<button class="person" data-id="${p.id}" aria-pressed="${p===cur}">${face(p,true)}<div><b>${p.name}, ${p.age}</b><span>${p.gen} · ${p.role}</span></div></button>`).join('');
+$('#people').addEventListener('click',e=>{const b=e.target.closest('.person');if(!b||busy)return;select(P.find(p=>p.id===b.dataset.id))});
+
+function renderLog(){
+  $('#log').innerHTML=hist[cur.id].map(m=>m.role==='user'?`<div class="msg me">${esc(m.content)}</div>`:`<div class="msg av"><small>${cur.name}</small>${esc(m.content)}</div>`).join('')||`<div class="msg av"><small>${cur.name}</small>Ciao, sono ${cur.name}, ${cur.role.toLowerCase()}. Chiedimi pure come vivo il lavoro: ti rispondo per come lo vedo io.</div>`;
+  $('#log').scrollTop=1e6;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function select(p){
+  cur=p;tts?.stop?.();
+  document.querySelectorAll('.person').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===p.id));
+  $('#screen').style.setProperty('--tone',p.tone);$('#screen').style.background=p.tone;
+  $('#face').innerHTML=face(p);$('#tag').textContent=`${p.gen} · ${p.age} anni`;
+  $('#wname').textContent=`${p.name}, ${p.age} anni`;$('#wdesc').textContent=p.role;$('#sub').textContent='';
+  $('#sugg').innerHTML=QS.map((q,i)=>`<button class="chip" data-i="${i}">${q}</button>`).join('');
+  renderLog();
+}
+$('#sugg').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b)ask(b.textContent,+b.dataset.i)});
+
+function setTalk(on){$('#screen').classList.toggle('talk',on);$('#screen').classList.toggle('idle',!on)}
+async function speak(text){
+  if(tts&&voiceOn){try{setTalk(true);await tts.speak(text,{voice:cur.voice,language:'it'})}catch(e){}setTalk(false);return}
+  if(voiceOn&&window.speechSynthesis){await new Promise(res=>{try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='it-IT';u.rate=1;u.pitch=cur.id==='marco'?.85:cur.id==='franca'?.95:1.1;const v=speechSynthesis.getVoices().filter(v=>/^it/i.test(v.lang));if(v.length)u.voice=v[cur.id==='marco'?Math.min(1,v.length-1):0];u.onstart=()=>setTalk(true);u.onend=u.onerror=()=>{setTalk(false);res()};speechSynthesis.speak(u);setTimeout(res,20000)}catch(e){res()}});setTalk(false);return}
+  setTalk(true);await new Promise(r=>setTimeout(r,Math.min(9000,text.length*55)));setTalk(false);
+}
+async function ask(q,cannedIdx){
+  if(busy||!q.trim())return;busy=true;
+  const p=cur,h=hist[p.id];h.push({role:'user',content:q.trim()});renderLog();
+  let answer='';
+  if(ai){
+    const sys=`Sei ${p.name}, ${p.age} anni, ${p.role} in una grande azienda energetica italiana. Sei un avatar conversazionale in un'installazione sull'intergenerazionalità (generazione: ${p.gen}). Parli in prima persona, in italiano colloquiale e caldo, 2-4 frasi brevi, senza elenchi né emoji. Resta fedele a queste testimonianze e non inventare fatti aziendali, nomi o numeri: ${p.facts.join('; ')}. Racconta il tuo punto di vista con un esempio concreto; se ha senso, chiudi chiedendo all'interlocutore come la vive lui. Se ti chiedono se sei reale, di' che sei un avatar costruito su testimonianze reali di colleghi.`;
+    const msgs=[{role:'user',content:sys+'\n\nPrima domanda dell\'interlocutore: '+h[0].content}];
+    for(let i=1;i<h.length;i++)msgs.push({role:h[i].role,content:h[i].content});
+    const el=document.createElement('div');el.className='msg av';el.innerHTML=`<small>${p.name}</small><span>…</span>`;$('#log').appendChild(el);
+    try{
+      const r=await ai(msgs,{cache:false,modelTier:'quick',onText:({text})=>{if(!/^Thinking/.test(text)){el.lastChild.textContent=text;$('#log').scrollTop=1e6}}});
+      answer=r.text.trim();
+    }catch(e){answer=''}
+    el.remove();
+  }
+  if(!answer){
+    let i=cannedIdx;
+    if(i==null){const t=q.toLowerCase();const K=[['rilevant','conta','importan','utile'],['ascolt','ignorat','decision','consider'],['insegn','trasmett','spieg','lasciare'],['impar','apprend','scoprire'],[' ai','intelligenza','tecnolog','strument','digital','futuro']];i=K.findIndex(k=>k.some(w=>(' '+t).includes(w)));}
+    answer=i>=0?p.canned[i]:'Nella demo online rispondo alle domande suggerite qui sotto. Nell’installazione potrai chiedermi tutto quello che vuoi, a voce.';
+  }
+  h.push({role:'assistant',content:answer});
+  if(cur===p){renderLog();$('#sub').textContent=answer;await speak(answer)}
+  busy=false;
+}
+$('#f').addEventListener('submit',e=>{e.preventDefault();const q=$('#q').value;$('#q').value='';ask(q,null)});
+$('#voice').addEventListener('click',()=>{voiceOn=!voiceOn;$('#voice').setAttribute('aria-pressed',voiceOn);$('#voice').textContent=voiceOn?'Voce attiva':'Voce spenta';if(!voiceOn)tts?.stop?.()});
+$('#mic').addEventListener('click',()=>{
+  if(!dict)return;
+  if($('#mic').getAttribute('aria-pressed')==='true'){dict.stop().catch(()=>{});return}
+  dict.start().catch(()=>{$('#mic').hidden=true});
+});
+function updMode(){$('#mode').textContent=ai?'Le risposte sono generate dal vivo da Claude a partire dalle testimonianze di esempio.':'Demo online: le risposte sono preparate a partire dalle testimonianze di esempio. Nell’installazione le genera l’AI in tempo reale.'}
+select(cur);updMode();
+if(!window.claude?.use){
+  if(window.speechSynthesis)$('#voice').hidden=false;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){const rec=new SR();rec.lang='it-IT';rec.interimResults=true;let on=false;$('#mic').hidden=false;
+    rec.onresult=e=>{$('#q').value=Array.from(e.results).map(r=>r[0].transcript).join(' ')};
+    rec.onend=()=>{on=false;$('#mic').setAttribute('aria-pressed',false);$('#mic').textContent='Parla';const q=$('#q').value.trim();if(q){$('#q').value='';ask(q,null)}};
+    $('#mic').onclick=()=>{if(on){rec.stop();return}try{rec.start();on=true;$('#mic').setAttribute('aria-pressed',true);$('#mic').textContent='Ascolto… tocca per inviare'}catch(e){}};}
+}
+(async()=>{
+  const c=window.claude;if(!c?.use)return;
+  try{ai=await c.use('sample')}catch(e){}updMode();
+  try{tts=await c.use('tts');if(tts){$('#voice').hidden=false;tts.onState?.(({state})=>setTalk(state==='speaking'))}}catch(e){}
+  try{dict=await c.use('dictation');if(dict){$('#mic').hidden=false;
+    dict.onPartial?.(({text})=>{$('#q').value=text});
+    dict.onFinal?.(({text})=>{$('#q').value=text});
+    dict.onState?.(({state})=>{const on=state==='listening';$('#mic').setAttribute('aria-pressed',on);$('#mic').textContent=on?'Ascolto… tocca per inviare':'Parla';if(!on&&$('#q').value.trim()){const q=$('#q').value;$('#q').value='';ask(q,null)}});
+  }}catch(e){}
+})();
+}
+</script>
+</body>
+</html>

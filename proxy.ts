@@ -50,6 +50,7 @@ export const config = {
     // Match everything except api routes, _next internals, static files with extensions
     // and the interactive artifacts (/artifacts/[id] route handler, /artifact-files/* rewrite to Blob):
     // no locale redirect and no auth here — the route checks the admin session for drafts itself.
-    "/((?!api|_next|artifacts/|artifact-files/|.*\\..*).*)",
+    // Eni$/eni$: microsite statico della proposta Eni (public/Eni/), servito via rewrite in next.config.ts.
+    "/((?!api|_next|artifacts/|artifact-files/|Eni$|eni$|.*\\..*).*)",
   ],
 }

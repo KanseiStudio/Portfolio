@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Touch wall Eni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@200;300;400;500;600;700&display=swap">
+<style>
+/* VOICE  occasion, installazione corporate: sobria, scura, precisa
+   IDEA   lo schermo del touch wall reale, con cornice, visto di fronte
+   PICTURE il muro stesso: frasi da attribuire, poi parole che si compongono in costellazioni di temi
+   COLOUR inchiostro Kansei #0B0D12, carta #F4F3F0, rosso #E3121B; tre toni per le generazioni
+   TYPE   Saira per tutto, pesi contrastati
+   LAYOUT muro a tutta larghezza sotto un titolo modesto, pannello note a destra; su telefono impilato */
+:root{color-scheme:dark;--bg:#07080B;--wall:#0B0D12;--ink:#F4F3F0;--mute:#9EA1A9;--line:#262A33;--red:#E3121B;--j:#F4F3F0;--m:#8FB0D6;--s:#E3121B}
+*{box-sizing:border-box;min-width:0}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Saira,Arial,sans-serif;overflow-x:clip}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 24px;padding:20px max(4vw,16px) 12px}
+h1{font-size:clamp(26px,3.2vw,40px);font-weight:300;line-height:1.05;letter-spacing:-.01em;margin:0}
+h1 b{font-weight:600}
+.by{color:var(--mute);font-size:14px}
+main{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;align-items:start;padding:8px max(4vw,16px) 32px}
+.frame{background:#15171D;border-radius:14px;padding:14px;box-shadow:0 0 0 1px #2A2E38 inset}
+.wall{position:relative;background:var(--wall);border-radius:6px;height:clamp(540px,72vh,760px);overflow:hidden;background-image:radial-gradient(circle at 50% 120%,#1A1E28 0,transparent 60%)}
+.tabs{position:absolute;top:16px;left:16px;right:16px;display:flex;gap:8px;flex-wrap:wrap;z-index:5}
+.tab{font:500 15px Saira,sans-serif;color:var(--mute);background:#12151B;border:1px solid var(--line);border-radius:30px;padding:10px 18px;min-height:44px;cursor:pointer}
+.tab[aria-selected=true]{color:var(--ink);border-color:var(--red);background:#1A0C0E}
+.tab:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.mode{position:absolute;inset:0;padding:84px 24px 24px;display:none}
+.mode.on{display:block}
+/* bias */
+.phrase{position:absolute;left:50%;top:30%;transform:translate(-50%,-50%);width:min(620px,86%);background:#F4F3F0;color:#0B0D12;border-radius:10px;padding:26px 30px;font-size:clamp(20px,2.4vw,30px);font-weight:400;line-height:1.3;cursor:grab;touch-action:none;box-shadow:0 18px 40px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.phrase.drag{cursor:grabbing;transition:none}
+.phrase small{display:block;font-size:14px;color:#55575E;margin-top:10px}
+.zones{position:absolute;left:24px;right:24px;bottom:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.zone{height:132px;border:1px dashed #3A3F4B;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:inherit;color:var(--ink);background:transparent;cursor:pointer}
+.zone b{font-size:22px;font-weight:600}
+.zone span{font-size:14px;color:var(--mute)}
+.zone.hot{border-style:solid;border-color:var(--red);background:#1A0C0E}
+.reveal{position:absolute;left:24px;right:24px;top:84px;bottom:20px;display:none;flex-direction:column;gap:14px;overflow:auto;max-width:900px;margin:0 auto}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 32px}
+.bar{grid-template-columns:70px minmax(0,1fr) 44px}
+.reveal.on{display:flex}
+.reveal .q{font-size:clamp(20px,2.2vw,28px);font-weight:300;line-height:1.3}
+.reveal h3{font-size:15px;font-weight:500;color:var(--mute);margin:6px 0 0}
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:90px minmax(0,1fr) 52px;align-items:center;gap:12px;font-size:15px}
+.bar i{display:block;height:22px;border-radius:3px;background:var(--c);width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.verdict{font-size:clamp(20px,2.2vw,26px);font-weight:600;line-height:1.2}
+.btn{font:500 16px Saira,sans-serif;color:#0B0D12;background:var(--ink);border:0;border-radius:30px;padding:12px 24px;min-height:44px;cursor:pointer;align-self:flex-start}
+.btn.red{background:var(--red);color:#FBFAF7}
+/* words */
+.cloud{position:absolute;left:0;right:0;top:116px;bottom:92px}
+.theme{position:absolute;transform:translate(-50%,-50%);font-size:13px;font-weight:500;color:var(--mute);white-space:nowrap;letter-spacing:.02em}
+.w{position:absolute;left:0;top:0;white-space:nowrap;line-height:1;transition:transform 1.1s cubic-bezier(.2,.8,.2,1),opacity .6s;will-change:transform}
+.w.shared{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:5px}
+.w.new{animation:glow 2.4s ease-out}
+@keyframes glow{0%{text-shadow:0 0 22px #fff}100%{text-shadow:none}}
+.compose{position:absolute;left:16px;right:16px;bottom:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:#12151B;border:1px solid var(--line);border-radius:12px;padding:10px}
+.compose label{font-size:16px;color:var(--mute);white-space:nowrap;padding-left:6px}
+.compose input{flex:1 1 220px;font:16px Saira,sans-serif;color:var(--ink);background:#0B0D12;border:1px solid #333845;border-radius:8px;padding:10px 12px;min-height:44px}
+.gens{display:flex;gap:4px}
+.gen{font:500 14px Saira,sans-serif;color:var(--mute);background:transparent;border:1px solid #333845;border-radius:20px;padding:8px 12px;min-height:44px;cursor:pointer}
+.gen[aria-pressed=true]{color:#0B0D12;background:var(--c);border-color:var(--c)}
+.status{position:absolute;right:24px;top:28px;font-size:13px;color:var(--mute);text-align:right;max-width:46%}
+aside{display:flex;flex-direction:column;gap:18px}
+aside h2{font-size:20px;font-weight:600;margin:0}
+aside p{margin:0;color:var(--mute);font-size:15px}
+.card{border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:8px}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:15px}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--c);margin-right:8px;vertical-align:-1px}
+.big{font-size:40px;font-weight:200;line-height:1}
+ul.notes{margin:0;padding-left:18px;color:var(--mute);font-size:15px}
+ul.notes li{margin-bottom:6px}
+.sample{font-size:13px;color:#7A7D85}
+@media(max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.zone{height:96px}.zone b{font-size:18px}.phrase{top:34%}.status{display:none}.compose label{width:100%}}
+@media(prefers-reduced-motion:reduce){.w,.phrase,.bar i{transition:none}.w.new{animation:none}}
+</style>
+</head>
+<body>
+<header>
+<h1><b>Il muro delle parole</b> · prototipo del touch wall</h1>
+<p class="by"><a href="/Eni" style="color:inherit">← Torna alla proposta</a> · Kansei Studio per Eni Corporate University</p>
+</header>
+<main>
+<div class="frame">
+<div class="wall" id="wall">
+<div class="tabs" role="tablist">
+<button class="tab" role="tab" id="t-bias" aria-selected="true">1 · Chi l’ha detto?</button>
+<button class="tab" role="tab" id="t-words" aria-selected="false">2 · Mi sento rilevante quando…</button>
+</div>
+
+<section class="mode on" id="m-bias" aria-labelledby="t-bias">
+<div class="phrase" id="phrase" tabindex="0"></div>
+<div class="zones" id="zones"></div>
+<div class="reveal" id="reveal" aria-live="polite"></div>
+</section>
+
+<section class="mode" id="m-words" aria-labelledby="t-words">
+<p class="status" id="status"></p>
+<div class="cloud" id="cloud"></div>
+<form class="compose" id="compose">
+<label for="inp">Mi sento rilevante quando…</label>
+<input id="inp" autocomplete="off" maxlength="120" placeholder="es. qualcuno mi chiede un parere prima di decidere">
+<div class="gens" id="gens"></div>
+<button class="btn red" type="submit">Aggiungi</button>
+</form>
+</section>
+</div>
+</div>
+
+<aside>
+<div class="card" id="side-bias">
+<h2>Chi l’ha detto?</h2>
+<p>Trascina la frase sulla generazione che pensi l’abbia detta, oppure tocca una delle tre fasce. Il muro rivela chi l’ha scritta davvero e come ha votato la sala.</p>
+<p><span class="big" id="score">0/0</span><br>frasi in cui il bisogno era comune a tutte le generazioni</p>
+</div>
+<div class="card">
+<h2>Generazioni</h2>
+<div class="legend" id="legend"></div>
+<p>Le parole sottolineate in rosso sono usate da più generazioni.</p>
+</div>
+<div class="card">
+<h2>Nell’installazione reale</h2>
+<ul class="notes">
+<li>Touch wall multiutente: più persone scrivono e votano insieme.</li>
+<li>Le frasi della Bias Wall arrivano dal co-design con Eni.</li>
+<li>L’AI riconosce il tema di ogni frase; le parole volano poi nella sala immersiva.</li>
+<li>Tutto resta anonimo: si registra solo la fascia generazionale.</li>
+</ul>
+<p class="sample">Frasi, percentuali e risposte in questa demo sono esempi.</p>
+</div>
+</aside>
+</main>
+
+<script>
+{
+const G={J:{n:'Junior',c:'var(--j)'},M:{n:'Middle',c:'var(--m)'},S:{n:'Senior',c:'var(--s)'}};
+const PHRASES=[
+{t:'Ho paura che quello che so fare non serva più.',real:{J:30,M:33,S:37},room:{J:6,M:22,S:72}},
+{t:'Vorrei avere più spazio per provare.',real:{J:38,M:31,S:31},room:{J:74,M:19,S:7}},
+{t:'Non mi sento ascoltato nelle decisioni.',real:{J:35,M:34,S:31},room:{J:61,M:24,S:15}},
+{t:'Ho ancora molto da imparare.',real:{J:34,M:32,S:34},room:{J:81,M:13,S:6}},
+{t:'Mi piacerebbe che qualcuno mi insegnasse i nuovi strumenti senza giudicarmi.',real:{J:29,M:34,S:37},room:{J:9,M:25,S:66}},
+{t:'A volte la mia esperienza conta meno di una buona presentazione.',real:{J:33,M:35,S:32},room:{J:8,M:30,S:62}}
+];
+const $=s=>document.querySelector(s);
+const wall=$('#wall'),phrase=$('#phrase'),zones=$('#zones'),reveal=$('#reveal');
+let idx=0,seen=0,common=0;
+
+$('#legend').innerHTML=Object.entries(G).map(([k,g])=>`<span style="--c:${g.c}">${g.n}</span>`).join('');
+zones.innerHTML=Object.entries(G).map(([k,g])=>`<button class="zone" data-g="${k}"><b>${g.n}</b><span>${k=='J'?'primi anni':k=='M'?'metà carriera':'lunga esperienza'}</span></button>`).join('');
+
+function showPhrase(){
+  const p=PHRASES[idx%PHRASES.length];
+  phrase.innerHTML=`«${p.t}»<small>Frase ${idx%PHRASES.length+1} di ${PHRASES.length} · Trascinala su una generazione</small>`;
+  phrase.style.transform='translate(-50%,-50%)';phrase.style.opacity=1;phrase.style.display='block';
+  zones.style.display='grid';reveal.classList.remove('on');
+}
+function bars(obj,label){
+  return `<h3>${label}</h3><div class="bars">${Object.entries(G).map(([k,g])=>`<div class="bar" style="--c:${g.c}"><span>${g.n}</span><i data-w="${obj[k]}"></i><em>${obj[k]}%</em></div>`).join('')}</div>`;
+}
+function answer(k){
+  const p=PHRASES[idx%PHRASES.length];
+  const spread=Math.max(...Object.values(p.real))-Math.min(...Object.values(p.real));
+  seen++;if(spread<12)common++;
+  $('#score').textContent=`${common}/${seen}`;
+  const top=Object.entries(p.room).sort((a,b)=>b[1]-a[1])[0];
+  phrase.style.opacity=0;zones.style.display='none';
+  reveal.innerHTML=`<p class="q">«${p.t}»</p>
+  <p>Hai scelto <b>${G[k].n}</b>. Il ${top[1]}% della sala ha pensato ai ${G[top[0]].n}.</p>
+  <div class="duo"><div>${bars(p.room,'Come ha votato la sala')}</div><div>${bars(p.real,'Chi l’ha scritta davvero')}</div></div>
+  <p class="verdict">${spread<12?'Lo dicono tutte e tre le generazioni, in misura quasi uguale.':'Qui una generazione prevale, ma meno di quanto pensa la sala.'}</p>
+  <button class="btn" id="next">Frase successiva</button>`;
+  reveal.classList.add('on');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>reveal.querySelectorAll('.bar i').forEach(i=>i.style.width=i.dataset.w+'%')));
+  $('#next').onclick=()=>{idx++;showPhrase()};
+}
+zones.addEventListener('click',e=>{const z=e.target.closest('.zone');if(z)answer(z.dataset.g)});
+phrase.addEventListener('keydown',e=>{const m={1:'J',2:'M',3:'S'}[e.key];if(m)answer(m)});
+let drag=null;
+phrase.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};phrase.classList.add('drag');phrase.setPointerCapture(e.pointerId)});
+phrase.addEventListener('pointermove',e=>{
+  if(!drag)return;
+  const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  phrase.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) rotate(${dx/40}deg)`;
+  zones.querySelectorAll('.zone').forEach(z=>{const r=z.getBoundingClientRect();z.classList.toggle('hot',e.clientX>r.left&&e.clientX<r.right&&e.clientY>r.top-40&&e.clientY<r.bottom)});
+});
+phrase.addEventListener('pointerup',()=>{
+  phrase.classList.remove('drag');drag=null;
+  const hot=zones.querySelector('.zone.hot');
+  zones.querySelectorAll('.zone').forEach(z=>z.classList.remove('hot'));
+  if(hot)answer(hot.dataset.g);else phrase.style.transform='translate(-50%,-50%)';
+});
+showPhrase();
+
+/* ---------- parole ---------- */
+const THEMES=[
+{k:'Ascolto',x:.2,y:.3,kw:['ascolt','parere','opinion','chiede','coinvol','decision','voce','consult']},
+{k:'Riconoscimento',x:.52,y:.24,kw:['riconosc','grazie','merito','valor','apprezz','nome','vede','notato']},
+{k:'Apprendimento',x:.82,y:.32,kw:['impar','insegn','spieg','mentor','cresc','nuov','strument','conosc']},
+{k:'Autonomia',x:.3,y:.72,kw:['fiducia','libert','autonom','provare','sbagli','spazio','scegl','respons']},
+{k:'Impatto',x:.72,y:.72,kw:['risultat','serve','cambia','progett','contribu','problem','risolv','impatt','aiut']}
+];
+const STOP=new Set('quando che chi per con una uno gli lei lui loro mio mia miei mie mi ti si ci vi del della dello degli delle dei nel nella nei nelle sul sulla sui alla allo agli alle dal dalla dai come anche più meno non sono essere avere fare viene vengo posso può qualcuno qualcosa prima dopo molto poco ogni tutto tutti tutte quella quello questo questa sua suo suoi sue alle davvero danno senza faccio vedo lavoro conta anni nome mie miei lasciano posso ancora cose ho hai sempre'.split(' '));
+const SEED=[
+['qualcuno mi chiede un parere prima di decidere','J'],['il mio capo ascolta davvero le mie idee','J'],['posso provare senza paura di sbagliare','J'],['insegno a un collega anziano un nuovo strumento','J'],['vedo che il mio lavoro cambia un progetto','J'],['mi danno fiducia su un cliente importante','J'],['qualcuno riconosce il mio contributo in riunione','J'],['imparo da chi ha più esperienza','J'],
+['il team mi coinvolge nelle decisioni','M'],['risolvo un problema che bloccava tutti','M'],['faccio da mentor a un giovane collega','M'],['mi lasciano libertà di scegliere il metodo','M'],['imparo qualcosa di nuovo da un junior','M'],['il mio lavoro viene riconosciuto per nome','M'],['vedo i risultati del progetto','M'],['la mia opinione conta nelle scelte','M'],
+['qualcuno mi chiede di spiegare come si faceva','S'],['la mia esperienza serve a evitare errori','S'],['un giovane mi insegna uno strumento nuovo','S'],['vengo ascoltato prima di una decisione','S'],['mi riconoscono il valore di anni di lavoro','S'],['posso ancora provare cose nuove','S'],['aiuto a risolvere un problema difficile','S'],['ho fiducia e responsabilità','S']
+];
+const cloud=$('#cloud');let curGen='J';let entries=[];
+$('#gens').innerHTML=Object.entries(G).map(([k,g])=>`<button type="button" class="gen" data-g="${k}" style="--c:${g.c}" aria-pressed="${k=='J'}">${g.n}</button>`).join('');
+$('#gens').addEventListener('click',e=>{const b=e.target.closest('.gen');if(!b)return;curGen=b.dataset.g;$('#gens').querySelectorAll('.gen').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+function localTheme(t){t=t.toLowerCase();let best=THEMES[4],sc=0;THEMES.forEach(th=>{const s=th.kw.filter(k=>t.includes(k)).length;if(s>sc){sc=s;best=th}});return best.k}
+function keywords(t){return t.toLowerCase().replace(/[^a-zàèéìòù\s]/g,' ').split(/\s+/).filter(w=>w.length>3&&!STOP.has(w)).slice(0,3)}
+SEED.forEach(([t,g])=>entries.push({t,g,theme:localTheme(t),kw:keywords(t)}));
+
+const ctx=document.createElement('canvas').getContext('2d');
+let nodes=new Map();
+function layout(newKey){
+  const W=cloud.clientWidth,H=cloud.clientHeight;if(!W)return;
+  const narrow=W<560;
+  cloud.querySelectorAll('.theme').forEach(n=>n.remove());
+  const placed=[];
+  THEMES.forEach(th=>{
+    const words={};
+    entries.filter(e=>e.theme===th.k).forEach(e=>e.kw.forEach(w=>{(words[w]=words[w]||{n:0,g:{J:0,M:0,S:0}}).n++;words[w].g[e.g]++}));
+    const cx=th.x*W,cy=th.y*H;
+    const lab=document.createElement('div');lab.className='theme';lab.textContent=th.k;lab.style.left=cx+'px';lab.style.top=(cy-(narrow?52:74))+'px';cloud.appendChild(lab);
+    placed.push({x:cx-60,y:cy-(narrow?62:84),w:120,h:20});
+    Object.entries(words).sort((a,b)=>b[1].n-a[1].n).slice(0,narrow?6:11).forEach(([w,d],i)=>{
+      const fs=Math.min(narrow?26:40,(narrow?13:16)+d.n*(narrow?4:6));
+      ctx.font=`${d.n>1?500:300} ${fs}px Saira, Arial`;
+      const bw=ctx.measureText(w).width+8,bh=fs*1.1;
+      let a=i*2.4,r=0,x,y,ok=false;
+      for(let s=0;s<500&&!ok;s++){
+        x=cx+Math.cos(a)*r*1.6-bw/2;y=cy+Math.sin(a)*r-bh/2;
+        ok=x>4&&x+bw<W-4&&y>0&&y+bh<H&&!placed.some(p=>x<p.x+p.w&&x+bw>p.x&&y<p.y+p.h&&y+bh>p.y);
+        a+=.45;r+=.9;
+      }
+      if(!ok)return;
+      placed.push({x,y,w:bw,h:bh});
+      const gens=Object.entries(d.g).filter(v=>v[1]>0);
+      const dom=gens.sort((a,b)=>b[1]-a[1])[0][0];
+      const key=th.k+'|'+w;
+      let el=nodes.get(key);
+      if(!el){el=document.createElement('span');el.className='w';el.textContent=w;cloud.appendChild(el);nodes.set(key,el);
+        el.style.transform=`translate(${W/2}px,${H+40}px)`;el.style.opacity=0;el.getBoundingClientRect();}
+      el.style.fontSize=fs+'px';el.style.fontWeight=d.n>1?500:300;el.style.color=G[dom].c;
+      el.classList.toggle('shared',gens.length>1);
+      el.style.opacity=1;el.style.transform=`translate(${x+4}px,${y}px)`;
+      el.dataset.live=1;
+      if(newKey&&newKey.includes(w)&&newKey[0]===th.k){el.classList.remove('new');void el.offsetWidth;el.classList.add('new')}
+    });
+  });
+  nodes.forEach((el,k)=>{if(!el.dataset.live){el.style.opacity=0}delete el.dataset.live});
+  $('#status').textContent=`${entries.length} frasi sul muro · ${new Set(entries.map(e=>e.g)).size} generazioni`;
+}
+const ro=new ResizeObserver(()=>layout());ro.observe(cloud);
+
+let ai=null;
+(async()=>{try{ai=await window.claude?.use?.('sample')}catch(e){ai=null}})();
+async function classify(t){
+  if(!ai)return {theme:localTheme(t),kw:keywords(t)};
+  try{
+    const r=await ai.json(`Classifica questa frase scritta da un dipendente che completa "Mi sento rilevante quando...": "${t}".
+Temi possibili: Ascolto, Riconoscimento, Apprendimento, Autonomia, Impatto.
+Rispondi solo in JSON: {"theme":"<uno dei temi>","keywords":["1-3 parole chiave in italiano, minuscole, prese o derivate dalla frase"]}`,{modelTier:'quick'});
+    const th=THEMES.find(x=>x.k===r?.theme)?r.theme:localTheme(t);
+    const kw=Array.isArray(r?.keywords)&&r.keywords.length?r.keywords.slice(0,3).map(s=>String(s).toLowerCase().trim()).filter(Boolean):keywords(t);
+    return {theme:th,kw};
+  }catch(e){return {theme:localTheme(t),kw:keywords(t)}}
+}
+$('#compose').addEventListener('submit',async e=>{
+  e.preventDefault();const inp=$('#inp');const t=inp.value.trim();if(t.length<3)return;
+  inp.value='';$('#status').textContent='Riconosco il tema…';
+  const r=await classify(t);
+  if(!r.kw.length)r.kw=[t.split(' ')[0].toLowerCase()];
+  entries.push({t,g:curGen,theme:r.theme,kw:r.kw});
+  layout([r.theme,...r.kw]);
+  $('#status').textContent=`«${t}» → ${r.theme}`;
+});
+
+function setMode(m){
+  $('#t-bias').setAttribute('aria-selected',m==='bias');$('#t-words').setAttribute('aria-selected',m==='words');
+  $('#m-bias').classList.toggle('on',m==='bias');$('#m-words').classList.toggle('on',m==='words');
+  $('#side-bias').style.display=m==='bias'?'flex':'none';
+  if(m==='words')layout();
+}
+$('#t-bias').onclick=()=>setMode('bias');$('#t-words').onclick=()=>setMode('words');
+}
+</script>
+</body>
+</html>
